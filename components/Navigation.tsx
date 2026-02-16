@@ -26,8 +26,8 @@ export function Navigation() {
     { href: '/about', label: 'About' },
     { href: '/content', label: 'Free Content' },
     { href: '/workbook', label: 'Workbook' },
-    { href: '/Resource', label: 'Resource' },
     { href: '/membership', label: 'Membership' },
+    { href: '/Resource', label: 'Resource' },
   ];
 
   const handleSignOut = async () => {

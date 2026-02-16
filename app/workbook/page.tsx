@@ -84,8 +84,8 @@ export default function WorkbookPage() {
                 to get financing-ready before you apply.
               </p>
               <div className="flex items-baseline gap-3 mb-6">
-                <span className="text-5xl font-bold text-gray-900">$97</span>
-                <span className="text-gray-500">One-time payment</span>
+                <span className="text-5xl font-bold text-gray-900">$14.95</span>
+                <span className="text-gray-500">Instant PDF Download</span>
               </div>
               <Button size="lg" asChild className="text-lg px-8 py-6 w-full sm:w-auto">
                 <Link href="/signup">
@@ -172,8 +172,8 @@ export default function WorkbookPage() {
             Download the workbook and start preparing today
           </p>
           <div className="flex items-baseline gap-3 justify-center mb-8">
-            <span className="text-5xl font-bold">$97</span>
-            <span className="text-slate-300">One-time payment</span>
+            <span className="text-5xl font-bold">$14.95</span>
+            <span className="text-slate-300">Instant PDF Download</span>
           </div>
           <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6">
             <Link href="/signup">

@@ -63,8 +63,8 @@ export default function Home() {
                 href="/workbook"
                 className="absolute -bottom-4 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-full border-2 border-yellow-500 bg-yellow-400 px-8 py-3 text-sm font-bold text-gray-900 shadow-md transition-all hover:bg-yellow-300 hover:shadow-lg"
               >
-                Download Now
-                <ArrowRight className="h-4 w-4" />
+                Learn More
+                <BookOpen className="h-4 w-4" />
               </Link>
             </div>
           </div>
@@ -193,7 +193,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Price</span>
-                  <span className="font-semibold text-2xl">$97</span>
+                  <span className="font-semibold text-2xl">$14.95</span>
                 </div>
               </div>
             </div>
