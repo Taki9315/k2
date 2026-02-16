@@ -154,7 +154,7 @@ export default function PreferredVendorPage() {
                   </h3>
                   <div className="mx-auto w-[58%] min-w-[220px] max-w-[360px] bg-white rounded-xl p-4 shadow-md border border-primary/30">
                     <Image
-                      src="/assets/Network_Logo.png"
+                      src="/assets/Vendor_Logo.png"
                       alt="Preferred Network"
                       width={500}
                       height={300}

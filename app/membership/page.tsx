@@ -5,13 +5,6 @@ import { Button } from '@/components/ui/button';
 
 const membershipPages = [
   {
-    title: 'K2 Preferred Lender',
-    description:
-      'A lender-focused page for partners, referral teams, and institutions seeking qualified borrower opportunities.',
-    href: '/membership/k2_preferred_lender',
-    icon: Building2,
-  },
-  {
     title: 'Certified Borrower',
     description:
       'A borrower-focused page that explains certification, readiness milestones, and a faster path to funding.',
@@ -19,7 +12,14 @@ const membershipPages = [
     icon: BadgeCheck,
   },
   {
-    title: 'K2 Preferred Vendor',
+    title: 'K2 Preferred Lender',
+    description:
+      'A lender-focused page for partners, referral teams, and institutions seeking qualified borrower opportunities.',
+    href: '/membership/k2_preferred_lender',
+    icon: Building2,
+  },
+  {
+    title: 'K2 CRE Preferred Vendor',
     description:
       'A vendor-focused page for service providers seeking qualified referrals and lasting client relationships through the K2 network.',
     href: '/membership/preferred-vendor',
