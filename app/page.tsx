@@ -16,43 +16,57 @@ import VideoCards from '@/components/VideoCards';
 export default function Home() {
   return (
     <div className="flex flex-col">
-      <section className="relative bg-gradient-to-br from-slate-50 to-slate-100 py-20 md:py-32">
+      <section className="relative bg-gradient-to-br from-slate-50 to-slate-100 py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Fast Track Funding
-              <p className="text-2xl text-primary/90 mt-4">
-                <span className="text-slate-500">
-                  Rapid Results, Higher Returns.
-                </span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                Fast Track Funding
+                <p className="text-2xl text-primary/90 mt-4">
+                  <span className="text-slate-500">
+                    Rapid Results, Higher Returns.
+                  </span>
+                </p>
+              </h1>
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                Master Business Financing{' '}
+                With Expert Guidance
               </p>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-              Master Business Financing{' '}
-              With Expert Guidance
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild className="text-lg px-8 py-6">
-                <Link href="/workbook">
-                  Download Workbook
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                asChild
-                className="text-lg px-8 py-6 hover:bg-primary hover:text-primary-foreground"
-              >
-                <Link href="/membership">
-                  Join Membership
-                  <Users className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  asChild
+                  className="text-lg px-8 py-6 hover:bg-primary hover:text-primary-foreground"
+                >
+                  <Link href="/membership">
+                    Join Membership
+                    <Users className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+              </div>
+              <p className="text-sm text-gray-500 mt-4">
+                Trusted by entrepreneurs and borrowers nationwide
+              </p>
             </div>
-            <p className="text-sm text-gray-500 mt-4">
-              Trusted by entrepreneurs and borrowers nationwide
-            </p>
+
+            <div className="relative flex justify-center lg:justify-end">
+              <Image
+                src="/book_cover.png"
+                alt="K2 Borrower Preparation Workbook"
+                width={480}
+                height={620}
+                className="rounded-xl shadow-2xl object-contain max-h-[520px] w-auto"
+                priority
+              />
+              <Link
+                href="/workbook"
+                className="absolute -bottom-4 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-full border-2 border-yellow-500 bg-yellow-400 px-8 py-3 text-sm font-bold text-gray-900 shadow-md transition-all hover:bg-yellow-300 hover:shadow-lg"
+              >
+                Download Now
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>

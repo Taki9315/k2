@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Mail, Linkedin, Twitter, X } from 'lucide-react';
+import { Mail, Linkedin, X } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -62,7 +62,7 @@ export function Footer() {
                   href="/content"
                   className="text-sm text-primary/90 hover:text-primary transition-colors"
                 >
-                  Free Resources
+                  Free Content
                 </Link>
               </li>
             </ul>

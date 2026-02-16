@@ -13,35 +13,35 @@ const WORKBOOK_HERO_IMAGE =
 
 const WORKBOOK_FEATURES = [
   {
-    title: 'Credit Analysis Framework',
+    title: 'Preparing for Financing Success',
     description:
-      'Understand how lenders evaluate your credit, identify weaknesses, and create an action plan to improve your profile.',
+      'How to position yourself as a borrower lenders will want to work with.',
     image:
       'https://images.pexels.com/photos/7947656/pexels-photo-7947656.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
-    title: 'Cash Flow Documentation System',
+    title: ' Understanding and Selecting the loan program best suited for your unique situation.',
     description:
       'Learn what financial documents lenders require, how to organize them, and how to present your cash flow story effectively.',
     image:
       'https://images.pexels.com/photos/8729952/pexels-photo-8729952.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
-    title: 'Business Plan Templates',
+    title: 'Finding the right lender - hint...it may not be your local bank',
     description:
       'Proven frameworks for creating business plans that lenders actually read and approve. Includes real examples.',
     image:
       'https://images.unsplash.com/photo-1758518729711-1cbacd55efdb?auto=format&fit=crop&w=800&q=80',
   },
   {
-    title: 'Collateral Positioning Guide',
+    title: 'Navigating Underwriting and Closing your deal.',
     description:
       'How to identify, value, and present collateral in a way that maximizes your borrowing capacity.',
     image:
       'https://images.unsplash.com/photo-1758518727734-98f0a55983b6?auto=format&fit=crop&w=800&q=80',
   },
   {
-    title: 'Application Checklists',
+    title: 'Document Vault - All the forms a lender may request available for instant download.',
     description:
       'Complete checklists for SBA loans, term loans, lines of credit, and other common financing types.',
     image:
