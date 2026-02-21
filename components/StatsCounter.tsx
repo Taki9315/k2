@@ -9,9 +9,9 @@ type Stat = {
 };
 
 const STATS: Stat[] = [
-  { value: 500, suffix: '+', label: 'Borrowers Prepared' },
-  { value: 100, suffix: 'M+', label: 'In Deals Supported' },
-  { value: 200, suffix: '+', label: '5-Star Reviews' },
+  { value: 200, suffix: '+', label: 'Borrowers Prepared' },
+  { value: 50, suffix: 'M+', label: 'In Deals Supported' },
+  { value: 15, suffix: '+', label: 'Preferred Lenders' },
   { value: 50, suffix: '+', label: 'Pages of Frameworks' },
 ];
 

@@ -155,7 +155,7 @@ export function Footer() {
 
         <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-500">
-            © {new Date().getFullYear()} K2C Finance. All rights reserved.
+            © {new Date().getFullYear()} K2 Commercial Finance. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link
