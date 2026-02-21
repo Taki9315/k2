@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -8,81 +8,142 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { PuzzleCaptcha } from '@/components/PuzzleCaptcha';
 import { supabase } from '@/lib/supabase';
-import { Building2, BarChart3, Users } from 'lucide-react';
+import {
+  Building2,
+  CheckCircle2,
+  Users,
+  TrendingUp,
+  Shield,
+  ArrowRight,
+  Send,
+  Star,
+  Handshake,
+  BadgeCheck,
+} from 'lucide-react';
 
-// Placeholder – replace with your video URL when ready
-const CONTACT_VIDEO_URL =
-  'https://bigvu.tv/pages/kenkaplan/unlock-your-small-business-loan-successnwjvx1us';
-const WHO_WE_ARE_IMAGE =
-  "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1600&q=80";
-const FAQ_IMAGE =
-  "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1600&q=80";
-const LENDER_STATS = [
-  { value: '23+', label: 'MARKETS' },
-  { value: '$970MM+', label: 'EQUITY INVESTED' },
-  { value: '$5.1B', label: 'TOTAL CAPITALIZATION' },
-  { value: '160+', label: 'PROPERTIES ACQUIRED' },
-  { value: '29,000+', label: 'UNITS ACQUIRED' },
-  { value: '700+', label: 'LENDER RELATIONSHIPS' },
-  { value: '2,400+', label: 'FUNDED BORROWERS' },
-  { value: '94%', label: 'CLIENT RETENTION' },
-  { value: '48H', label: 'AVG RESPONSE TIME' },
-  { value: '120+', label: 'INDUSTRY PARTNERS' },
-  { value: '$42B+', label: 'NETWORK CAPACITY' },
-  { value: '4.9/5', label: 'CLIENT RATING' },
-];
-const LENDER_COLUMNS = [
-  LENDER_STATS.filter((_, i) => i % 3 === 0),
-  LENDER_STATS.filter((_, i) => i % 3 === 1),
-  LENDER_STATS.filter((_, i) => i % 3 === 2),
+/* ── Lender types for the dropdown ────────────────────────────────────── */
+const LENDER_TYPES = [
+  { value: '', label: 'Select lender type...' },
+  { value: 'bank', label: 'Bank' },
+  { value: 'credit_union', label: 'Credit Union' },
+  { value: 'cdfi', label: 'CDFI' },
+  { value: 'sba_lender', label: 'SBA Lender' },
+  { value: 'private_lender', label: 'Private / Direct Lender' },
+  { value: 'hard_money', label: 'Hard Money Lender' },
+  { value: 'bridge_lender', label: 'Bridge Lender' },
+  { value: 'life_company', label: 'Life Company' },
+  { value: 'agency', label: 'Agency Lender' },
+  { value: 'other', label: 'Other' },
 ];
 
-export default function ContactPage() {
+/* ── Benefits for the highlight cards ─────────────────────────────────── */
+const HIGHLIGHTS = [
+  {
+    icon: Users,
+    title: 'Pre-Qualified Certified Borrowers',
+    text: 'Every borrower in our pipeline has completed the K2 Borrower Preparation Workbook — educated, documented, and ready to transact with a lender who treats them as a priority.',
+  },
+  {
+    icon: TrendingUp,
+    title: 'Structured, Quality Deal Flow',
+    text: 'Receive borrower packages matched to your lending criteria. Each submission includes a Transaction Executive Summary — reducing noise and increasing close rates.',
+  },
+  {
+    icon: Shield,
+    title: 'White-Glove Commitment',
+    text: 'K2 Preferred Lenders commit to providing dedicated account representation and high-priority service to every certified borrower in the network.',
+  },
+];
+
+/* ── Lender commitments for the borrower-focused section ──────────────── */
+const COMMITMENTS = [
+  'Assign a dedicated account representative to every K2 certified borrower',
+  'Respond to borrower submissions within 48 hours',
+  'Provide transparent term sheets with clear pricing and conditions',
+  'Maintain ongoing communication throughout the underwriting process',
+  'Treat K2 certified borrowers as a high priority in your pipeline',
+];
+
+export default function PreferredLenderPage() {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
     company: '',
+    lenderType: '',
+    lendingFocus: '',
     message: '',
   });
-  const [fileLabel, setFileLabel] = useState('Upload File');
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [captchaPassed, setCaptchaPassed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!captchaPassed) {
+      setError('Please complete the puzzle verification first.');
+      return;
+    }
+    if (!formData.lenderType) {
+      setError('Please select your lender type.');
+      return;
+    }
     setError('');
     setSuccess(false);
     setLoading(true);
 
     try {
-      const fullName = [formData.firstName, formData.lastName].filter(Boolean).join(' ');
-      const messageWithMeta = [
-        formData.message,
-        formData.company && `Company: ${formData.company}`,
-        formData.phone && `Phone: ${formData.phone}`,
-      ].filter(Boolean).join('\n');
-
+      /* Save to the dedicated lender_inquiries table */
       const { error: submitError } = await supabase
-        .from('contact_inquiries')
+        .from('lender_inquiries')
         .insert({
-          type: 'general',
-          name: fullName || '—',
+          first_name: formData.firstName,
+          last_name: formData.lastName,
           email: formData.email,
-          message: messageWithMeta || '—',
+          phone: formData.phone || null,
+          company: formData.company,
+          lender_type: formData.lenderType,
+          lending_focus: formData.lendingFocus || null,
+          message: formData.message || null,
         });
 
       if (submitError) throw submitError;
+
+      /* Queue admin notification */
+      try {
+        await fetch('/api/inquiry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'lender',
+            name: `${formData.firstName} ${formData.lastName}`,
+            company: formData.company,
+            email: formData.email,
+            lenderType: formData.lenderType,
+          }),
+        });
+      } catch {
+        /* non-blocking — inquiry was already saved */
+      }
 
       setSuccess(true);
       setFormData({
@@ -91,438 +152,372 @@ export default function ContactPage() {
         email: '',
         phone: '',
         company: '',
+        lenderType: '',
+        lendingFocus: '',
         message: '',
       });
-      setFileLabel('Upload File');
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to submit inquiry');
+      setError(
+        err instanceof Error ? err.message : 'Failed to submit inquiry'
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileClick = () => fileInputRef.current?.click();
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) setFileLabel(file.name);
-  };
-
   return (
     <div className="flex flex-col">
-      {/* Section 1: Video + Form (Photo 1) */}
-      <section className="bg-white py-16 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
+      <section className="bg-gradient-to-br from-slate-900 to-slate-800 py-20 md:py-28 text-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium mb-6">
+            <Building2 className="h-4 w-4" />
+            Direct Lenders Only
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+            Join the K2 Preferred Lender Network
+          </h1>
+          <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+            We&apos;re building a dream team of direct lenders willing to provide
+            white-glove service — including a dedicated account representative —
+            to our certified borrowers. If your institution is ready to commit
+            to making K2 borrowers a high priority, we want to hear from you.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Highlights ────────────────────────────────────────────────── */}
+      <section className="py-16 md:py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Why Lenders Join the K2 Network
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              We do the heavy lifting on borrower preparation so you can focus
+              on what you do best — funding deals with confidence.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {HIGHLIGHTS.map((h) => (
+              <Card
+                key={h.title}
+                className="border-2 hover:shadow-lg transition-shadow"
+              >
+                <CardContent className="pt-8 pb-6 px-6 text-center">
+                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
+                    <h.icon className="h-7 w-7 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {h.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {h.text}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Lender Commitment + Inquiry Form ──────────────────────────── */}
+      <section className="py-16 md:py-20 bg-slate-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-            {/* Left: Video + CTA + Preferred Network logo */}
+            {/* Left: overview & commitments */}
             <div className="space-y-6">
-              <div className="bg-black rounded-xl overflow-hidden shadow-xl">
-                <div className="px-4 py-2 bg-black text-white text-sm font-medium border-b border-white/10">
-                  Partner with K2 Commercial Finance Video
-                </div>
-                <div className="aspect-video bg-black relative">
-                  <iframe
-                    src={CONTACT_VIDEO_URL}
-                    title="Partner with K2 Commercial Finance Video"
-                    className="w-full h-full"
-                    allowFullScreen
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+                How It Works
+              </h2>
+              <p className="text-gray-600 leading-relaxed">
+                K2 Commercial Finance educates and prepares borrowers through a
+                structured workbook process before they ever reach your desk.
+                Each certified borrower completes our Borrower Preparation
+                Workbook, goes through a full intake, and receives a Transaction
+                Executive Summary — so when you see a deal, it&apos;s already
+                organized and underwriteable.
+              </p>
+
+              <div className="space-y-3">
+                <h3 className="text-xl font-bold text-gray-900">
+                  Preferred Lender Commitments
+                </h3>
+                <ul className="space-y-3">
+                  {COMMITMENTS.map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 shrink-0" />
+                      <span className="text-gray-700">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <p className="text-sm text-gray-500 italic">
+                Once your inquiry is reviewed, we&apos;ll send you a link to the
+                full Preferred Lender program description, including referral
+                fee structure, borrower matching criteria, and portal access
+                details.
+              </p>
+
+              <div className="rounded-xl border-2 border-primary/20 bg-white p-6 mt-4">
+                <div className="flex items-center gap-4 mb-3">
+                  <Image
+                    src="/assets/Network_Logo.png"
+                    alt="K2 Preferred Network"
+                    width={160}
+                    height={80}
+                    className="object-contain"
                   />
                 </div>
-                <p className="px-4 py-2 text-sm text-white/70 bg-black border-t border-white/10">
-                  Partner with K2 Commercial Finance Video by K2 Commercial Finance.
+                <p className="text-sm text-gray-600">
+                  Approved lenders receive full access to the Preferred Lender
+                  portal including deal flow details, referral fee structure,
+                  and direct communication with the K2 team.
                 </p>
               </div>
+            </div>
 
-              <div className="flex flex-col items-center gap-6 pt-2 text-center">
-                <Button
-                  size="lg"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
-                  asChild
-                >
-                  <Link href="/about">Learn More & Meet the Team</Link>
-                </Button>
-
-                <div className="w-full">
-                  <h3 className="text-2xl md:text-3xl font-bold text-black mb-4">
-                    Preferred Network
+            {/* Right: Inquiry form */}
+            <div>
+              <Card className="border-2 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    Lender Inquiry Form
                   </h3>
-                  <div className="mx-auto w-[58%] min-w-[220px] max-w-[360px] bg-white rounded-xl p-4 shadow-md border border-primary/30">
-                    <Image
-                      src="/assets/Network_Logo.png"
-                      alt="Preferred Network"
-                      width={500}
-                      height={300}
-                      className="h-auto w-full object-contain"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+                  <p className="text-sm text-gray-500 mb-6">
+                    Submit your inquiry and a K2 representative will follow up
+                    with full program details.
+                  </p>
 
-            {/* Right: Heading + Form */}
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
-                Maximize Your Financing Success
-              </h2>
-              <p className="text-neutral-700 mb-4 leading-relaxed">
-                Partner with a team that delivers more than just capital—we drive results.
-                From borrower education and preparation to competitive terms and ongoing
-                support, we deliver outcomes that create lasting value.
-              </p>
-              <p className="text-neutral-700 mb-8 leading-relaxed">
-                Share your information today and discover how K2 Commercial Finance can
-                support your business financing goals.
-              </p>
-
-              <div className="rounded-2xl border border-black/10 bg-white p-6 md:p-8 shadow-sm">
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  {success && (
-                    <Alert>
-                      <AlertDescription>
-                        Thank you for your message! We&apos;ll get back to you soon.
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                  {error && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                  )}
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="firstName" className="text-black">
-                        *First Name (required)
-                      </Label>
-                      <Input
-                        id="firstName"
-                        name="firstName"
-                        type="text"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        required
-                        className="bg-white border-black/20 focus-visible:ring-primary"
-                      />
+                  {success ? (
+                    <div className="rounded-lg border border-green-200 bg-green-50 p-6 text-center">
+                      <CheckCircle2 className="mx-auto h-10 w-10 text-green-600 mb-3" />
+                      <h4 className="text-lg font-semibold text-green-800 mb-1">
+                        Inquiry Received
+                      </h4>
+                      <p className="text-sm text-green-700">
+                        Thank you for your interest in the K2 Preferred Lender
+                        Network. We&apos;ll review your inquiry and follow up
+                        with the full program description shortly.
+                      </p>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName" className="text-black">
-                        *Last Name (required)
-                      </Label>
-                      <Input
-                        id="lastName"
-                        name="lastName"
-                        type="text"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        required
-                        className="bg-white border-black/20 focus-visible:ring-primary"
-                      />
-                    </div>
-                  </div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      {error && (
+                        <Alert variant="destructive">
+                          <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                      )}
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-black">
-                        *Email (required)
-                      </Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="bg-white border-black/20 focus-visible:ring-primary"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-black">
-                        *Phone Number (required)
-                      </Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        required
-                        className="bg-white border-black/20 focus-visible:ring-primary"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="company" className="text-black">
-                      Company
-                    </Label>
-                    <Input
-                      id="company"
-                      name="company"
-                      type="text"
-                      value={formData.company}
-                      onChange={handleChange}
-                      className="bg-white border-black/20 focus-visible:ring-primary"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="message" className="text-black">
-                      Tell us more about your financing needs or business
-                    </Label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      placeholder="Tell us more about your portfolio or property."
-                      rows={5}
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      className="bg-white border-black/20 resize-none focus-visible:ring-primary"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="text-sm text-black">
-                      Submit your RFP to K2 Commercial Finance:
-                    </p>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      className="hidden"
-                      onChange={handleFileChange}
-                      accept=".pdf,.doc,.docx"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleFileClick}
-                      className="text-sm text-black underline hover:text-primary"
-                    >
-                      {fileLabel}
-                    </button>
-                  </div>
-
-                  <Button type="submit" size="lg" disabled={loading} className="w-full sm:w-auto">
-                    {loading ? 'Sending...' : 'Send Message'}
-                  </Button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 2: Who We Are / What Sets Us Apart */}
-      <section className="py-20 bg-primary/[0.04]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-lg border border-black/10">
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url('${WHO_WE_ARE_IMAGE}')` }}
-                aria-label="K2 Commercial Finance team meeting"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-black mb-6">Who We Are</h2>
-              <p className="text-neutral-700 mb-4 leading-relaxed">
-                K2 Commercial Finance is an education-first financing platform built to
-                help borrowers and investors make better decisions. We bring a lender&apos;s
-                perspective to the process—driving clarity, preparation, and measurable
-                results.
-              </p>
-              <p className="text-neutral-700 mb-4 leading-relaxed">
-                Our team combines real lending experience with a commitment to
-                transparency. We&apos;ve supported businesses across multiple markets with
-                practical guidance on credit, cash flow, and loan readiness.
-              </p>
-              <p className="text-neutral-700 mb-6 leading-relaxed">
-                From first-time applicants to experienced borrowers, we help you prepare
-                with the precision that leads to better terms and faster approvals.
-              </p>
-
-              <h2 className="text-3xl font-bold text-black mb-6 mt-10">
-                What Sets Us Apart
-              </h2>
-              <ul className="space-y-4">
-                {[
-                  {
-                    title: 'Education-first approach',
-                    text: 'We focus on helping you understand what lenders look for and how to position your business before you apply.',
-                  },
-                  {
-                    title: 'Practical resources',
-                    text: 'Workbooks, checklists, and content based on real lending criteria—no theory, just actionable steps.',
-                  },
-                  {
-                    title: 'Ongoing support',
-                    text: 'Membership and resources designed to support you through the entire financing journey.',
-                  },
-                ].map((item, i) => (
-                  <li key={i}>
-                    <span className="font-semibold text-black">{item.title}:</span>{' '}
-                    <span className="text-neutral-700">{item.text}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button size="lg" className="mt-8" asChild>
-                <Link href="/contact">Request an Intro Meeting</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 3: FAQs */}
-      <section className="py-20 bg-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/20">
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url('${FAQ_IMAGE}')` }}
-                aria-label="Client meeting and consultation"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-primary mb-8">FAQs</h2>
-              <Accordion type="single" collapsible className="w-full text-white">
-                {[
-                  {
-                    q: 'What makes K2 different from other financing education resources?',
-                    a: 'We focus on practical, lender-based guidance—what underwriters actually look for—backed by real experience. Our workbook and content are built to improve your readiness and terms, not just general advice.',
-                  },
-                  {
-                    q: 'Who is the workbook and membership for?',
-                    a: 'Entrepreneurs and business owners preparing for loans, those who have been rejected and want to understand why, and anyone who wants to navigate SBA or commercial lending with confidence.',
-                  },
-                  {
-                    q: 'How does the membership work?',
-                    a: 'Members get access to monthly Q&A sessions, exclusive content, and direct support to help you prepare documents and applications effectively.',
-                  },
-                  {
-                    q: 'Do you provide loans or funding?',
-                    a: 'We provide education and preparation resources. We help you get ready to approach lenders and improve your chances of approval and better terms.',
-                  },
-                  {
-                    q: 'How do I get started?',
-                    a: 'Start with our free content or the Borrower Preparation Workbook for a step-by-step guide. For ongoing support, consider our membership program.',
-                  },
-                ].map((faq, i) => (
-                  <AccordionItem key={i} value={`faq-${i}`} className="border-white/20">
-                    <AccordionTrigger className="text-left text-white hover:text-primary py-4">
-                      {faq.q}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-white/75">
-                      {faq.a}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 4: Best Lender Networks + Our Expertise */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-black mb-4 text-center">
-            Best Lender Networks
-          </h2>
-          <p className="text-center text-neutral-600 mb-12 max-w-3xl mx-auto">
-            Our network performance is backed by proven outcomes across markets,
-            borrower profiles, and lending programs.
-          </p>
-
-          <div className="hidden md:grid md:grid-cols-3 gap-6 mb-16">
-            {LENDER_COLUMNS.map((column, colIndex) => (
-              <div
-                key={colIndex}
-                className="hex-vertical-track h-[560px] rounded-2xl border border-primary/20 bg-primary/[0.04] p-4"
-              >
-                <div className={`${colIndex === 1 ? 'hex-flow-down' : 'hex-flow-up'} space-y-6`}>
-                  {[...column, ...column].map((stat, i) => (
-                    <div key={`${stat.label}-${i}`} className="hex-card mx-auto">
-                      <div className="hex-card-inner">
-                        <div className="text-xl md:text-2xl font-bold text-black leading-none">
-                          {stat.value}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                          <Label htmlFor="firstName">First Name *</Label>
+                          <Input
+                            id="firstName"
+                            name="firstName"
+                            value={formData.firstName}
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
-                        <div className="mt-2 text-[11px] font-semibold tracking-wide text-neutral-700">
-                          {stat.label}
+                        <div className="space-y-1.5">
+                          <Label htmlFor="lastName">Last Name *</Label>
+                          <Input
+                            id="lastName"
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:hidden mb-16">
-            {LENDER_STATS.map((stat) => (
-              <div key={stat.label} className="hex-card mx-auto">
-                <div className="hex-card-inner">
-                  <div className="text-xl font-bold text-black leading-none">
-                    {stat.value}
-                  </div>
-                  <div className="mt-2 text-[11px] font-semibold tracking-wide text-neutral-700">
-                    {stat.label}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="email">Email *</Label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
 
-          <h2 className="text-3xl font-bold text-black mb-10 text-center">
-            Our Expertise
+                      <div className="space-y-1.5">
+                        <Label htmlFor="phone">Phone</Label>
+                        <Input
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label htmlFor="company">
+                          Company / Institution *
+                        </Label>
+                        <Input
+                          id="company"
+                          name="company"
+                          value={formData.company}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label htmlFor="lenderType">Lender Type *</Label>
+                        <select
+                          id="lenderType"
+                          name="lenderType"
+                          value={formData.lenderType}
+                          onChange={handleChange}
+                          required
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        >
+                          {LENDER_TYPES.map((lt) => (
+                            <option key={lt.value} value={lt.value}>
+                              {lt.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label htmlFor="lendingFocus">
+                          Lending Focus (property types, loan size range)
+                        </Label>
+                        <Input
+                          id="lendingFocus"
+                          name="lendingFocus"
+                          placeholder="e.g. Multifamily, MHP, $250K–$5M"
+                          value={formData.lendingFocus}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label htmlFor="message">Message</Label>
+                        <Textarea
+                          id="message"
+                          name="message"
+                          rows={3}
+                          placeholder="Tell us about your lending programs or any questions..."
+                          value={formData.message}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <PuzzleCaptcha
+                        onVerified={() => setCaptchaPassed(true)}
+                      />
+
+                      <Button
+                        type="submit"
+                        className="w-full"
+                        size="lg"
+                        disabled={loading || !captchaPassed}
+                      >
+                        {loading ? (
+                          'Submitting...'
+                        ) : (
+                          <>
+                            Submit Inquiry
+                            <Send className="ml-2 h-4 w-4" />
+                          </>
+                        )}
+                      </Button>
+                    </form>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQs ──────────────────────────────────────────────────────── */}
+      <section className="py-20 bg-black">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-primary mb-8 text-center">
+            Frequently Asked Questions
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-xl p-8 shadow-sm border border-black/10">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Building2 className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-bold text-black mb-3">
-                Preparation & Documentation Support
-              </h3>
-              <p className="text-neutral-700 text-sm leading-relaxed">
-                We help you build credit narratives, cash flow documentation, and
-                application packages that meet lender expectations—so you present your
-                business in the best light.
-              </p>
-            </div>
-            <div className="bg-white rounded-xl p-8 shadow-sm border border-black/10">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <BarChart3 className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-bold text-black mb-3">
-                Lender Expectations & Better Terms
-              </h3>
-              <p className="text-neutral-700 text-sm leading-relaxed">
-                Understand how lenders evaluate applications and what drives approvals
-                and pricing. Position yourself for competitive terms and faster
-                decisions.
-              </p>
-            </div>
-            <div className="bg-white rounded-xl p-8 shadow-sm border border-black/10">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Users className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-bold text-black mb-3">
-                Ongoing Education & Member Support
-              </h3>
-              <p className="text-neutral-700 text-sm leading-relaxed">
-                From workbooks to live Q&A and member resources, we support you through
-                the full financing journey with clear, actionable guidance.
-              </p>
-            </div>
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full text-white max-w-3xl mx-auto"
+          >
+            {[
+              {
+                q: 'What kind of borrowers will I receive?',
+                a: 'Every borrower has purchased and completed the K2 Borrower Preparation Workbook. They arrive documented, educated, and with a Transaction Executive Summary — so you can evaluate deals faster with fewer back-and-forth requests.',
+              },
+              {
+                q: 'Is this program for direct lenders only?',
+                a: 'Yes. The K2 Preferred Lender Network is exclusively for direct lenders — banks, credit unions, CDFIs, SBA lenders, bridge lenders, and private/direct lending institutions. Brokers and correspondents are not eligible.',
+              },
+              {
+                q: 'What commitment is required?',
+                a: 'Preferred Lenders agree to assign a dedicated account representative, respond within 48 hours, provide transparent term sheets, and treat K2 certified borrowers as a high priority.',
+              },
+              {
+                q: 'What happens after I submit my inquiry?',
+                a: 'A K2 representative will review your submission and send you a link to the full Preferred Lender program description — similar to our LEV page — with complete details on referral fees, matching criteria, and portal access.',
+              },
+              {
+                q: 'Is there a cost to join?',
+                a: 'Program terms, including any associated fees or referral structures, are shared after your inquiry is approved. Contact us to learn about the current partnership terms.',
+              },
+            ].map((faq, i) => (
+              <AccordionItem
+                key={i}
+                value={`faq-${i}`}
+                className="border-white/20"
+              >
+                <AccordionTrigger className="text-left text-white hover:text-primary py-4">
+                  {faq.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-white/75">
+                  {faq.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
+      {/* ── CTA ───────────────────────────────────────────────────────── */}
+      <section className="py-16 bg-slate-900 text-white">
+        <div className="max-w-3xl mx-auto px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold mb-4">
+            Not a Lender? Explore Other Programs
+          </h2>
+          <p className="text-slate-300 mb-8">
+            Whether you&apos;re a borrower looking to get funded or a vendor
+            looking to grow your business, K2 has a program for you.
+          </p>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Button size="lg" asChild>
+              <Link href="/membership/certified-borrower">
+                Certified Borrower
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="border-white text-white hover:bg-white hover:text-slate-900"
+            >
+              <Link href="/membership/preferred-vendor">
+                Vendor Network
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -8,40 +8,69 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { PuzzleCaptcha } from '@/components/PuzzleCaptcha';
 import { supabase } from '@/lib/supabase';
-import { Wrench, ShieldCheck, Handshake } from 'lucide-react';
+import {
+  Wrench,
+  CheckCircle2,
+  Handshake,
+  Target,
+  BarChart3,
+  ArrowRight,
+  Send,
+  ShieldCheck,
+} from 'lucide-react';
 
-// Placeholder – replace with your video URL when ready
-const CONTACT_VIDEO_URL =
-  'https://bigvu.tv/pages/kenkaplan/unlock-your-small-business-loan-successnwjvx1us';
-const WHO_WE_ARE_IMAGE =
-  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1600&q=80";
-const FAQ_IMAGE =
-  "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1600&q=80";
-const VENDOR_STATS = [
-  { value: '23+', label: 'MARKETS SERVED' },
-  { value: '350+', label: 'ACTIVE VENDORS' },
-  { value: '$1.2B+', label: 'VENDOR VOLUME' },
-  { value: '160+', label: 'PROPERTIES SUPPORTED' },
-  { value: '29,000+', label: 'UNITS MANAGED' },
-  { value: '500+', label: 'VENDOR PARTNERSHIPS' },
-  { value: '1,800+', label: 'PROJECTS COMPLETED' },
-  { value: '96%', label: 'VENDOR SATISFACTION' },
-  { value: '24H', label: 'AVG RESPONSE TIME' },
-  { value: '80+', label: 'SERVICE CATEGORIES' },
-  { value: '$28B+', label: 'NETWORK CAPACITY' },
-  { value: '4.8/5', label: 'PARTNER RATING' },
+/* ── Service types dropdown ──────────────────────────────────────────── */
+const SERVICE_TYPES = [
+  { value: '', label: 'Select service type...' },
+  { value: 'appraisal', label: 'Appraisal' },
+  { value: 'environmental', label: 'Environmental Consulting' },
+  { value: 'insurance', label: 'Insurance' },
+  { value: 'legal', label: 'Legal / Attorney' },
+  { value: 'title', label: 'Title Services' },
+  { value: 'construction_mgmt', label: 'Construction Management' },
+  { value: 'property_inspection', label: 'Property Inspection' },
+  { value: 'property_mgmt', label: 'Property Management' },
+  { value: 'accounting', label: 'Accounting / CPA' },
+  { value: 'architecture', label: 'Architecture / Engineering' },
+  { value: 'surveying', label: 'Surveying' },
+  { value: 'other', label: 'Other' },
 ];
-const VENDOR_COLUMNS = [
-  VENDOR_STATS.filter((_, i) => i % 3 === 0),
-  VENDOR_STATS.filter((_, i) => i % 3 === 1),
-  VENDOR_STATS.filter((_, i) => i % 3 === 2),
+
+/* ── Benefit highlights ──────────────────────────────────────────────── */
+const HIGHLIGHTS = [
+  {
+    icon: Target,
+    title: 'Qualified, Active Referrals',
+    text: 'Connect with K2 certified borrowers and commercial property investors who are actively transacting and need your services — not cold leads, but warm introductions.',
+  },
+  {
+    icon: Handshake,
+    title: 'White-Glove Partnership',
+    text: 'As a K2 Preferred Vendor, you commit to priority service and dedicated attention for our certified borrowers — building trust and long-term relationships.',
+  },
+  {
+    icon: BarChart3,
+    title: 'Grow Your Pipeline',
+    text: 'Gain steady, high-quality deal flow through the K2 ecosystem. Your services are showcased to borrowers at the point of need — when decisions are being made.',
+  },
+];
+
+/* ── Vendor commitments ──────────────────────────────────────────────── */
+const COMMITMENTS = [
+  'Provide dedicated point-of-contact for every K2 certified borrower referral',
+  'Deliver priority turnaround times on engagements sourced through K2',
+  'Maintain transparent pricing and clear scope of work upfront',
+  'Communicate proactively throughout the engagement lifecycle',
+  'Treat K2 certified borrowers as a high priority in your service queue',
 ];
 
 export default function PreferredVendorPage() {
@@ -51,38 +80,70 @@ export default function PreferredVendorPage() {
     email: '',
     phone: '',
     company: '',
+    serviceType: '',
+    serviceAreas: '',
     message: '',
   });
-  const [fileLabel, setFileLabel] = useState('Upload File');
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [captchaPassed, setCaptchaPassed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!captchaPassed) {
+      setError('Please complete the puzzle verification first.');
+      return;
+    }
+    if (!formData.serviceType) {
+      setError('Please select your service type.');
+      return;
+    }
     setError('');
     setSuccess(false);
     setLoading(true);
 
     try {
-      const fullName = [formData.firstName, formData.lastName].filter(Boolean).join(' ');
-      const messageWithMeta = [
-        formData.message,
-        formData.company && `Company: ${formData.company}`,
-        formData.phone && `Phone: ${formData.phone}`,
-      ].filter(Boolean).join('\n');
-
+      /* Save to the dedicated vendor_inquiries table */
       const { error: submitError } = await supabase
-        .from('contact_inquiries')
+        .from('vendor_inquiries')
         .insert({
-          type: 'vendor',
-          name: fullName || '—',
+          first_name: formData.firstName,
+          last_name: formData.lastName,
           email: formData.email,
-          message: messageWithMeta || '—',
+          phone: formData.phone || null,
+          company: formData.company,
+          service_type: formData.serviceType,
+          service_areas: formData.serviceAreas || null,
+          message: formData.message || null,
         });
 
       if (submitError) throw submitError;
+
+      /* Queue admin notification */
+      try {
+        await fetch('/api/inquiry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'vendor',
+            name: `${formData.firstName} ${formData.lastName}`,
+            company: formData.company,
+            email: formData.email,
+            serviceType: formData.serviceType,
+          }),
+        });
+      } catch {
+        /* non-blocking — inquiry was already saved */
+      }
 
       setSuccess(true);
       setFormData({
@@ -91,442 +152,368 @@ export default function PreferredVendorPage() {
         email: '',
         phone: '',
         company: '',
+        serviceType: '',
+        serviceAreas: '',
         message: '',
       });
-      setFileLabel('Upload File');
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to submit inquiry');
+      setError(
+        err instanceof Error ? err.message : 'Failed to submit inquiry'
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileClick = () => fileInputRef.current?.click();
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) setFileLabel(file.name);
-  };
-
   return (
     <div className="flex flex-col">
-      {/* Section 1: Video + Form */}
-      <section className="bg-white py-16 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
+      <section className="bg-gradient-to-br from-slate-900 to-slate-800 py-20 md:py-28 text-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium mb-6">
+            <Wrench className="h-4 w-4" />
+            Preferred Vendor Network
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+            Join the K2 CRE Preferred Vendor Network
+          </h1>
+          <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+            We&apos;re building a dream team of vendors committed to providing
+            white-glove service — including a dedicated point of contact — to
+            our certified borrowers. If your firm delivers exceptional service
+            and wants access to qualified, transacting clients, we want to
+            hear from you.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Highlights ────────────────────────────────────────────────── */}
+      <section className="py-16 md:py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Why Vendors Join the K2 Network
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Our certified borrowers need trusted service providers. Position
+              your firm in front of decision-makers who are ready to act.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {HIGHLIGHTS.map((h) => (
+              <Card
+                key={h.title}
+                className="border-2 hover:shadow-lg transition-shadow"
+              >
+                <CardContent className="pt-8 pb-6 px-6 text-center">
+                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
+                    <h.icon className="h-7 w-7 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {h.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {h.text}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Vendor Commitments + Inquiry Form ─────────────────────────── */}
+      <section className="py-16 md:py-20 bg-slate-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-            {/* Left: Video + CTA + Preferred Network logo */}
+            {/* Left: overview & commitments */}
             <div className="space-y-6">
-              <div className="bg-black rounded-xl overflow-hidden shadow-xl">
-                <div className="px-4 py-2 bg-black text-white text-sm font-medium border-b border-white/10">
-                  Join the K2 Preferred Vendor Network
-                </div>
-                <div className="aspect-video bg-black relative">
-                  <iframe
-                    src={CONTACT_VIDEO_URL}
-                    title="Join the K2 Preferred Vendor Network"
-                    className="w-full h-full"
-                    allowFullScreen
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+                How It Works
+              </h2>
+              <p className="text-gray-600 leading-relaxed">
+                K2 Commercial Finance works with commercial real estate borrowers
+                and investors at every stage of the transaction. From attorneys
+                and appraisers to environmental consultants and property managers
+                — our certified borrowers need the services you provide.
+              </p>
+
+              <div className="space-y-3">
+                <h3 className="text-xl font-bold text-gray-900">
+                  Preferred Vendor Commitments
+                </h3>
+                <ul className="space-y-3">
+                  {COMMITMENTS.map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 shrink-0" />
+                      <span className="text-gray-700">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <p className="text-sm text-gray-500 italic">
+                Once your inquiry is reviewed, we&apos;ll send you a link to the
+                full Preferred Vendor program description with complete details
+                on referral structure, listing placement, and partnership terms.
+              </p>
+
+              <div className="rounded-xl border-2 border-primary/20 bg-white p-6 mt-4">
+                <div className="flex items-center gap-4 mb-3">
+                  <Image
+                    src="/assets/Network_Logo.png"
+                    alt="K2 Preferred Network"
+                    width={160}
+                    height={80}
+                    className="object-contain"
                   />
                 </div>
-                <p className="px-4 py-2 text-sm text-white/70 bg-black border-t border-white/10">
-                  Become a K2 Preferred Vendor — learn how our network works.
+                <p className="text-sm text-gray-600">
+                  Approved vendors receive full access to the Preferred Vendor
+                  portal including referral details, listing placement, and
+                  direct communication with the K2 team.
                 </p>
               </div>
+            </div>
 
-              <div className="flex flex-col items-center gap-6 pt-2 text-center">
-                <Button
-                  size="lg"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
-                  asChild
-                >
-                  <Link href="/about">Learn More & Meet the Team</Link>
-                </Button>
-
-                <div className="w-full">
-                  <h3 className="text-2xl md:text-3xl font-bold text-black mb-4">
-                    Preferred Network
+            {/* Right: Inquiry form */}
+            <div>
+              <Card className="border-2 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    Vendor Inquiry Form
                   </h3>
-                  <div className="mx-auto w-[58%] min-w-[220px] max-w-[360px] bg-white rounded-xl p-4 shadow-md border border-primary/30">
-                    <Image
-                      src="/assets/Vendor_Logo.png"
-                      alt="Preferred Network"
-                      width={500}
-                      height={300}
-                      className="h-auto w-full object-contain"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+                  <p className="text-sm text-gray-500 mb-6">
+                    Submit your inquiry and a K2 representative will follow up
+                    with full program details.
+                  </p>
 
-            {/* Right: Heading + Form */}
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
-                Grow Your Business with K2 Referrals
-              </h2>
-              <p className="text-neutral-700 mb-4 leading-relaxed">
-                Join a curated network of trusted vendors serving commercial real
-                estate borrowers and investors. As a K2 Preferred Vendor you gain
-                direct exposure to qualified deal flow and lasting client
-                relationships.
-              </p>
-              <p className="text-neutral-700 mb-8 leading-relaxed">
-                Share your information today and discover how the K2 Preferred
-                Vendor program can expand your reach and revenue.
-              </p>
-
-              <div className="rounded-2xl border border-black/10 bg-white p-6 md:p-8 shadow-sm">
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  {success && (
-                    <Alert>
-                      <AlertDescription>
-                        Thank you for your interest! We&apos;ll review your application and get back to you soon.
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                  {error && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                  )}
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="firstName" className="text-black">
-                        *First Name (required)
-                      </Label>
-                      <Input
-                        id="firstName"
-                        name="firstName"
-                        type="text"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        required
-                        className="bg-white border-black/20 focus-visible:ring-primary"
-                      />
+                  {success ? (
+                    <div className="rounded-lg border border-green-200 bg-green-50 p-6 text-center">
+                      <CheckCircle2 className="mx-auto h-10 w-10 text-green-600 mb-3" />
+                      <h4 className="text-lg font-semibold text-green-800 mb-1">
+                        Inquiry Received
+                      </h4>
+                      <p className="text-sm text-green-700">
+                        Thank you for your interest in the K2 Preferred Vendor
+                        Network. We&apos;ll review your inquiry and follow up
+                        with the full program description shortly.
+                      </p>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName" className="text-black">
-                        *Last Name (required)
-                      </Label>
-                      <Input
-                        id="lastName"
-                        name="lastName"
-                        type="text"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        required
-                        className="bg-white border-black/20 focus-visible:ring-primary"
-                      />
-                    </div>
-                  </div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      {error && (
+                        <Alert variant="destructive">
+                          <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                      )}
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-black">
-                        *Email (required)
-                      </Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="bg-white border-black/20 focus-visible:ring-primary"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-black">
-                        *Phone Number (required)
-                      </Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        required
-                        className="bg-white border-black/20 focus-visible:ring-primary"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="company" className="text-black">
-                      Company
-                    </Label>
-                    <Input
-                      id="company"
-                      name="company"
-                      type="text"
-                      value={formData.company}
-                      onChange={handleChange}
-                      className="bg-white border-black/20 focus-visible:ring-primary"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="message" className="text-black">
-                      Tell us about the services you provide
-                    </Label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      placeholder="Describe your services, specialties, and service areas."
-                      rows={5}
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      className="bg-white border-black/20 resize-none focus-visible:ring-primary"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="text-sm text-black">
-                      Attach your company overview or capabilities deck:
-                    </p>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      className="hidden"
-                      onChange={handleFileChange}
-                      accept=".pdf,.doc,.docx"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleFileClick}
-                      className="text-sm text-black underline hover:text-primary"
-                    >
-                      {fileLabel}
-                    </button>
-                  </div>
-
-                  <Button type="submit" size="lg" disabled={loading} className="w-full sm:w-auto">
-                    {loading ? 'Sending...' : 'Apply Now'}
-                  </Button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 2: Who We Are / What Sets Us Apart */}
-      <section className="py-20 bg-primary/[0.04]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-lg border border-black/10">
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url('${WHO_WE_ARE_IMAGE}')` }}
-                aria-label="K2 Commercial Finance vendor collaboration"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-black mb-6">Why Join the Preferred Vendor Network?</h2>
-              <p className="text-neutral-700 mb-4 leading-relaxed">
-                K2 Commercial Finance connects borrowers and investors with
-                best-in-class service providers. Our Preferred Vendor program
-                gives you a direct channel to qualified clients who are actively
-                pursuing commercial real estate transactions.
-              </p>
-              <p className="text-neutral-700 mb-4 leading-relaxed">
-                Whether you provide appraisals, environmental reports, insurance,
-                legal counsel, construction management, or other essential
-                services, being a Preferred Vendor positions you as a trusted
-                partner in every deal.
-              </p>
-              <p className="text-neutral-700 mb-6 leading-relaxed">
-                We vet every vendor in our network so borrowers and lenders can
-                move faster with confidence—and your pipeline stays full with
-                high-quality referrals.
-              </p>
-
-              <h2 className="text-3xl font-bold text-black mb-6 mt-10">
-                What Sets Us Apart
-              </h2>
-              <ul className="space-y-4">
-                {[
-                  {
-                    title: 'Curated network',
-                    text: 'Only vetted, qualified vendors are included—ensuring credibility and trust for every referral.',
-                  },
-                  {
-                    title: 'Direct deal access',
-                    text: 'Get connected to borrowers and investors at the point of need, not through cold outreach.',
-                  },
-                  {
-                    title: 'Ongoing visibility',
-                    text: 'Your services are featured within the K2 ecosystem, keeping you top-of-mind for every transaction.',
-                  },
-                ].map((item, i) => (
-                  <li key={i}>
-                    <span className="font-semibold text-black">{item.title}:</span>{' '}
-                    <span className="text-neutral-700">{item.text}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button size="lg" className="mt-8" asChild>
-                <Link href="/contact">Request an Intro Meeting</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 3: FAQs */}
-      <section className="py-20 bg-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/20">
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url('${FAQ_IMAGE}')` }}
-                aria-label="Vendor partnership consultation"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-primary mb-8">FAQs</h2>
-              <Accordion type="single" collapsible className="w-full text-white">
-                {[
-                  {
-                    q: 'What types of vendors can join the Preferred Vendor network?',
-                    a: 'We welcome appraisers, environmental consultants, insurance providers, attorneys, title companies, construction managers, property inspectors, and other professionals that serve commercial real estate transactions.',
-                  },
-                  {
-                    q: 'Is there a cost to become a Preferred Vendor?',
-                    a: 'Our vendor program is structured to align interests. Contact us to learn about the current partnership terms and any associated fees.',
-                  },
-                  {
-                    q: 'How are vendors matched with clients?',
-                    a: 'We match vendors based on service category, geography, deal type, and track record. Our goal is to connect you with clients where your expertise is the best fit.',
-                  },
-                  {
-                    q: 'What is the vetting process?',
-                    a: 'We review your credentials, client references, service history, and licensing to ensure quality and reliability for our borrower and lender network.',
-                  },
-                  {
-                    q: 'How do I get started?',
-                    a: 'Fill out the application form on this page with your contact details and a description of your services. Our team will review and follow up within 48 hours.',
-                  },
-                ].map((faq, i) => (
-                  <AccordionItem key={i} value={`faq-${i}`} className="border-white/20">
-                    <AccordionTrigger className="text-left text-white hover:text-primary py-4">
-                      {faq.q}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-white/75">
-                      {faq.a}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 4: Vendor Network Stats + Our Expertise */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-black mb-4 text-center">
-            Preferred Vendor Network
-          </h2>
-          <p className="text-center text-neutral-600 mb-12 max-w-3xl mx-auto">
-            Our vendor network powers the full lifecycle of commercial real
-            estate deals—from due diligence to closing and beyond.
-          </p>
-
-          <div className="hidden md:grid md:grid-cols-3 gap-6 mb-16">
-            {VENDOR_COLUMNS.map((column, colIndex) => (
-              <div
-                key={colIndex}
-                className="hex-vertical-track h-[560px] rounded-2xl border border-primary/20 bg-primary/[0.04] p-4"
-              >
-                <div className={`${colIndex === 1 ? 'hex-flow-down' : 'hex-flow-up'} space-y-6`}>
-                  {[...column, ...column].map((stat, i) => (
-                    <div key={`${stat.label}-${i}`} className="hex-card mx-auto">
-                      <div className="hex-card-inner">
-                        <div className="text-xl md:text-2xl font-bold text-black leading-none">
-                          {stat.value}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                          <Label htmlFor="firstName">First Name *</Label>
+                          <Input
+                            id="firstName"
+                            name="firstName"
+                            value={formData.firstName}
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
-                        <div className="mt-2 text-[11px] font-semibold tracking-wide text-neutral-700">
-                          {stat.label}
+                        <div className="space-y-1.5">
+                          <Label htmlFor="lastName">Last Name *</Label>
+                          <Input
+                            id="lastName"
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:hidden mb-16">
-            {VENDOR_STATS.map((stat) => (
-              <div key={stat.label} className="hex-card mx-auto">
-                <div className="hex-card-inner">
-                  <div className="text-xl font-bold text-black leading-none">
-                    {stat.value}
-                  </div>
-                  <div className="mt-2 text-[11px] font-semibold tracking-wide text-neutral-700">
-                    {stat.label}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="email">Email *</Label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
 
-          <h2 className="text-3xl font-bold text-black mb-10 text-center">
-            Our Expertise
+                      <div className="space-y-1.5">
+                        <Label htmlFor="phone">Phone</Label>
+                        <Input
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label htmlFor="company">Company *</Label>
+                        <Input
+                          id="company"
+                          name="company"
+                          value={formData.company}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label htmlFor="serviceType">Service Type *</Label>
+                        <select
+                          id="serviceType"
+                          name="serviceType"
+                          value={formData.serviceType}
+                          onChange={handleChange}
+                          required
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        >
+                          {SERVICE_TYPES.map((st) => (
+                            <option key={st.value} value={st.value}>
+                              {st.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label htmlFor="serviceAreas">
+                          Service Areas (states / regions)
+                        </Label>
+                        <Input
+                          id="serviceAreas"
+                          name="serviceAreas"
+                          placeholder="e.g. NY, NJ, CT or Nationwide"
+                          value={formData.serviceAreas}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label htmlFor="message">Message</Label>
+                        <Textarea
+                          id="message"
+                          name="message"
+                          rows={3}
+                          placeholder="Tell us about your services, specialties, and experience..."
+                          value={formData.message}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <PuzzleCaptcha
+                        onVerified={() => setCaptchaPassed(true)}
+                      />
+
+                      <Button
+                        type="submit"
+                        className="w-full"
+                        size="lg"
+                        disabled={loading || !captchaPassed}
+                      >
+                        {loading ? (
+                          'Submitting...'
+                        ) : (
+                          <>
+                            Submit Inquiry
+                            <Send className="ml-2 h-4 w-4" />
+                          </>
+                        )}
+                      </Button>
+                    </form>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQs ──────────────────────────────────────────────────────── */}
+      <section className="py-20 bg-black">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-primary mb-8 text-center">
+            Frequently Asked Questions
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-xl p-8 shadow-sm border border-black/10">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Wrench className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-bold text-black mb-3">
-                Full-Service Vendor Coverage
-              </h3>
-              <p className="text-neutral-700 text-sm leading-relaxed">
-                From appraisals and environmental assessments to insurance, legal,
-                and construction management—we connect borrowers with the right
-                professionals at every stage.
-              </p>
-            </div>
-            <div className="bg-white rounded-xl p-8 shadow-sm border border-black/10">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <ShieldCheck className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-bold text-black mb-3">
-                Vetted Quality & Reliability
-              </h3>
-              <p className="text-neutral-700 text-sm leading-relaxed">
-                Every Preferred Vendor is reviewed for credentials, track record,
-                and responsiveness—so borrowers and lenders can move forward with
-                confidence.
-              </p>
-            </div>
-            <div className="bg-white rounded-xl p-8 shadow-sm border border-black/10">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Handshake className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-bold text-black mb-3">
-                Built-In Deal Flow & Partnerships
-              </h3>
-              <p className="text-neutral-700 text-sm leading-relaxed">
-                Preferred Vendors gain ongoing exposure to active deals and
-                client referrals through the K2 ecosystem—growing your business
-                alongside ours.
-              </p>
-            </div>
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full text-white max-w-3xl mx-auto"
+          >
+            {[
+              {
+                q: 'What types of vendors can join the Preferred Vendor network?',
+                a: 'We welcome appraisers, environmental consultants, insurance providers, attorneys, title companies, construction managers, property inspectors, property managers, accountants, and other professionals that serve commercial real estate transactions.',
+              },
+              {
+                q: 'What commitment is required?',
+                a: 'Preferred Vendors agree to provide a dedicated point of contact, deliver priority turnaround times, maintain transparent pricing, and treat K2 certified borrowers as a high priority in their service queue.',
+              },
+              {
+                q: 'How are vendors matched with clients?',
+                a: 'We match vendors based on service category, geography, deal type, and track record. Our goal is to connect you with certified borrowers where your expertise is the best fit.',
+              },
+              {
+                q: 'What happens after I submit my inquiry?',
+                a: 'A K2 representative will review your submission and send you a link to the full Preferred Vendor program description with complete details on referral structure, listing placement, and partnership terms.',
+              },
+              {
+                q: 'Is there a cost to become a Preferred Vendor?',
+                a: 'Program terms, including any associated fees, are shared after your inquiry is approved. Contact us to learn about the current partnership terms.',
+              },
+            ].map((faq, i) => (
+              <AccordionItem
+                key={i}
+                value={`faq-${i}`}
+                className="border-white/20"
+              >
+                <AccordionTrigger className="text-left text-white hover:text-primary py-4">
+                  {faq.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-white/75">
+                  {faq.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
+      {/* ── CTA ───────────────────────────────────────────────────────── */}
+      <section className="py-16 bg-slate-900 text-white">
+        <div className="max-w-3xl mx-auto px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold mb-4">
+            Not a Vendor? Explore Other Programs
+          </h2>
+          <p className="text-slate-300 mb-8">
+            Whether you&apos;re a borrower looking to get funded or a lender
+            looking for qualified deal flow, K2 has a program for you.
+          </p>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Button size="lg" asChild>
+              <Link href="/membership/certified-borrower">
+                Certified Borrower
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="border-white text-white hover:bg-white hover:text-slate-900"
+            >
+              <Link href="/membership/preferred-lender">
+                Lender Network
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

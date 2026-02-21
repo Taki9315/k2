@@ -376,7 +376,7 @@ export default function VendorNetworkPage() {
               asChild
               className="border-white text-white hover:bg-white hover:text-slate-900"
             >
-              <Link href="/membership/lender-network">Lender Network</Link>
+              <Link href="/membership/preferred-lender">Lender Network</Link>
             </Button>
           </div>
         </div>

@@ -67,9 +67,15 @@ export function Navigation() {
                   </DropdownMenuItem>
                   {hasMembership && (
                     <DropdownMenuItem asChild>
-                      <Link href="/member-area">Member Area</Link>
+                      <Link href="/membership">Membership</Link>
                     </DropdownMenuItem>
                   )}
+                  <DropdownMenuItem asChild>
+                    <Link href="/membership/preferred-lender">Lender Network</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/membership/preferred-vendor">Vendor Network</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/profile">Profile</Link>
                   </DropdownMenuItem>
@@ -160,13 +166,27 @@ export function Navigation() {
                 </Link>
                 {hasMembership && (
                   <Link
-                    href="/member-area"
+                    href="/membership"
                     className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Member Area
+                    Membership
                   </Link>
                 )}
+                <Link
+                  href="/membership/preferred-lender"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Lender Network
+                </Link>
+                <Link
+                  href="/membership/preferred-vendor"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Vendor Network
+                </Link>
                 <Link
                   href="/profile"
                   className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"

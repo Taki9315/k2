@@ -94,13 +94,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
     if (error) throw error;
 
+    console.log('Sign-up successful, user:', data.user);
+
     if (data.user) {
-      await supabase.from('profiles').insert({
-        id: data.user.id,
-        email,
-        full_name: fullName,
-      });
+      try {
+        await supabase.from('profiles').insert({
+          id: data.user.id,
+          email,
+          full_name: fullName,
+          role: data.user.user_metadata.role,
+        });
+      } catch (error) {
+        console.error('Error inserting profile:', error);
+      }
     }
+
+
   };
 
   const signOut = async () => {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { supabase } from '@/lib/supabase';
 
 interface FormData {
   companyName: string;
@@ -19,6 +20,8 @@ const initialFormData: FormData = {
 export function CTA() {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -27,11 +30,46 @@ export function CTA() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Preferred Lender Application:', formData);
-    setSubmitted(true);
-    setFormData(initialFormData);
+    setSubmitting(true);
+    setError('');
+
+    try {
+      const nameParts = formData.contactName.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      const { error: dbError } = await supabase.from('lender_inquiries').insert({
+        first_name: firstName,
+        last_name: lastName,
+        email: formData.email,
+        company: formData.companyName,
+        message: formData.message,
+        lender_type: 'other',
+      });
+
+      if (dbError) throw dbError;
+
+      // Fire-and-forget admin notification
+      fetch('/api/inquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'lender',
+          name: formData.contactName,
+          company: formData.companyName,
+          email: formData.email,
+        }),
+      }).catch(() => {});
+
+      setSubmitted(true);
+      setFormData(initialFormData);
+    } catch {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -43,8 +81,9 @@ export function CTA() {
               Join the K2 Preferred Lender Network
             </h2>
             <p className="mx-auto mt-3 max-w-lg text-slate-300">
-              Tell us about your lending programs and we will be in touch to
-              discuss how K2 can deliver qualified borrowers to your team.
+              Preferred Lenders commit to white-glove service for our certified
+              borrowers. Submit your inquiry and we&apos;ll send you the full
+              program description.
             </p>
           </div>
 
@@ -144,10 +183,15 @@ export function CTA() {
 
               <button
                 type="submit"
-                className="w-full rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:bg-blue-500 hover:shadow-blue-500/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 sm:w-auto"
+                disabled={submitting}
+                className="w-full rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:bg-blue-500 hover:shadow-blue-500/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 disabled:opacity-50 sm:w-auto"
               >
-                Submit Application
+                {submitting ? 'Submitting…' : 'Submit Application'}
               </button>
+
+              {error && (
+                <p className="mt-2 text-sm text-red-400">{error}</p>
+              )}
             </form>
           )}
         </div>

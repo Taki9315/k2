@@ -42,11 +42,11 @@ export function Benefits() {
             Why Join
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Built for lenders who value quality over quantity
+            How Our Preferred Lenders Serve Certified Borrowers
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-slate-600">
-            The K2 network is designed to deliver borrowers who respect your time
-            and meet your criteria.
+            K2 Preferred Lenders commit to making our borrowers a high priority —
+            with dedicated representatives, fast response times, and transparent terms.
           </p>
         </div>
 

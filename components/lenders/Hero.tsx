@@ -22,17 +22,18 @@ export function Hero() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-300 sm:text-xl">
-            Access a steady pipeline of pre-qualified small commercial and SBA borrowers
-            who are educated, prepared, and ready to close. Join a network built on
-            transparency, preparation, and mutual success.
+            Our preferred lenders commit to providing white-glove service — including
+            a dedicated account representative — to every K2 Certified Borrower.
+            They treat our borrowers as a high priority, respond within 48 hours,
+            and deliver transparent terms every time.
           </p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
-              href="#apply"
+              href="/membership/preferred-lender"
               className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:bg-blue-500 hover:shadow-blue-500/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
             >
-              Apply Now
+              Lender Inquiry Form
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
