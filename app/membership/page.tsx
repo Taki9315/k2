@@ -82,6 +82,17 @@ const membershipCards = [
 function MembershipHub() {
   return (
     <div className="flex flex-col">
+      {/* Sample page banner */}
+      <div className="bg-amber-50 border-b border-amber-200 py-3 px-4 text-center">
+        <span className="text-sm text-amber-800 font-medium mr-2">📐 A sample redesign is available for review:</span>
+        <Link
+          href="/membership-sample"
+          className="inline-flex items-center gap-1 rounded-md bg-amber-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-amber-700 transition"
+        >
+          View Membership Sample Page
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      </div>
       <section className="bg-gradient-to-br from-slate-50 to-slate-100 py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
