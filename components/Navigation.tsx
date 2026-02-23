@@ -41,7 +41,7 @@ export function Navigation() {
     { href: '/workbook', label: 'Workbook' },
     { href: '/membership', label: 'Membership' },
     ...(user ? [{ href: '/prepcoach', label: 'PrepCoach' }] : []),
-    { href: '/Resource', label: 'Resource' },
+    { href: '/Resource', label: 'Resources' },
   ];
 
   const contentSubLinks = [
