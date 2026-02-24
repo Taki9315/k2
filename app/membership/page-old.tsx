@@ -140,10 +140,10 @@ function MembershipHub() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Sparkles className="h-8 w-8 text-primary mx-auto mb-4" />
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Built for Workbook Buyers
+            Built for Success Kit Buyers
           </h2>
           <p className="text-lg text-gray-600 mb-8">
-            When you purchase the K2 Borrower Preparation Workbook, you unlock
+            When you purchase the K2 Financing Success Kit, you unlock
             access to our Certified Borrower dashboard — your command center
             for document management, lender matching, meeting scheduling, and
             direct support from the K2 team.
@@ -151,7 +151,7 @@ function MembershipHub() {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button size="lg" asChild>
               <Link href="/workbook">
-                Get the Workbook
+                Get the Success Kit
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -178,14 +178,14 @@ function UpgradePrompt() {
           </h1>
           <p className="text-lg text-gray-600 mb-8">
             The membership dashboard is available exclusively to Certified
-            Borrowers who have purchased the K2 Borrower Preparation Workbook.
-            Get your workbook today to unlock your dashboard, document vault,
+            Borrowers who have purchased the K2 Financing Success Kit.
+            Get your Success Kit today to unlock your dashboard, document vault,
             meeting scheduling, and direct support.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button size="lg" asChild>
               <Link href="/workbook">
-                Purchase Workbook
+                Purchase Success Kit
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -385,7 +385,7 @@ function CertifiedDashboard({ userName }: { userName: string }) {
           <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Links</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: 'Workbook', href: '/workbook', icon: BookOpen },
+              { label: 'Success Kit', href: '/workbook', icon: BookOpen },
               { label: 'Resources', href: '/Resource', icon: FileText },
               { label: 'Calculator', href: '/calculator', icon: ExternalLink },
               { label: 'Content Library', href: '/content', icon: Folder },
@@ -575,7 +575,7 @@ function CertifiedDashboard({ userName }: { userName: string }) {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600 mb-4">
-                Workbook purchasers can schedule a project review meeting. Please
+                Success Kit purchasers can schedule a project review meeting. Please
                 upload or forward your{' '}
                 <strong>Project Executive Summary</strong> prior to the meeting
                 so we can prepare.

@@ -177,7 +177,7 @@ export default function LenderNetworkPage() {
               <p className="text-gray-600 leading-relaxed">
                 K2 Commercial Finance educates and prepares borrowers through a
                 structured process before they ever reach your desk. Each borrower
-                completes our Borrower Preparation Workbook, goes through a full
+                completes our Financing Success Kit, goes through a full
                 intake, and receives a Transaction Executive Summary — so when you
                 see a deal, it&apos;s already organized and underwriteable.
               </p>

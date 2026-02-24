@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -50,7 +50,7 @@ const HIGHLIGHTS = [
   {
     icon: Users,
     title: 'Pre-Qualified Certified Borrowers',
-    text: 'Every borrower in our pipeline has completed the K2 Borrower Preparation Workbook — educated, documented, and ready to transact with a lender who treats them as a priority.',
+    text: 'Every borrower in our pipeline has completed the K2 Financing Success Kit — educated, documented, and ready to transact with a lender who treats them as a priority.',
   },
   {
     icon: TrendingUp,
@@ -88,6 +88,9 @@ export default function PreferredLenderPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -233,9 +236,9 @@ export default function PreferredLenderPage() {
               </h2>
               <p className="text-gray-600 leading-relaxed">
                 K2 Commercial Finance educates and prepares borrowers through a
-                structured workbook process before they ever reach your desk.
-                Each certified borrower completes our Borrower Preparation
-                Workbook, goes through a full intake, and receives a Transaction
+                structured Success Kit process before they ever reach your desk.
+                Each certified borrower completes our Financing Success
+                Kit, goes through a full intake, and receives a Transaction
                 Executive Summary — so when you see a deal, it&apos;s already
                 organized and underwriteable.
               </p>
@@ -261,21 +264,27 @@ export default function PreferredLenderPage() {
                 details.
               </p>
 
-              <div className="rounded-xl border-2 border-primary/20 bg-white p-6 mt-4">
-                <div className="flex items-center gap-4 mb-3">
+              <div className="rounded-xl border border-slate-200 bg-gradient-to-r from-primary/5 via-white to-white p-5 mt-4 flex items-start gap-5 shadow-sm">
+                <div className="shrink-0 rounded-lg bg-white p-2.5 shadow-sm border border-slate-100">
                   <Image
-                    src="/assets/Network_Logo.png"
-                    alt="K2 Preferred Network"
-                    width={160}
-                    height={80}
+                    src="/assets/Lender_Logo.png"
+                    alt="K2 Preferred Lender Network"
+                    width={72}
+                    height={72}
                     className="object-contain"
                   />
                 </div>
-                <p className="text-sm text-gray-600">
-                  Approved lenders receive full access to the Preferred Lender
-                  portal including deal flow details, referral fee structure,
-                  and direct communication with the K2 team.
-                </p>
+                <div>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <BadgeCheck className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-bold text-gray-900">K2 Preferred Lender</span>
+                  </div>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    Approved lenders receive full access to the Preferred Lender
+                    portal including deal flow details, referral fee structure,
+                    and direct communication with the K2 team.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -291,7 +300,13 @@ export default function PreferredLenderPage() {
                     with full program details.
                   </p>
 
-                  {success ? (
+                  {!mounted ? (
+                    <div className="space-y-4 py-4">
+                      {[...Array(7)].map((_, i) => (
+                        <div key={i} className="h-10 rounded-md bg-slate-100 animate-pulse" />
+                      ))}
+                    </div>
+                  ) : success ? (
                     <div className="rounded-lg border border-green-200 bg-green-50 p-6 text-center">
                       <CheckCircle2 className="mx-auto h-10 w-10 text-green-600 mb-3" />
                       <h4 className="text-lg font-semibold text-green-800 mb-1">
@@ -455,7 +470,7 @@ export default function PreferredLenderPage() {
             {[
               {
                 q: 'What kind of borrowers will I receive?',
-                a: 'Every borrower has purchased and completed the K2 Borrower Preparation Workbook. They arrive documented, educated, and with a Transaction Executive Summary — so you can evaluate deals faster with fewer back-and-forth requests.',
+                a: 'Every borrower has purchased and completed the K2 Financing Success Kit. They arrive documented, educated, and with a Transaction Executive Summary — so you can evaluate deals faster with fewer back-and-forth requests.',
               },
               {
                 q: 'Is this program for direct lenders only?',

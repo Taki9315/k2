@@ -62,7 +62,10 @@ export default function TermsPage() {
             Refund Policy
           </h2>
           <p className="text-gray-700 mb-4">
-            We offer a 30-day satisfaction guarantee on our workbook. Membership
+            We offer a 30-day Prepared Borrower Guarantee on our Success Kit.
+            If you don&apos;t feel more confident, more organized, and better
+            equipped to approach lenders after using the Kit, return it within
+            30 days for a full refund. Membership
             subscriptions can be cancelled at any time, with no refunds for
             partial months.
           </p>

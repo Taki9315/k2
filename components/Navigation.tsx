@@ -38,7 +38,7 @@ export function Navigation() {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
-    { href: '/workbook', label: 'Workbook' },
+    { href: '/workbook', label: 'Success Kit' },
     { href: '/membership', label: 'Membership' },
     ...(user ? [{ href: '/prepcoach', label: 'PrepCoach' }] : []),
     { href: '/Resource', label: 'Resources' },

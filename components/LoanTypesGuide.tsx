@@ -222,7 +222,7 @@ export function LoanTypesGuide() {
       <div className="text-center pt-4">
         <p className="text-sm text-gray-500 flex items-center justify-center gap-2">
           <BookOpen className="h-4 w-4" />
-          Detailed program breakdowns available in the Borrower Preparation Workbook
+          Detailed program breakdowns available in the Financing Success Kit
         </p>
       </div>
     </div>

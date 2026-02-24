@@ -15,8 +15,6 @@ import {
   Brain,
   FileSearch,
   BarChart3,
-  Clock,
-  MessageCircle,
   Headphones,
   BookOpen,
   FileText,
@@ -107,7 +105,7 @@ const FEATURES = [
 ];
 
 const STEPS = [
-  { num: '1', text: 'Pay $150 once → instant access' },
+  { num: '1', text: 'Pay $249 once → instant access' },
   { num: '2', text: 'Build & polish deal with Summit AI & checklists' },
   { num: '3', text: 'Submit to Preferred Lenders (or K2 shops broader)' },
   { num: '4', text: 'Close → collect $1,500 credit' },
@@ -153,11 +151,11 @@ export default function CertifiedBorrowerSample() {
           </h1>
 
           <p className="text-xl md:text-2xl text-slate-600 mb-6">
-            One-Time $150 — Professional Financing Tools
+            One-Time $249 — Professional Financing Tools
           </p>
 
           <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-4 leading-relaxed">
-            Pay $150 once. Get lifetime access to K2&apos;s proprietary
+            Pay $249 once. Get lifetime access to K2&apos;s proprietary
             platform.
           </p>
 
@@ -189,7 +187,7 @@ export default function CertifiedBorrowerSample() {
             href="/membership/certified-borrower"
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30"
           >
-            Join Now — $150 (One-Time)
+            Join Now — $249 (One-Time)
             <ArrowRight className="h-5 w-5" />
           </Link>
         </div>
@@ -209,13 +207,38 @@ export default function CertifiedBorrowerSample() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
             {WHO_BULLETS.map((bullet) => (
               <div
                 key={bullet}
                 className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-5"
               >
                 <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                <p className="text-gray-700 font-medium">{bullet}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mb-8">
+            <p className="text-sm font-semibold uppercase tracking-wider text-red-500 mb-3">
+              Not the Right Fit?
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              Who This Is NOT For
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {[
+              'Borrowers who want the bank to "figure it out for them"',
+              'People who aren\'t ready to gather documents',
+              'Borrowers who want the cheapest rate without preparation',
+            ].map((bullet) => (
+              <div
+                key={bullet}
+                className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-5"
+              >
+                <span className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5 font-bold text-lg leading-5">✕</span>
                 <p className="text-gray-700 font-medium">{bullet}</p>
               </div>
             ))}
@@ -456,7 +479,7 @@ export default function CertifiedBorrowerSample() {
             Ready?
           </h2>
           <p className="text-lg text-slate-300 mb-10 max-w-xl mx-auto">
-            One-time $150 unlocks the tools and network that win better deals.
+            One-time $249 unlocks the tools and network that win better deals.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
@@ -464,7 +487,7 @@ export default function CertifiedBorrowerSample() {
               href="/membership/certified-borrower"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-primary/30 transition-all hover:bg-primary/90 hover:shadow-xl"
             >
-              Become Certified — $150 (One-Time)
+              Become Certified — $249 (One-Time)
               <ArrowRight className="h-5 w-5" />
             </Link>
           </div>

@@ -38,8 +38,8 @@ export function Footer() {
               K2C Finance
             </h3>
             <p className="text-primary/90 text-sm mb-4">
-              Empowering borrowers with the knowledge and tools to secure
-              financing and build successful businesses.
+              Empowering borrowers with the knowledge, tools and 
+              relationships to secure financing and build successful businesses.
             </p>
             <div className="flex space-x-4">
               <a
@@ -98,7 +98,7 @@ export function Footer() {
                   href="/workbook"
                   className="text-sm text-primary/90 hover:text-primary transition-colors"
                 >
-                  Borrower Workbook
+                  Financing Success Kit
                 </Link>
               </li>
               <li>

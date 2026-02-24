@@ -25,7 +25,7 @@ import { PathsAccordion } from '@/components/PathsAccordion';
 const TESTIMONIALS = [
   {
     quote:
-      'The workbook helped me organize everything before I even talked to a lender. I got approved on the first try with better terms than I expected.',
+      'The Success Kit helped me organize everything before I even talked to a lender. I got approved on the first try with better terms than I expected.',
     author: 'Michael R.',
     role: 'First-Time CRE Borrower',
     stars: 5,
@@ -112,7 +112,7 @@ export default function Home() {
             <div className="relative flex justify-center lg:justify-end">
               <Image
                 src="/book_cover.png"
-                alt="K2 Borrower Preparation Workbook"
+                alt="K2 Financing Success Kit"
                 width={480}
                 height={620}
                 className="rounded-xl shadow-2xl object-contain max-h-[520px] w-auto"
@@ -275,7 +275,7 @@ export default function Home() {
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Understanding available programs is the first step to choosing the
               right one. Expand each to see what lenders look for, common
-              pitfalls, and a prep tip linked to the workbook.
+              pitfalls, and a prep tip linked to the Success Kit.
             </p>
           </div>
 
@@ -284,7 +284,7 @@ export default function Home() {
       </section> */}
 
       {/* ============================================================ */}
-      {/*  THE BORROWER PREPARATION WORKBOOK                            */}
+      {/*  THE FINANCING SUCCESS KIT                                  */}
       {/* ============================================================ */}
       <section className="py-24 bg-white relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -481,7 +481,7 @@ export default function Home() {
                 your corner.
               </p>
               <p className="text-gray-600 mb-8 leading-relaxed">
-                For a one-time $150 fee, you get lifetime access to our full
+                For a one-time $249 fee, you get lifetime access to our full
                 transaction management system, our Preferred Lender network,
                 monthly live Q&A sessions, document review and feedback, and
                 more. And when you close with a K2 Preferred Lender, you

@@ -13,7 +13,7 @@ const steps: Step[] = [
     icon: <BookOpen className="h-5 w-5" />,
     title: 'Borrowers Prepare Packages',
     description:
-      'Borrowers work through the K2 education platform — building credit narratives, organizing financials, and completing structured workbooks.',
+      'Borrowers work through the K2 education platform — building credit narratives, organizing financials, and completing structured preparation guides.',
   },
   {
     number: '02',

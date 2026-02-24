@@ -375,7 +375,7 @@ export default function DashboardPage() {
                   </Button>
                   {!hasMembership && (
                     <Button variant="outline" className="w-full" asChild>
-                      <Link href="/workbook">Get Workbook</Link>
+                      <Link href="/workbook">Get Success Kit</Link>
                     </Button>
                   )}
                   <AssistantDialog

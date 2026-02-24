@@ -230,7 +230,7 @@ export default function ContentHubPage() {
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Understanding available programs is the first step to choosing the
               right one. Expand each to see what lenders look for, common
-              pitfalls, and a prep tip linked to the workbook.
+              pitfalls, and a prep tip linked to the Success Kit.
             </p>
           </div>
 

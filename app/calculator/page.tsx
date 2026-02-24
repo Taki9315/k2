@@ -335,7 +335,7 @@ export default function MortgageCalculatorPage() {
                   For a comprehensive analysis of your borrowing capacity and the best loan
                   programs for your situation, check out the{' '}
                   <Link href="/workbook" className="font-semibold underline hover:text-blue-600">
-                    Borrower Preparation Workbook
+                    Financing Success Kit
                   </Link>.
                 </p>
               </div>

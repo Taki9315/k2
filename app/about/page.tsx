@@ -15,11 +15,11 @@ import {
 
 const ABOUT_MISSION_IMAGE =
   'https://images.unsplash.com/photo-1758518727734-98f0a55983b6?auto=format&fit=crop&w=1600&q=80';
-const ABOUT_EXPERTISE_IMAGE =
+const ABOUT_INTEGRITY_IMAGE =
   'https://images.unsplash.com/photo-1758518729711-1cbacd55efdb?auto=format&fit=crop&w=1200&q=80';
-const ABOUT_HONESTY_IMAGE =
+const ABOUT_COMMUNICATION_IMAGE =
   'https://images.pexels.com/photos/8729952/pexels-photo-8729952.jpeg?auto=compress&cs=tinysrgb&w=1200';
-const ABOUT_ACCESS_IMAGE =
+const ABOUT_SPEED_IMAGE =
   'https://images.pexels.com/photos/7947656/pexels-photo-7947656.jpeg?auto=compress&cs=tinysrgb&w=1200';
 
 export default function AboutPage() {
@@ -235,18 +235,18 @@ export default function AboutPage() {
               <CardContent className="p-8">
                 <div
                   className="mb-5 aspect-video rounded-lg bg-cover bg-center"
-                  style={{ backgroundImage: `url('${ABOUT_EXPERTISE_IMAGE}')` }}
-                  aria-label="Experts collaborating around financial reports"
+                  style={{ backgroundImage: `url('${ABOUT_INTEGRITY_IMAGE}')` }}
+                  aria-label="Transparent business partnership"
                 />
                 <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
                   <Award className="h-6 w-6 text-slate-700" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Expertise
+                  Integrity
                 </h3>
                 <p className="text-gray-600">
-                  All content is based on real lending experience and industry
-                  best practices, not theory.
+                  Transparent fees and honest, expert guidance. We earn only
+                  when you succeed — no hidden costs, no surprises.
                 </p>
               </CardContent>
             </Card>
@@ -255,18 +255,18 @@ export default function AboutPage() {
               <CardContent className="p-8">
                 <div
                   className="mb-5 aspect-video rounded-lg bg-cover bg-center"
-                  style={{ backgroundImage: `url('${ABOUT_HONESTY_IMAGE}')` }}
-                  aria-label="Business document review"
+                  style={{ backgroundImage: `url('${ABOUT_COMMUNICATION_IMAGE}')` }}
+                  aria-label="Clear business communication"
                 />
                 <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
                   <CheckCircle2 className="h-6 w-6 text-slate-700" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Honesty
+                  Communication
                 </h3>
                 <p className="text-gray-600">
-                  We tell you what you need to know, not what you want to hear.
-                  No false promises.
+                  Clear, up-front expectations and regular updates on
+                  transaction status. You&apos;ll always know where your deal stands.
                 </p>
               </CardContent>
             </Card>
@@ -275,18 +275,18 @@ export default function AboutPage() {
               <CardContent className="p-8">
                 <div
                   className="mb-5 aspect-video rounded-lg bg-cover bg-center"
-                  style={{ backgroundImage: `url('${ABOUT_ACCESS_IMAGE}')` }}
-                  aria-label="Accessible digital learning workspace"
+                  style={{ backgroundImage: `url('${ABOUT_SPEED_IMAGE}')` }}
+                  aria-label="Efficient execution in business"
                 />
                 <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
                   <Users className="h-6 w-6 text-slate-700" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Accessibility
+                  Speed
                 </h3>
                 <p className="text-gray-600">
-                  Complex concepts explained clearly. No jargon, just
-                  straightforward guidance.
+                  Efficient execution at every step of the process. Plan your
+                  work and work your plan!
                 </p>
               </CardContent>
             </Card>
@@ -296,7 +296,7 @@ export default function AboutPage() {
 
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-slate-50 rounded-xl p-8 md:p-12 border-2 border-slate-200">
+          <div className="bg-slate-50 rounded-xl p-8 md:p-12 border-2 border-slate-200 mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
               Who This Is For
             </h2>
@@ -310,6 +310,24 @@ export default function AboutPage() {
               ].map((item) => (
                 <li key={item} className="flex items-start">
                   <CheckCircle2 className="h-6 w-6 text-green-600 mr-3 flex-shrink-0 mt-0.5" />
+                  <span className="text-lg text-gray-700">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="bg-red-50 rounded-xl p-8 md:p-12 border-2 border-red-200">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+              Who This Is NOT For
+            </h2>
+            <ul className="space-y-4">
+              {[
+                'Borrowers who want the bank to "figure it out for them"',
+                'People who aren\'t ready to gather documents',
+                'Borrowers who want the cheapest rate without preparation',
+              ].map((item) => (
+                <li key={item} className="flex items-start">
+                  <span className="h-6 w-6 text-red-500 mr-3 flex-shrink-0 mt-0.5 font-bold text-xl leading-6">✕</span>
                   <span className="text-lg text-gray-700">{item}</span>
                 </li>
               ))}
@@ -343,7 +361,7 @@ export default function AboutPage() {
               asChild
               className="text-lg px-8 py-6 border-white hover:bg-primary hover:text-primary-foreground"
             >
-              <Link href="/workbook">Get the Workbook</Link>
+              <Link href="/workbook">Get the Success Kit</Link>
             </Button>
           </div>
         </div>

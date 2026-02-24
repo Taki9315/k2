@@ -62,7 +62,7 @@ const PATHS: PathItem[] = [
     title: ' Expert Guidance + $1,500 Credit - K2 Certified Borrower',
     idealFor: 'faster results, complex deals, or any asset class',
     bullets: [
-      '$150 one-time lifetime access',
+      '$249 one-time lifetime access',
       'Automated transaction system + direct Preferred Lender access',
       'Monthly Q&A, advanced videos, document review, private community',
       '$1,500 closing credit from any Preferred Lender you close with',
@@ -72,9 +72,9 @@ const PATHS: PathItem[] = [
       text: 'K2 earns a flat lender-paid success fee only on closed loans (2% under $500k, 1.5% $500k–$1M, 1% above $1M) – fully disclosed, no surprises, your success first.',
     },
     commitment:
-      '$150 one-time - with real payback potential through your closing credit.',
+      '$249 one-time - with real payback potential through your closing credit.',
     cta: {
-      label: 'Become Certified - $150 + Credit',
+      label: 'Become Certified - $249 + Credit',
       href: '/membership/certified-borrower',
     },
   },

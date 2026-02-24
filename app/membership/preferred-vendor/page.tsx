@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -88,6 +88,9 @@ export default function PreferredVendorPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -259,21 +262,27 @@ export default function PreferredVendorPage() {
                 on referral structure, listing placement, and partnership terms.
               </p>
 
-              <div className="rounded-xl border-2 border-primary/20 bg-white p-6 mt-4">
-                <div className="flex items-center gap-4 mb-3">
+              <div className="rounded-xl border border-slate-200 bg-gradient-to-r from-primary/5 via-white to-white p-5 mt-4 flex items-start gap-5 shadow-sm">
+                <div className="shrink-0 rounded-lg bg-white p-2.5 shadow-sm border border-slate-100">
                   <Image
-                    src="/assets/Network_Logo.png"
-                    alt="K2 Preferred Network"
-                    width={160}
-                    height={80}
+                    src="/assets/Vendor_Logo.png"
+                    alt="K2 Preferred Vendor Network"
+                    width={72}
+                    height={72}
                     className="object-contain"
                   />
                 </div>
-                <p className="text-sm text-gray-600">
-                  Approved vendors receive full access to the Preferred Vendor
-                  portal including referral details, listing placement, and
-                  direct communication with the K2 team.
-                </p>
+                <div>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <ShieldCheck className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-bold text-gray-900">K2 Preferred Vendor</span>
+                  </div>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    Approved vendors receive full access to the Preferred Vendor
+                    portal including referral details, listing placement, and
+                    direct communication with the K2 team.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -289,7 +298,13 @@ export default function PreferredVendorPage() {
                     with full program details.
                   </p>
 
-                  {success ? (
+                  {!mounted ? (
+                    <div className="space-y-4 py-4">
+                      {[...Array(7)].map((_, i) => (
+                        <div key={i} className="h-10 rounded-md bg-slate-100 animate-pulse" />
+                      ))}
+                    </div>
+                  ) : success ? (
                     <div className="rounded-lg border border-green-200 bg-green-50 p-6 text-center">
                       <CheckCircle2 className="mx-auto h-10 w-10 text-green-600 mb-3" />
                       <h4 className="text-lg font-semibold text-green-800 mb-1">

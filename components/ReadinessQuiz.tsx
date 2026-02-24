@@ -120,7 +120,7 @@ function computeResult(answers: Record<string, number>): QuizResult {
       recommended: [
         'Financing Success Kit ($15)',
         'Lender Comparison Worksheets',
-        'K2 Certified Borrower ($150 + $1,500 credit)',
+        'K2 Certified Borrower ($249 + $1,500 credit)',
       ],
     };
   }
@@ -132,11 +132,11 @@ function computeResult(answers: Record<string, number>): QuizResult {
     headline: "You're Nearly Deal-Ready — Fine-Tune and Execute",
     advice: [
       'Your experience is your advantage — make sure your presentation matches.',
-      'Use the workbook templates to ensure zero gaps in your package.',
+      'Use the Success Kit templates to ensure zero gaps in your package.',
       'K2 Certified Borrower gives you access to expert review of your deal.',
     ],
     recommended: [
-      'K2 Certified Borrower ($150 + $1,500 credit)',
+      'K2 Certified Borrower ($249 + $1,500 credit)',
       'Deal Intake Assistant (chatbot)',
       'Monthly live Q&A sessions',
     ],

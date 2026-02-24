@@ -8,10 +8,10 @@ import {
   Shield,
 } from 'lucide-react';
 
-const WORKBOOK_HERO_IMAGE =
+const SUCCESSKIT_HERO_IMAGE =
   'https://images.pexels.com/photos/6801643/pexels-photo-6801643.jpeg?auto=compress&cs=tinysrgb&w=1400';
 
-const WORKBOOK_FEATURES = [
+const SUCCESSKIT_FEATURES = [
   {
     title: 'Preparing for Financing Success',
     description:
@@ -77,7 +77,7 @@ export default function WorkbookPage() {
                 </span>
               </div>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                The Borrower Preparation Workbook
+                The Financing Success Kit
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                 Stop guessing. Start preparing. A complete, step-by-step system
@@ -100,8 +100,8 @@ export default function WorkbookPage() {
             <div className="bg-white rounded-xl shadow-2xl p-8 border-2 border-slate-200">
               <div
                 className="aspect-[3/4] rounded-lg mb-6 bg-cover bg-center"
-                style={{ backgroundImage: `url('${WORKBOOK_HERO_IMAGE}')` }}
-                aria-label="Workbook planning materials on desk"
+                style={{ backgroundImage: `url('${SUCCESSKIT_HERO_IMAGE}')` }}
+                aria-label="Success Kit planning materials on desk"
               />
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
@@ -139,7 +139,7 @@ export default function WorkbookPage() {
           </div>
 
           <div className="space-y-6">
-            {WORKBOOK_FEATURES.map((item, index) => (
+            {SUCCESSKIT_FEATURES.map((item, index) => (
               <Card key={index} className="border-2">
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
@@ -162,6 +162,20 @@ export default function WorkbookPage() {
         </div>
       </section>
 
+      <section className="py-20 bg-slate-50">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <Shield className="h-14 w-14 text-primary mx-auto mb-6" />
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            The Prepared Borrower Guarantee
+          </h2>
+          <p className="text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
+            If you don&apos;t feel more confident, more organized, and better
+            equipped to approach lenders after using the Kit, return it within
+            30 days for a full refund.
+          </p>
+        </div>
+      </section>
+
       <section className="py-20 bg-slate-900 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Shield className="h-16 w-16 mx-auto mb-6" />
@@ -169,7 +183,7 @@ export default function WorkbookPage() {
             Ready to Get Financing-Ready?
           </h2>
           <p className="text-xl text-slate-300 mb-8">
-            Download the workbook and start preparing today
+            Download the Success Kit and start preparing today
           </p>
           <div className="flex items-baseline gap-3 justify-center mb-8">
             <span className="text-5xl font-bold">$14.95</span>

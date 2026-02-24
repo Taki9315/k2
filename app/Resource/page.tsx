@@ -35,7 +35,7 @@ const resources: Resource[] = [
     badge: 'Free Tool',
   },
   {
-    title: 'Borrower Preparation Workbook',
+    title: 'Financing Success Kit',
     description:
       'The step-by-step guide that walks you through everything lenders want to see. Stop guessing and start preparing like a pro — this is the same framework used by borrowers who close deals.',
     href: '/workbook',
@@ -236,13 +236,13 @@ export default function ResourcePage() {
             Ready to Get Started?
           </h2>
           <p className="mt-3 text-slate-300">
-            The Borrower Preparation Workbook gives you everything you need
+            The Financing Success Kit gives you everything you need
             to present yourself as a borrower banks want to work with.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button size="lg" asChild>
               <Link href="/workbook">
-                Get the Workbook
+                Get the Success Kit
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>

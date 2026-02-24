@@ -16,7 +16,8 @@ function randomTarget() {
 }
 
 export function PuzzleCaptcha({ onVerified }: PuzzleCaptchaProps) {
-  const [target] = useState(randomTarget);
+  const [target, setTarget] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const [offset, setOffset] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [verified, setVerified] = useState(false);
@@ -24,6 +25,12 @@ export function PuzzleCaptcha({ onVerified }: PuzzleCaptchaProps) {
   const startX = useRef(0);
   const startOffset = useRef(0);
   const trackRef = useRef<HTMLDivElement>(null);
+
+  // Generate random target only on the client to avoid hydration mismatch
+  useEffect(() => {
+    setTarget(randomTarget());
+    setMounted(true);
+  }, []);
 
   const clamp = (v: number) => Math.max(0, Math.min(v, TRACK_WIDTH - PIECE_SIZE));
 
@@ -80,6 +87,20 @@ export function PuzzleCaptcha({ onVerified }: PuzzleCaptchaProps) {
       <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
         <CheckCircle2 className="h-5 w-5" />
         Verified — you&apos;re human!
+      </div>
+    );
+  }
+
+  if (!mounted) {
+    return (
+      <div className="space-y-3">
+        <p className="text-xs font-medium text-slate-600">
+          Drag the puzzle piece to the matching slot to verify you&apos;re a real person.
+        </p>
+        <div
+          className="relative mx-auto overflow-hidden rounded-lg border-2 border-slate-200 bg-gradient-to-r from-slate-100 via-primary/5 to-slate-100"
+          style={{ width: TRACK_WIDTH, height: 56 }}
+        />
       </div>
     );
   }
