@@ -1,5 +1,5 @@
 // app/membership-sample/page.tsx
-// SAMPLE PAGE — Grok-generated layout for client review
+// SAMPLE PAGE - Grok-generated layout for client review
 // View at: /membership-sample
 // The site's Navigation and Footer are already provided by layout.tsx
 
@@ -42,7 +42,7 @@ export default function MembershipSample() {
             <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
               In CRE, the wrong partner can cost you time, money, and
               opportunities. K2 vets every participant to create a trusted
-              ecosystem—drawing from 20+ years of experience closing $250k–$5M
+              ecosystem-drawing from 20+ years of experience closing $250k–$5M
               deals.
             </p>
           </div>
@@ -84,7 +84,7 @@ export default function MembershipSample() {
               <p className="text-gray-600">
                 K2 earns only on success: Lender-paid fees (2% under $500k,
                 1.5% $500k–$1M, 1% above) with full disclosure. No hidden
-                costs—your outcomes drive ours.
+                costs-your outcomes drive ours.
               </p>
             </div>
           </div>
@@ -187,7 +187,7 @@ export default function MembershipSample() {
           </h2>
           <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
             Borrowers: Start with certification. Lenders/Vendors: Submit a
-            request—we&apos;ll review and grant access to your private dashboard
+            request-we&apos;ll review and grant access to your private dashboard
             if approved.
           </p>
           <a
@@ -209,17 +209,17 @@ export default function MembershipSample() {
             <div className="bg-white p-8 rounded-xl border border-gray-100">
               <p className="text-gray-700 italic mb-4">
                 &ldquo;K2&apos;s vetting gave me confidence in the
-                lenders—closed my deal faster than expected.&rdquo;
+                lenders-closed my deal faster than expected.&rdquo;
               </p>
-              <p className="font-semibold text-gray-900">— CRE Investor</p>
+              <p className="font-semibold text-gray-900">- CRE Investor</p>
             </div>
             <div className="bg-white p-8 rounded-xl border border-gray-100">
               <p className="text-gray-700 italic mb-4">
                 &ldquo;As a Preferred Lender, the leads are qualified and
-                ready—real time-saver.&rdquo;
+                ready-real time-saver.&rdquo;
               </p>
               <p className="font-semibold text-gray-900">
-                — Commercial Lender
+                - Commercial Lender
               </p>
             </div>
             <div className="bg-white p-8 rounded-xl border border-gray-100">
@@ -227,7 +227,7 @@ export default function MembershipSample() {
                 &ldquo;Vetting process was thorough, but worth it for the
                 quality referrals.&rdquo;
               </p>
-              <p className="font-semibold text-gray-900">— CRE Vendor</p>
+              <p className="font-semibold text-gray-900">- CRE Vendor</p>
             </div>
           </div>
         </div>

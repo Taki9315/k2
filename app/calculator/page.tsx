@@ -238,7 +238,7 @@ export default function MortgageCalculatorPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
-                    {results ? formatCurrency(results.monthlyPayment) : '—'}
+                    {results ? formatCurrency(results.monthlyPayment) : '-'}
                   </p>
                   {results && (
                     <p className="mt-1 text-sm text-gray-500">

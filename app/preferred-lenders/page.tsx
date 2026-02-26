@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Hero, Benefits, Steps, Features, Trust, CTA } from '@/components/lenders';
 
 export const metadata: Metadata = {
-  title: 'Preferred Lender Network — K2 Commercial Finance',
+  title: 'Preferred Lender Network - K2 Commercial Finance',
   description:
     'Join the K2 Preferred Lender Network. Access pre-qualified small commercial and SBA borrowers, structured deal flow, and faster closings.',
 };

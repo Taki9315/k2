@@ -28,7 +28,7 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
       { label: 'SBA / Small Business Loan', score: 2, tag: 'SBA' },
       { label: 'Business Line of Credit', score: 2, tag: 'LOC' },
       { label: 'Equipment / Vehicle Financing', score: 2, tag: 'Equipment' },
-      { label: "Not sure yet — I'm exploring", score: 1, tag: 'Exploring' },
+      { label: "Not sure yet - I'm exploring", score: 1, tag: 'Exploring' },
     ],
   },
   {
@@ -49,7 +49,7 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
       { label: 'First-time borrower', score: 1 },
       { label: '1–2 prior loans', score: 2 },
       { label: '3–5 prior loans', score: 3 },
-      { label: '5+ loans — experienced borrower', score: 3 },
+      { label: '5+ loans - experienced borrower', score: 3 },
     ],
   },
   {
@@ -58,7 +58,7 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
     options: [
       { label: "Haven't started gathering docs", score: 1 },
       { label: 'I have some, but not organized', score: 2 },
-      { label: 'Mostly organized — a few gaps', score: 3 },
+      { label: 'Mostly organized - a few gaps', score: 3 },
       { label: 'Fully prepared & up to date', score: 4 },
     ],
   },
@@ -66,7 +66,7 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
     id: 'timeline',
     question: 'When do you plan to apply for financing?',
     options: [
-      { label: 'Immediately — I have a deal now', score: 3 },
+      { label: 'Immediately - I have a deal now', score: 3 },
       { label: 'Within 1–3 months', score: 3 },
       { label: '3–6 months out', score: 2 },
       { label: 'Just researching for the future', score: 1 },
@@ -92,7 +92,7 @@ function computeResult(answers: Record<string, number>): QuizResult {
       score,
       maxScore,
       level: 'beginner',
-      headline: 'You Have Great Potential — Start Building Your Foundation',
+      headline: 'You Have Great Potential - Start Building Your Foundation',
       advice: [
         'Begin with the free video content to understand the lending landscape.',
         'The Financing Success Kit will give you a complete roadmap.',
@@ -111,9 +111,9 @@ function computeResult(answers: Record<string, number>): QuizResult {
       score,
       maxScore,
       level: 'intermediate',
-      headline: "You're On the Right Track — Sharpen Your Edge",
+      headline: "You're On the Right Track - Sharpen Your Edge",
       advice: [
-        'You have solid foundations — now refine your borrower presentation.',
+        'You have solid foundations - now refine your borrower presentation.',
         'Use the lender comparison worksheets to identify your best-fit lenders.',
         'Consider becoming a K2 Certified Borrower for expert guidance.',
       ],
@@ -129,9 +129,9 @@ function computeResult(answers: Record<string, number>): QuizResult {
     score,
     maxScore,
     level: 'advanced',
-    headline: "You're Nearly Deal-Ready — Fine-Tune and Execute",
+    headline: "You're Nearly Deal-Ready - Fine-Tune and Execute",
     advice: [
-      'Your experience is your advantage — make sure your presentation matches.',
+      'Your experience is your advantage - make sure your presentation matches.',
       'Use the Success Kit templates to ensure zero gaps in your package.',
       'K2 Certified Borrower gives you access to expert review of your deal.',
     ],

@@ -131,7 +131,7 @@ function getAutoMessages(questionId: string, answers: Answers): string[] {
       let m = `📊 Estimated DSCR: ${dscr.toFixed(2)}x (based on 7% rate / 25-yr am)`;
       if (dscr < 1.2) {
         m +=
-          '\n⚠️ DSCR is below 1.20x — a Bridge or DSCR-Lite program may be more appropriate.';
+          '\n⚠️ DSCR is below 1.20x - a Bridge or DSCR-Lite program may be more appropriate.';
       }
       msgs.push(m);
     }

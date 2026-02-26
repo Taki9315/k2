@@ -15,7 +15,7 @@ const DEFAULT_SYSTEM_PROMPT =
   'programs, underwriting, and borrower preparation. ' +
   'Be helpful, concise, and professional. Keep answers to 2-4 paragraphs. ' +
   'If the question is outside your expertise, politely say so. ' +
-  'Do not use markdown formatting — plain text only.';
+  'Do not use markdown formatting - plain text only.';
 
 export async function POST(request: Request) {
   try {

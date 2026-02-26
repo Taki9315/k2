@@ -86,7 +86,7 @@ export function PuzzleCaptcha({ onVerified }: PuzzleCaptchaProps) {
     return (
       <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
         <CheckCircle2 className="h-5 w-5" />
-        Verified — you&apos;re human!
+        Verified - you&apos;re human!
       </div>
     );
   }
@@ -159,7 +159,7 @@ export function PuzzleCaptcha({ onVerified }: PuzzleCaptchaProps) {
 
         {failed && (
           <p className="mt-1 text-center text-xs text-red-500">
-            Not quite — try again!
+            Not quite - try again!
           </p>
         )}
       </div>

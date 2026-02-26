@@ -50,17 +50,17 @@ const HIGHLIGHTS = [
   {
     icon: Target,
     title: 'Qualified, Active Referrals',
-    text: 'Connect with K2 certified borrowers and commercial property investors who are actively transacting and need your services — not cold leads, but warm introductions.',
+    text: 'Connect with K2 certified borrowers and commercial property investors who are actively transacting and need your services - not cold leads, but warm introductions.',
   },
   {
     icon: Handshake,
     title: 'White-Glove Partnership',
-    text: 'As a K2 Preferred Vendor, you commit to priority service and dedicated attention for our certified borrowers — building trust and long-term relationships.',
+    text: 'As a K2 Preferred Vendor, you commit to priority service and dedicated attention for our certified borrowers - building trust and long-term relationships.',
   },
   {
     icon: BarChart3,
     title: 'Grow Your Pipeline',
-    text: 'Gain steady, high-quality deal flow through the K2 ecosystem. Your services are showcased to borrowers at the point of need — when decisions are being made.',
+    text: 'Gain steady, high-quality deal flow through the K2 ecosystem. Your services are showcased to borrowers at the point of need - when decisions are being made.',
   },
 ];
 
@@ -145,7 +145,7 @@ export default function PreferredVendorPage() {
           }),
         });
       } catch {
-        /* non-blocking — inquiry was already saved */
+        /* non-blocking - inquiry was already saved */
       }
 
       setSuccess(true);
@@ -182,7 +182,7 @@ export default function PreferredVendorPage() {
           </h1>
           <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
             We&apos;re building a dream team of vendors committed to providing
-            white-glove service — including a dedicated point of contact — to
+            white-glove service - including a dedicated point of contact - to
             our certified borrowers. If your firm delivers exceptional service
             and wants access to qualified, transacting clients, we want to
             hear from you.
@@ -239,7 +239,7 @@ export default function PreferredVendorPage() {
                 K2 Commercial Finance works with commercial real estate borrowers
                 and investors at every stage of the transaction. From attorneys
                 and appraisers to environmental consultants and property managers
-                — our certified borrowers need the services you provide.
+                - our certified borrowers need the services you provide.
               </p>
 
               <div className="space-y-3">

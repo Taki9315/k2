@@ -29,7 +29,7 @@ const resources: Resource[] = [
   {
     title: 'Mortgage Payment Calculator',
     description:
-      'Run the numbers before you apply. This free calculator shows your estimated monthly payment, total interest, and full cost of any loan scenario — so you can walk into a lender meeting with confidence.',
+      'Run the numbers before you apply. This free calculator shows your estimated monthly payment, total interest, and full cost of any loan scenario - so you can walk into a lender meeting with confidence.',
     href: '/calculator',
     icon: <Calculator className="h-6 w-6" />,
     badge: 'Free Tool',
@@ -37,15 +37,15 @@ const resources: Resource[] = [
   {
     title: 'Financing Success Kit',
     description:
-      'The step-by-step guide that walks you through everything lenders want to see. Stop guessing and start preparing like a pro — this is the same framework used by borrowers who close deals.',
+      'The step-by-step guide that walks you through everything lenders want to see. Stop guessing and start preparing like a pro - this is the same framework used by borrowers who close deals.',
     href: '/workbook',
     icon: <BookOpen className="h-6 w-6" />,
     badge: '$14.95',
   },
   {
-    title: 'LivePlan — Business Plan Software',
+    title: 'LivePlan - Business Plan Software',
     description:
-      'Lenders want a professional business plan — LivePlan builds one for you. Its AI-powered platform creates lender-ready financials, cash flow forecasts, and SBA-approved documents in a fraction of the time it takes with spreadsheets. Trusted by over 1 million entrepreneurs, this is the fastest way to present your business like a bankable borrower.',
+      'Lenders want a professional business plan - LivePlan builds one for you. Its AI-powered platform creates lender-ready financials, cash flow forecasts, and SBA-approved documents in a fraction of the time it takes with spreadsheets. Trusted by over 1 million entrepreneurs, this is the fastest way to present your business like a bankable borrower.',
     href: 'https://ssqt.co/mQLMnXG',
     external: true,
     iframeable: false,
@@ -53,9 +53,9 @@ const resources: Resource[] = [
     badge: 'Partner',
   },
   {
-    title: 'Deal Maker Analyzer — CRE Deal Analysis',
+    title: 'Deal Maker Analyzer - CRE Deal Analysis',
     description:
-      'Evaluate any commercial property like a seasoned investor. Deal Maker Analyzer calculates cap rates, DSCR, cash-on-cash returns, and multi-year projections so you know exactly whether a deal pencils before you ever contact a lender. Present your numbers with confidence — the same way underwriters will evaluate them.',
+      'Evaluate any commercial property like a seasoned investor. Deal Maker Analyzer calculates cap rates, DSCR, cash-on-cash returns, and multi-year projections so you know exactly whether a deal pencils before you ever contact a lender. Present your numbers with confidence - the same way underwriters will evaluate them.',
     href: 'https://tinyurl.com/DealmakerPro',
     external: true,
     iframeable: true,

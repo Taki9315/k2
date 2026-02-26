@@ -42,7 +42,7 @@ export function buildExecutiveSummary(
 
   /* ---- Header --------------------------------------------------- */
   lines.push('⭐ K2 COMMERCIAL FINANCE');
-  lines.push(`Transaction Executive Summary — ${pt}`);
+  lines.push(`Transaction Executive Summary - ${pt}`);
 
   /* ---- DEAL OVERVIEW -------------------------------------------- */
   lines.push('');
@@ -189,7 +189,7 @@ export function buildExecutiveSummary(
 
   if (assetLines.length > 0) {
     lines.push('');
-    lines.push(divider(`ASSET-SPECIFIC DETAILS — ${propType.toUpperCase()}`));
+    lines.push(divider(`ASSET-SPECIFIC DETAILS - ${propType.toUpperCase()}`));
     lines.push(...assetLines);
   }
 

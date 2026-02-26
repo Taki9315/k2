@@ -22,8 +22,8 @@ export function Hero() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-300 sm:text-xl">
-            Our preferred lenders commit to providing white-glove service — including
-            a dedicated account representative — to every K2 Certified Borrower.
+            Our preferred lenders commit to providing white-glove service - including
+            a dedicated account representative - to every K2 Certified Borrower.
             They treat our borrowers as a high priority, respond within 48 hours,
             and deliver transparent terms every time.
           </p>

@@ -35,7 +35,7 @@ const HIGHLIGHTS = [
   {
     icon: BarChart3,
     title: 'Grow Your Revenue',
-    text: 'Tap into a steady stream of clients through the K2 ecosystem — not cold calls, but warm introductions.',
+    text: 'Tap into a steady stream of clients through the K2 ecosystem - not cold calls, but warm introductions.',
   },
 ];
 
@@ -86,9 +86,9 @@ export default function VendorNetworkPage() {
         .from('contact_inquiries')
         .insert({
           type: 'vendor_network',
-          name: fullName || '—',
+          name: fullName || '-',
           email: formData.email,
-          message: messageParts.join('\n') || '—',
+          message: messageParts.join('\n') || '-',
         });
 
       if (submitError) throw submitError;
@@ -127,7 +127,7 @@ export default function VendorNetworkPage() {
           <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
             Connect with commercial real estate borrowers and property owners
             who need your services. The K2 network delivers warm, qualified
-            referrals — not cold leads.
+            referrals - not cold leads.
           </p>
         </div>
       </section>
@@ -179,12 +179,12 @@ export default function VendorNetworkPage() {
                 K2 Commercial Finance works with commercial real estate borrowers
                 and investors at every stage of the transaction. From attorneys
                 and appraisers to environmental consultants and property managers
-                — our clients need the services you provide.
+                - our clients need the services you provide.
               </p>
               <ul className="space-y-4">
                 {[
                   'Your business is presented to borrowers at the point of need',
-                  'Referrals come from an active deal pipeline — not a stale directory',
+                  'Referrals come from an active deal pipeline - not a stale directory',
                   'Service categories span the full CRE transaction lifecycle',
                   'Network members receive priority visibility in our ecosystem',
                   'Full vendor benefits, listing details, and fee structure shared after approval',

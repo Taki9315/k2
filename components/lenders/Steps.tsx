@@ -13,7 +13,7 @@ const steps: Step[] = [
     icon: <BookOpen className="h-5 w-5" />,
     title: 'Borrowers Prepare Packages',
     description:
-      'Borrowers work through the K2 education platform — building credit narratives, organizing financials, and completing structured preparation guides.',
+      'Borrowers work through the K2 education platform - building credit narratives, organizing financials, and completing structured preparation guides.',
   },
   {
     number: '02',
@@ -27,7 +27,7 @@ const steps: Step[] = [
     icon: <Send className="h-5 w-5" />,
     title: 'Lenders Receive Structured Submissions',
     description:
-      'You receive clean, well-documented packages matched to your lending criteria — no cold calls, no unqualified leads.',
+      'You receive clean, well-documented packages matched to your lending criteria - no cold calls, no unqualified leads.',
   },
   {
     number: '04',

@@ -1,5 +1,5 @@
 // app/membership/page.tsx
-// Membership page — focused on K2 Certified Borrower
+// Membership page - focused on K2 Certified Borrower
 
 import Link from 'next/link';
 
@@ -17,14 +17,14 @@ export default function MembershipPage() {
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             Expert guidance, automated deal tools, and direct access to our
-            Preferred Lender network — all for a one-time $249 fee with
+            Preferred Lender network - all for a one-time $249 fee with
             lifetime access.
           </p>
           <a
             href="/membership/certified-borrower"
             className="inline-block bg-primary text-white font-semibold py-3 px-8 rounded-lg hover:bg-primary/90 transition shadow-lg shadow-primary/20"
           >
-            Get Started — $249 One-Time
+            Get Started - $249 One-Time
           </a>
         </div>
       </section>
@@ -38,7 +38,7 @@ export default function MembershipPage() {
             </h2>
             <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
               Built for CRE investors and business owners who want hands-on
-              support — whether you&apos;re navigating a complex deal, working
+              support - whether you&apos;re navigating a complex deal, working
               across asset classes, or simply want experts in your corner.
             </p>
           </div>
@@ -51,7 +51,7 @@ export default function MembershipPage() {
               <ul className="text-gray-600 list-disc pl-5 space-y-2">
                 <li>Full transaction management platform</li>
                 <li>Readiness checklists &amp; document review</li>
-                <li>K2 Summit AI chatbot — your CRE co-pilot</li>
+                <li>K2 Summit AI chatbot - your CRE co-pilot</li>
                 <li>Real-time lender activity tracking</li>
               </ul>
             </div>
@@ -125,7 +125,7 @@ export default function MembershipPage() {
                 Become a K2 Certified Borrower
               </h2>
               <p className="text-lg text-gray-600 mb-5 leading-relaxed">
-                Built for borrowers who want hands-on support — whether you&apos;re
+                Built for borrowers who want hands-on support - whether you&apos;re
                 navigating a complex deal, working across asset classes, or
                 simply want the confidence that comes from having experts in
                 your corner.
@@ -139,7 +139,7 @@ export default function MembershipPage() {
               </p>
               <div className="rounded-2xl bg-slate-50 border border-slate-200/80 p-6 mb-10">
                 <p className="font-semibold text-gray-900 mb-2">
-                  How We Earn — Full Transparency
+                  How We Earn - Full Transparency
                 </p>
                 <p className="text-sm text-gray-600 mb-3">
                   K2 Commercial Finance receives a flat success fee only when
@@ -151,7 +151,7 @@ export default function MembershipPage() {
                   <li>1% on loans above $1,000,000</li>
                 </ul>
                 <p className="text-xs text-gray-500 italic">
-                  This fee is paid by the lender — not by you. It&apos;s standard
+                  This fee is paid by the lender - not by you. It&apos;s standard
                   in the industry and fully disclosed upfront, so there are
                   never any surprises.
                 </p>
@@ -177,10 +177,10 @@ export default function MembershipPage() {
           </div>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { num: '1', text: 'Pay $249 once — get instant lifetime access' },
+              { num: '1', text: 'Pay $249 once - get instant lifetime access' },
               { num: '2', text: 'Build & polish your deal with Summit AI & checklists' },
               { num: '3', text: 'Submit to Preferred Lenders (or K2 shops broader)' },
-              { num: '4', text: 'Close your deal — collect $1,500 credit' },
+              { num: '4', text: 'Close your deal - collect $1,500 credit' },
             ].map((step) => (
               <div key={step.num} className="text-center">
                 <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white text-lg font-bold mb-4">
@@ -206,7 +206,7 @@ export default function MembershipPage() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl bg-slate-50 border border-slate-200 p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-3">
-              How We Earn — Full Transparency
+              How We Earn - Full Transparency
             </h3>
             <p className="text-gray-600 mb-4">
               K2 Commercial Finance receives a flat success fee only when you
@@ -218,7 +218,7 @@ export default function MembershipPage() {
               <li>1% on loans above $1,000,000</li>
             </ul>
             <p className="text-sm text-gray-500 italic">
-              This fee is paid by the lender — not by you. It&apos;s standard
+              This fee is paid by the lender - not by you. It&apos;s standard
               in the industry and fully disclosed upfront, so there are never
               any surprises.
             </p>
@@ -236,16 +236,16 @@ export default function MembershipPage() {
             <div className="bg-white p-8 rounded-xl border border-gray-100">
               <p className="text-gray-700 italic mb-4">
                 &ldquo;K2&apos;s vetting gave me confidence in the
-                lenders — closed my deal faster than expected.&rdquo;
+                lenders - closed my deal faster than expected.&rdquo;
               </p>
-              <p className="font-semibold text-gray-900">— Michael R., First-Time CRE Borrower</p>
+              <p className="font-semibold text-gray-900">Michael R., First-Time CRE Borrower</p>
             </div>
             <div className="bg-white p-8 rounded-xl border border-gray-100">
               <p className="text-gray-700 italic mb-4">
                 &ldquo;Vetted lenders plus the closing credit made it worth
                 every dollar.&rdquo;
               </p>
-              <p className="font-semibold text-gray-900">— Sarah L., Small Business Owner</p>
+              <p className="font-semibold text-gray-900">Sarah L., Small Business Owner</p>
             </div>
           </div>
         </div>

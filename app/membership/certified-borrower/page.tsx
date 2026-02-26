@@ -1,5 +1,5 @@
 // app/membership/certified-borrower-sample/page.tsx
-// SAMPLE PAGE — Concise Certified Borrower sales page for client review
+// SAMPLE PAGE - Concise Certified Borrower sales page for client review
 // View at: /membership/certified-borrower-sample
 
 import Link from 'next/link';
@@ -47,7 +47,7 @@ const WHO_BULLETS = [
 const FEATURES = [
   {
     icon: Brain,
-    title: 'K2 Summit AI Chatbot — Your CRE Co-Pilot',
+    title: 'K2 Summit AI Chatbot - Your CRE Co-Pilot',
     desc: 'Always available, trained on real K2 closings.',
     bullets: [
       'Instant deal health score + fix list',
@@ -60,7 +60,7 @@ const FEATURES = [
       'Full conversation memory for your deal',
     ],
     callout:
-      'Ask anything — get answers that save weeks and thousands.',
+      'Ask anything - get answers that save weeks and thousands.',
   },
   {
     icon: Target,
@@ -85,7 +85,7 @@ const FEATURES = [
   {
     icon: TrendingUp,
     title: 'Broader Shopping',
-    desc: 'K2 shops wider network when needed — no extra cost.',
+    desc: 'K2 shops wider network when needed - no extra cost.',
   },
   {
     icon: BarChart3,
@@ -151,7 +151,7 @@ export default function CertifiedBorrowerSample() {
           </h1>
 
           <p className="text-xl md:text-2xl text-slate-600 mb-6">
-            One-Time $249 — Professional Financing Tools
+            One-Time $249 - Professional Financing Tools
           </p>
 
           <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-4 leading-relaxed">
@@ -187,7 +187,7 @@ export default function CertifiedBorrowerSample() {
             href="/membership/certified-borrower"
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30"
           >
-            Join Now — $249 (One-Time)
+            Join Now - $249 (One-Time)
             <ArrowRight className="h-5 w-5" />
           </Link>
         </div>
@@ -259,7 +259,7 @@ export default function CertifiedBorrowerSample() {
               K2&apos;s Proprietary AI-Integrated Platform
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Everything a prepared borrower needs — in one place.
+              Everything a prepared borrower needs - in one place.
             </p>
           </div>
 
@@ -323,10 +323,10 @@ export default function CertifiedBorrowerSample() {
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
             Your personal AI coach that walks you through every preparation
-            step — so you show up organized, confident, and lender-ready.
+            step - so you show up organized, confident, and lender-ready.
           </p>
           <p className="text-gray-500 max-w-2xl mx-auto mb-8">
-            It doesn&apos;t replace experts — it prepares you to work smarter
+            It doesn&apos;t replace experts - it prepares you to work smarter
             with them. Faster responses, better terms, deals that close.
           </p>
           <Link
@@ -350,7 +350,7 @@ export default function CertifiedBorrowerSample() {
                 Full Transparency
               </p>
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-                How K2 Earns — Only on Success
+                How K2 Earns - Only on Success
               </h2>
             </div>
 
@@ -487,7 +487,7 @@ export default function CertifiedBorrowerSample() {
               href="/membership/certified-borrower"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-primary/30 transition-all hover:bg-primary/90 hover:shadow-xl"
             >
-              Become Certified — $249 (One-Time)
+              Become Certified - $249 (One-Time)
               <ArrowRight className="h-5 w-5" />
             </Link>
           </div>

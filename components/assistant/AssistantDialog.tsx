@@ -73,7 +73,7 @@ export function AssistantDialog({
         <DialogHeader className="border-b px-6 py-4">
           <DialogTitle>PrepCoach</DialogTitle>
           <DialogDescription>
-            Your AI-powered preparation coach — ask questions, build your loan
+            Your AI-powered preparation coach - ask questions, build your loan
             package, and get lender-ready.
           </DialogDescription>
         </DialogHeader>

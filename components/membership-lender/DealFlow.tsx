@@ -164,7 +164,7 @@ const benefits: BenefitCard[] = [
     icon: <Zap className="h-5 w-5" />,
     title: 'Zero tech required',
     description:
-      'No new systems to learn. Engage with deals through clean materials, secure links, and email — K2 works fully behind the scenes.',
+      'No new systems to learn. Engage with deals through clean materials, secure links, and email - K2 works fully behind the scenes.',
   },
 ];
 

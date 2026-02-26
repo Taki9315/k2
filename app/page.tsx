@@ -75,7 +75,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-3 mb-6">
                 <Button size="lg" asChild className="text-lg px-8 py-6 shadow-lg shadow-primary/20">
                   <Link href="/workbook">
-                    Get Your Success Kit — $14.95
+                    Get Your Success Kit - $14.95
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
@@ -149,7 +149,7 @@ export default function Home() {
               If you&apos;re a commercial real estate investor or business owner pursuing financing for rental, multifamily, retail, mixed use, industrial, office, or owner-occupied business properties, you&apos;re in the right place.
             </p>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto mt-4">
-              We help you avoid common pitfalls and position your deal so lenders compete for it. Depending on your immediate needs, pick from these three paths:
+              We help you avoid common pitfalls and position your deal so lenders compete for it. Pick the path that fits where you are right now:
             </p>
           </div>
 
@@ -186,10 +186,10 @@ export default function Home() {
           </h2>
           <p className="text-lg text-gray-600 mb-4 leading-relaxed max-w-2xl mx-auto">
             Your personal AI coach that walks you through every preparation
-            step — so you show up organized, confident, and lender-ready.
+            step - so you show up organized, confident, and lender-ready.
           </p>
           <p className="text-gray-500 mb-10 leading-relaxed max-w-2xl mx-auto">
-            It doesn&apos;t replace experts — it prepares you to work smarter
+            It doesn&apos;t replace experts - it prepares you to work smarter
             with them. The result? Faster responses, better terms, and deals
             that close.
           </p>
@@ -224,7 +224,7 @@ export default function Home() {
               Prepared Borrowers Get Better Outcomes
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              The borrowers who land the best terms aren&apos;t always the biggest — they&apos;re
+              The borrowers who land the best terms aren&apos;t always the biggest - they&apos;re
               the best prepared. A little upfront work pays off in a big way.
             </p>
           </div>
@@ -234,7 +234,7 @@ export default function Home() {
               {
                 icon: Shield,
                 title: 'Avoid Costly Mistakes',
-                text: 'Know what lenders look for — and what raises red flags — so you can position yourself for approval before you ever submit an application. Skip the trial-and-error that costs time and money.',
+                text: 'Know what lenders look for - and what raises red flags - so you can position yourself for approval before you ever submit an application. Skip the trial-and-error that costs time and money.',
               },
               {
                 icon: TrendingUp,
@@ -302,7 +302,7 @@ export default function Home() {
               What Other Borrowers Are Saying
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Real stories from borrowers who took the time to prepare — and
+              Real stories from borrowers who took the time to prepare - and
               saw the difference it made when it counted.
             </p>
           </div>
@@ -366,7 +366,7 @@ export default function Home() {
               Free Educational Content
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Start building your knowledge today — no sign-up, no cost.
+              Start building your knowledge today - no sign-up, no cost.
             </p>
           </div>
 
@@ -446,9 +446,9 @@ export default function Home() {
             Ready to Take Control?
           </h2>
           <p className="text-xl text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Start free or grab your kit today. Hundreds of borrowers have used
-            K2 to get prepared, find the right lender, and close on their
-            terms. Pick the path that fits you and get started now.
+            Start free, go independent with the Kit, or get expert placement as
+            a K2 Certified Borrower. Hundreds of borrowers have used K2 to get
+            prepared, find the right lender, and close on their terms.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
             <Button
@@ -468,7 +468,7 @@ export default function Home() {
               className="text-lg px-8 py-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300"
             >
               <Link href="/workbook">
-                Grab Your Kit — $15
+                Get the Kit – $15
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -479,7 +479,7 @@ export default function Home() {
               className="text-lg px-8 py-6 bg-white/10 text-white border border-white/20 hover:bg-white hover:text-slate-900 backdrop-blur-sm transition-all duration-300"
             >
               <Link href="/membership/certified-borrower">
-                Become a Certified Borrower
+                Become K2 Certified – $249
                 <Users className="ml-2 h-5 w-5" />
               </Link>
             </Button>

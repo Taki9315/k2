@@ -153,9 +153,9 @@ export default function WorkbookPage() {
                 {[
                   'Preparing for Financing Success',
                   'Understanding and Selecting the loan program best suited for your unique situation',
-                  'Finding the right lender — hint... it may not be your local bank',
+                  'Finding the right lender - hint... it may not be your local bank',
                   'Navigating Underwriting and Closing your deal',
-                  'Document Vault — All the forms a lender may request, ready for download',
+                  'Document Vault - All the forms a lender may request, ready for download',
                   'Lender Comparison Worksheets',
                 ].map((feature) => (
                   <li key={feature} className="flex items-start group">
@@ -168,7 +168,7 @@ export default function WorkbookPage() {
               </ul>
               <Button size="lg" asChild className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300">
                 <Link href="/signup">
-                  Get the Financing Success Kit — $15
+                  Get the Financing Success Kit - $15
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>

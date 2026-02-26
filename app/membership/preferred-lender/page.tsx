@@ -50,12 +50,12 @@ const HIGHLIGHTS = [
   {
     icon: Users,
     title: 'Pre-Qualified Certified Borrowers',
-    text: 'Every borrower in our pipeline has completed the K2 Financing Success Kit — educated, documented, and ready to transact with a lender who treats them as a priority.',
+    text: 'Every borrower in our pipeline has completed the K2 Financing Success Kit - educated, documented, and ready to transact with a lender who treats them as a priority.',
   },
   {
     icon: TrendingUp,
     title: 'Structured, Quality Deal Flow',
-    text: 'Receive borrower packages matched to your lending criteria. Each submission includes a Transaction Executive Summary — reducing noise and increasing close rates.',
+    text: 'Receive borrower packages matched to your lending criteria. Each submission includes a Transaction Executive Summary - reducing noise and increasing close rates.',
   },
   {
     icon: Shield,
@@ -145,7 +145,7 @@ export default function PreferredLenderPage() {
           }),
         });
       } catch {
-        /* non-blocking — inquiry was already saved */
+        /* non-blocking - inquiry was already saved */
       }
 
       setSuccess(true);
@@ -182,7 +182,7 @@ export default function PreferredLenderPage() {
           </h1>
           <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
             We&apos;re building a dream team of direct lenders willing to provide
-            white-glove service — including a dedicated account representative —
+            white-glove service - including a dedicated account representative -
             to our certified borrowers. If your institution is ready to commit
             to making K2 borrowers a high priority, we want to hear from you.
           </p>
@@ -198,7 +198,7 @@ export default function PreferredLenderPage() {
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               We do the heavy lifting on borrower preparation so you can focus
-              on what you do best — funding deals with confidence.
+              on what you do best - funding deals with confidence.
             </p>
           </div>
 
@@ -239,7 +239,7 @@ export default function PreferredLenderPage() {
                 structured Success Kit process before they ever reach your desk.
                 Each certified borrower completes our Financing Success
                 Kit, goes through a full intake, and receives a Transaction
-                Executive Summary — so when you see a deal, it&apos;s already
+                Executive Summary - so when you see a deal, it&apos;s already
                 organized and underwriteable.
               </p>
 
@@ -470,11 +470,11 @@ export default function PreferredLenderPage() {
             {[
               {
                 q: 'What kind of borrowers will I receive?',
-                a: 'Every borrower has purchased and completed the K2 Financing Success Kit. They arrive documented, educated, and with a Transaction Executive Summary — so you can evaluate deals faster with fewer back-and-forth requests.',
+                a: 'Every borrower has purchased and completed the K2 Financing Success Kit. They arrive documented, educated, and with a Transaction Executive Summary - so you can evaluate deals faster with fewer back-and-forth requests.',
               },
               {
                 q: 'Is this program for direct lenders only?',
-                a: 'Yes. The K2 Preferred Lender Network is exclusively for direct lenders — banks, credit unions, CDFIs, SBA lenders, bridge lenders, and private/direct lending institutions. Brokers and correspondents are not eligible.',
+                a: 'Yes. The K2 Preferred Lender Network is exclusively for direct lenders - banks, credit unions, CDFIs, SBA lenders, bridge lenders, and private/direct lending institutions. Brokers and correspondents are not eligible.',
               },
               {
                 q: 'What commitment is required?',
@@ -482,7 +482,7 @@ export default function PreferredLenderPage() {
               },
               {
                 q: 'What happens after I submit my inquiry?',
-                a: 'A K2 representative will review your submission and send you a link to the full Preferred Lender program description — similar to our LEV page — with complete details on referral fees, matching criteria, and portal access.',
+                a: 'A K2 representative will review your submission and send you a link to the full Preferred Lender program description - similar to our LEV page - with complete details on referral fees, matching criteria, and portal access.',
               },
               {
                 q: 'Is there a cost to join?',

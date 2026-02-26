@@ -39,7 +39,7 @@ export function Navigation() {
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
     { href: '/workbook', label: 'Success Kit' },
-    { href: '/membership', label: 'Membership' },
+    { href: '/membership', label: 'Certified Borrower' },
     ...(user ? [{ href: '/prepcoach', label: 'PrepCoach' }] : []),
     { href: '/Resource', label: 'Resources' },
   ];

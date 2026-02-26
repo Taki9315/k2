@@ -11,7 +11,7 @@ const benefits: BenefitCard[] = [
     icon: <TrendingUp className="h-6 w-6" />,
     title: 'Qualified Deal Flow',
     description:
-      'Receive submissions from borrowers who have completed structured preparation — credit-reviewed, cash-flow-analyzed, and documentation-ready.',
+      'Receive submissions from borrowers who have completed structured preparation - credit-reviewed, cash-flow-analyzed, and documentation-ready.',
   },
   {
     icon: <PackageCheck className="h-6 w-6" />,
@@ -45,7 +45,7 @@ export function Benefits() {
             How Our Preferred Lenders Serve Certified Borrowers
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-slate-600">
-            K2 Preferred Lenders commit to making our borrowers a high priority —
+            K2 Preferred Lenders commit to making our borrowers a high priority -
             with dedicated representatives, fast response times, and transparent terms.
           </p>
         </div>

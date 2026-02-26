@@ -43,14 +43,14 @@ function buildPrompt(answers: Answers): string {
 
   return [
     'You are reviewing a commercial real estate loan intake. Based on the data below,',
-    'produce EXACTLY two sections — nothing else:',
+    'produce EXACTLY two sections - nothing else:',
     '',
-    'SECTION 1 — PROGRAM FIT (Preliminary)',
+    'SECTION 1 - PROGRAM FIT (Preliminary)',
     'List 3-5 bullet points of loan programs that may be suitable for this transaction.',
     'For each program, briefly explain why it fits. Examples: CMBS, Agency, Bank/Credit Union,',
     'SBA 504, Bridge, DSCR-Lite, Hard Money, etc.',
     '',
-    'SECTION 2 — NOTES FROM K2',
+    'SECTION 2 - NOTES FROM K2',
     'Write 2-4 sentences with your overall analyst assessment of this deal:',
     'strengths, concerns, and recommended next steps.',
     'End with: "A K2 analyst will review the full package and follow up with next steps,',
@@ -108,7 +108,7 @@ export async function POST(request: Request) {
             'You are a senior commercial lending analyst at K2 Commercial Finance. ' +
             'Write concise, factual, professional analysis. Do not invent facts. ' +
             'If data is missing or insufficient, note it and state assumptions clearly. ' +
-            'Output plain text only — no markdown, no headers with # symbols.',
+            'Output plain text only - no markdown, no headers with # symbols.',
         },
         { role: 'user', content: prompt },
       ],
@@ -131,13 +131,13 @@ export async function POST(request: Request) {
         .slice(0, splitIdx)
         .replace(/PROGRAM FIT.*?\n/i, '')
         .replace(/SECTION 1.*?\n/i, '')
-        .replace(/^[-—]+\n?/gm, '')
+        .replace(/^[--]+\n?/gm, '')
         .trim();
       k2Notes = raw
         .slice(splitIdx)
         .replace(/NOTES FROM K2.*?\n/i, '')
         .replace(/SECTION 2.*?\n/i, '')
-        .replace(/^[-—]+\n?/gm, '')
+        .replace(/^[--]+\n?/gm, '')
         .trim();
     } else {
       programFit = raw;

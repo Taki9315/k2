@@ -20,22 +20,22 @@ export type AssistantQuestion = {
 };
 
 /* ------------------------------------------------------------------ */
-/*  Section intro messages — shown once when the flow enters a section */
+/*  Section intro messages - shown once when the flow enters a section */
 /* ------------------------------------------------------------------ */
 
 export const SECTION_INTROS: Record<string, string> = {
   property_type:
-    "Great — let's get your deal entered. We'll start with the property details.",
+    "Great - let's get your deal entered. We'll start with the property details.",
   current_noi:
     "Now let's look at the property financials.",
   net_worth:
     "Next, I need some information about the borrower / sponsor.",
   overall_strategy:
-    "Almost there — tell me about your strategy for this property.",
+    "Almost there - tell me about your strategy for this property.",
   primary_goal:
     "Let's capture your goals and any challenges.",
   contact_name:
-    "Last step — your contact information so we can follow up.",
+    "Last step - your contact information so we can follow up.",
 };
 
 /* ------------------------------------------------------------------ */
@@ -51,7 +51,7 @@ const PROPERTY_TYPES_WITH_FOLLOWUP = [
 
 export const questions: AssistantQuestion[] = [
   /* ============================================================== */
-  /*  SECTION 1 — DEAL BASICS                                       */
+  /*  SECTION 1 - DEAL BASICS                                       */
   /* ============================================================== */
 
   {
@@ -348,7 +348,7 @@ export const questions: AssistantQuestion[] = [
   },
 
   /* ============================================================== */
-  /*  SECTION 2 — PROPERTY FINANCIALS                                */
+  /*  SECTION 2 - PROPERTY FINANCIALS                                */
   /* ============================================================== */
 
   {
@@ -390,7 +390,7 @@ export const questions: AssistantQuestion[] = [
   },
 
   /* ============================================================== */
-  /*  SECTION 3 — SPONSOR PROFILE                                    */
+  /*  SECTION 3 - SPONSOR PROFILE                                    */
   /* ============================================================== */
 
   {
@@ -427,11 +427,11 @@ export const questions: AssistantQuestion[] = [
     message:
       'Describe the commercial real estate experience. (Years and asset types)',
     type: 'text',
-    placeholder: 'e.g. 8 years — owns/operates 3 MHPs totaling 312 pads',
+    placeholder: 'e.g. 8 years - owns/operates 3 MHPs totaling 312 pads',
   },
 
   /* ============================================================== */
-  /*  SECTION 3B — BORROWER INTENT & STRATEGY                       */
+  /*  SECTION 3B - BORROWER INTENT & STRATEGY                       */
   /* ============================================================== */
 
   {
@@ -490,7 +490,7 @@ export const questions: AssistantQuestion[] = [
   },
 
   /* ============================================================== */
-  /*  SECTION 4 — GOALS & CHALLENGES                                */
+  /*  SECTION 4 - GOALS & CHALLENGES                                */
   /* ============================================================== */
 
   {
@@ -523,7 +523,7 @@ export const questions: AssistantQuestion[] = [
   },
 
   /* ============================================================== */
-  /*  SECTION 5 — CONTACT INFO                                      */
+  /*  SECTION 5 - CONTACT INFO                                      */
   /* ============================================================== */
 
   {

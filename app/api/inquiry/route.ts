@@ -68,7 +68,7 @@ export async function POST(request: Request) {
     }
 
     /* ────────────────────────────────────────────────────────────────
-     * Email notification (optional — works if ADMIN_EMAIL + a mailer
+     * Email notification (optional - works if ADMIN_EMAIL + a mailer
      * are configured; otherwise, the admin_notifications table row is
      * the record of the event)
      * ──────────────────────────────────────────────────────────────── */

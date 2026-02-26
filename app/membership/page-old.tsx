@@ -100,8 +100,8 @@ function MembershipHub() {
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             We&apos;re building a dream team of lenders and vendors committed to
-            providing white-glove service — including a dedicated account
-            representative — to every K2 Certified Borrower.
+            providing white-glove service - including a dedicated account
+            representative - to every K2 Certified Borrower.
           </p>
         </div>
       </section>
@@ -144,7 +144,7 @@ function MembershipHub() {
           </h2>
           <p className="text-lg text-gray-600 mb-8">
             When you purchase the K2 Financing Success Kit, you unlock
-            access to our Certified Borrower dashboard — your command center
+            access to our Certified Borrower dashboard - your command center
             for document management, lender matching, meeting scheduling, and
             direct support from the K2 team.
           </p>
@@ -360,7 +360,7 @@ function CertifiedDashboard({ userName }: { userName: string }) {
                 Welcome back, {userName || 'Borrower'}
               </h1>
               <p className="text-slate-300 text-lg">
-                Your K2 Certified Borrower dashboard — manage documents, track
+                Your K2 Certified Borrower dashboard - manage documents, track
                 submissions, and schedule meetings with your dedicated team.
               </p>
             </div>

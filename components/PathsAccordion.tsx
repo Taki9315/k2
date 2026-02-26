@@ -23,6 +23,7 @@ type PathItem = {
   bullets: string[];
   commitment: string;
   cta: { label: string; href: string };
+  featured?: boolean;
   feeTransparency?: {
     title: string;
     text: string;
@@ -34,47 +35,52 @@ const PATHS: PathItem[] = [
     step: 1,
     icon: BookOpen,
     title: 'Learn Borrowing Tips and Strategies for Free',
-    idealFor: `you're exploring or building basics.`,
+    idealFor: `you're brand new to commercial real estate financing, unsure if it fits your goals, or want smart, no-risk education before committing time or money\u2014avoid wasting months on bad advice or rookie mistakes.`,
     bullets: [
-      'Free videos & articles - no signup needed',
-      'Learn loan programs, pitfalls, prep essentials',
-      'Decide if financing fits without pressure',
+      'Free videos & articles \u2013 no signup, no email gate',
+      'Clear breakdowns of major loan programs, common pitfalls, and must-have prep steps',
+      'Honest insights to decide quickly whether financing accelerates your deals (or if another path makes more sense)',
     ],
-    commitment: '$0 - just your time and curiosity.',
+    commitment: '$0 \u2013 just your time and curiosity.',
     cta: { label: 'Browse Free Educational Content', href: '/content' },
   },
   {
     step: 2,
     icon: FileCheck,
-    title: 'Success Kit',
-    idealFor: `you're ready to prepare and pursue on your own.`,
+    title: 'Go Independent \u2013 Financing Success Kit',
+    idealFor: `you're organized, self-motivated, and ready to take control\u2014wanting to submit clean, professional packages that lenders actually want to fund, while skipping expensive brokers and saving thousands in fees.`,
+    featured: true,
     bullets: [
-      '$15 one-time (50+ pages, 15+ worksheets/templates)',
-      'Identify best loan program, organize docs lenders love, compare options, avoid deal-killers',
-      'Document Vault, checklists, lifetime access, instant download',
+      '$15 one-time instant access (50+ pages, 15+ ready-to-use worksheets & templates)',
+      'Step-by-step tools to pick the right loan program, organize docs lenders love, compare offers apples-to-apples, and dodge common deal-killers',
+      'Private Document Vault with checklists, tear sheets, lifetime updates, and immediate download',
+      'Pro-level polish without needing years of experience',
     ],
-    commitment: '$15 one-time. No subscriptions, no upsells.',
-    cta: { label: 'Get the Kit - Only $15', href: '/workbook' },
+    commitment: '$15 one-time. No subscriptions, no hidden upsells \u2013 pure leverage for the DIY borrower.',
+    cta: { label: 'Get the Kit \u2013 Only $15', href: '/workbook' },
   },
   {
     step: 3,
     icon: Headphones,
-    title: 'Expert Guidance Fast Track — K2 Certified Borrower',
-    idealFor: 'faster results, complex deals, or any asset class',
+    title: 'K2 Certified Borrower \u2013 Expert Placement & AI Support',
+    idealFor: `you want expert guidance, lender placement, and AI-powered prep support to maximize your close probability and terms.`,
     bullets: [
-      '$249 one-time lifetime access',
-      'Automated transaction system + direct Preferred Lender access',
-      'Monthly Q&A, advanced videos, document review, private community',
-      '$1,500 closing credit from any Preferred Lender you close with',
+      'K2 Certified Borrower status + lifetime unlimited access ($249 one-time)',
+      'PrepCoach \u2013 your dedicated AI agent built specifically for small commercial borrowers: guides every step of prep, spots gaps, and helps you show up lender-ready. CRE expertise available 24/7/365',
+      '30-minute free expert consultation to personally review your loan submission package, strategy, and positioning',
+      'Done-for-you Transaction Overview \u2013 professional, lender-attractive Executive Summary we customize for your deal',
+      'Direct access to our Preferred Lender network \u2013 we handle the placement work, introductions, and follow-through to get your deal in front of the right capital sources - or contact lenders on your own',
+      'Advanced video library, document review support, ongoing chat / email support',
+      '$1,500 closing credit from any Preferred Lender you close with (6x ROI on your membership fee) *Terms Apply*',
     ],
     feeTransparency: {
-      title: 'How We Earn - Full Transparency',
-      text: 'K2 earns a flat lender-paid success fee only on closed loans (2% under $500k, 1.5% $500k–$1M, 1% above $1M) – fully disclosed, no surprises, your success first.',
+      title: 'How We Get Paid',
+      text: 'Flat, success-only fee paid by the lender on closed loans (typically 1\u20132% depending on size) \u2013 zero cost to you if it doesn\u2019t close, full transparency, no hidden upfront fees.',
     },
     commitment:
-      '$249 one-time - with real payback potential through your closing credit.',
+      '$249 one-time \u2013 with 6X payback via closing $1,500 credit + dramatically higher close probability and better terms.',
     cta: {
-      label: 'Become Certified - $249 + Credit',
+      label: 'Become K2 Certified \u2013 $249',
       href: '/membership/certified-borrower',
     },
   },
@@ -90,7 +96,7 @@ export function PathsAccordion() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {PATHS.map((item, index) => {
-        const isFeatured = item.step === 3;
+        const isFeatured = item.featured === true;
         const isOpen = openIndex === index;
 
         return (
@@ -153,7 +159,7 @@ export function PathsAccordion() {
             {/* Expandable content */}
             <div
               className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                isOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'
+                isOpen ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'
               }`}
             >
               <CardContent className="flex-1 flex flex-col min-h-0 pt-0">

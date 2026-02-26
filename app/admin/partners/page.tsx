@@ -898,7 +898,7 @@ function PartnerForm({
                 <Label htmlFor="video_url">
                   Video URL{' '}
                   <span className="text-xs text-gray-400 font-normal">
-                    (embed URL — members only)
+                    (embed URL - members only)
                   </span>
                 </Label>
                 <Input

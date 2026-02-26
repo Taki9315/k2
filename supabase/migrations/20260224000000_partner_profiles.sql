@@ -1,10 +1,10 @@
 -- ============================================================================
--- K2 Commercial Finance — Partner Profiles (Lender & Vendor Pages)
+-- K2 Commercial Finance - Partner Profiles (Lender & Vendor Pages)
 -- Migration: 20260224000000_partner_profiles.sql
 -- ============================================================================
 
 -- ────────────────────────────────────────────────────────────────────────────
--- 1. Partner profiles table — one row per approved lender or vendor page
+-- 1. Partner profiles table - one row per approved lender or vendor page
 -- ────────────────────────────────────────────────────────────────────────────
 create table if not exists public.partner_profiles (
   id              uuid primary key default gen_random_uuid(),
@@ -59,7 +59,7 @@ create index if not exists partner_profiles_slug_idx
   on public.partner_profiles (slug);
 
 -- ────────────────────────────────────────────────────────────────────────────
--- 2. Partner contact submissions — borrower inquiries to lender/vendor
+-- 2. Partner contact submissions - borrower inquiries to lender/vendor
 -- ────────────────────────────────────────────────────────────────────────────
 create table if not exists public.partner_contacts (
   id              uuid primary key default gen_random_uuid(),
@@ -232,7 +232,7 @@ values
    '[]', true, true),
 
   ('vendor', 'summit-legal-advisors', 'Summit Legal Advisors', null,
-   'Commercial real estate law firm — closings, entities, title work.',
+   'Commercial real estate law firm - closings, entities, title work.',
    'Summit Legal Advisors is a full-service commercial real estate law firm handling closings, ' ||
    'entity formation, lease review, and title work throughout DC, Maryland, and Virginia. ' ||
    'Their attorneys have closed over $500M in commercial transactions.',

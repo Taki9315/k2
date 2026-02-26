@@ -40,7 +40,7 @@ import {
 } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
-/*  TASK DEFINITIONS — inputs + prompt builder                          */
+/*  TASK DEFINITIONS - inputs + prompt builder                          */
 /* ------------------------------------------------------------------ */
 
 type TaskField = {
@@ -72,7 +72,7 @@ const TASK_TEMPLATES: TaskTemplate[] = [
       'Create a lender-ready 1-page Executive Summary for your commercial loan request.',
     icon: <FileText className="h-6 w-6" />,
     description:
-      'PrepCoach will guide you through building a compelling Executive Summary — ' +
+      'PrepCoach will guide you through building a compelling Executive Summary - ' +
       'the single most important document in your loan package. Fill in your deal ' +
       'basics below so PrepCoach can jump right into drafting.',
     fields: [
@@ -99,11 +99,11 @@ const TASK_TEMPLATES: TaskTemplate[] = [
     step: 2,
     title: 'Completing Your Personal Financial Statement',
     subtitle:
-      'Build a professional PFS that lenders actually want to see — accurate, organized, no fluff.',
+      'Build a professional PFS that lenders actually want to see - accurate, organized, no fluff.',
     icon: <DollarSign className="h-6 w-6" />,
     description:
       'PrepCoach will walk you through every section of your Personal Financial ' +
-      'Statement — assets, liabilities, net worth, and contingent liabilities. ' +
+      'Statement - assets, liabilities, net worth, and contingent liabilities. ' +
       'Provide what you know below and PrepCoach will fill in the gaps.',
     fields: [
       { key: 'liquidAssets', label: 'Estimated Liquid Assets', placeholder: 'e.g., $150,000 in savings/checking', type: 'text' },
@@ -188,7 +188,7 @@ const TASK_TEMPLATES: TaskTemplate[] = [
     ],
     buildPrompt: (v) =>
       `I'm looking for guidance on getting prepared for a commercial loan.\n\n` +
-      `My situation: ${v.situation || "I'm not sure where to start — help me figure out my next step."}\n\n` +
+      `My situation: ${v.situation || "I'm not sure where to start - help me figure out my next step."}\n\n` +
       `Based on where I am, what should I tackle first?`,
   },
 ];
@@ -214,7 +214,7 @@ const EXCEL_TIPS: ExcelTip[] = [
     content: (
       <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
         <p>
-          Use a consistent column structure every time — lenders expect this for
+          Use a consistent column structure every time - lenders expect this for
           quick scanning.
         </p>
         <div>
@@ -252,7 +252,7 @@ const EXCEL_TIPS: ExcelTip[] = [
           </ul>
         </div>
         <p className="text-xs text-gray-500 italic">
-          Tip: Download free CRE rent roll templates as starters — customize to
+          Tip: Download free CRE rent roll templates as starters - customize to
           your property type (multi-family vs retail vs self-storage).
         </p>
       </div>
@@ -303,7 +303,7 @@ const EXCEL_TIPS: ExcelTip[] = [
           </li>
           <li>
             <span className="font-semibold text-gray-900">Bold</span> totals/subtotals
-            and use borders/gridlines sparingly — keep it clean, not cluttered.
+            and use borders/gridlines sparingly - keep it clean, not cluttered.
           </li>
           <li>
             <span className="font-semibold text-gray-900">Hide helper columns</span>{' '}
@@ -365,12 +365,12 @@ const EXCEL_TIPS: ExcelTip[] = [
         <ul className="space-y-3">
           <li>
             <span className="font-semibold text-gray-900">Save as PDF for submission</span>{' '}
-            (File → Save As → PDF): Lenders prefer non-editable PDFs — preserves
+            (File → Save As → PDF): Lenders prefer non-editable PDFs - preserves
             formatting, prevents accidental changes.
           </li>
           <li>
             <span className="font-semibold text-gray-900">Export to CSV if needed</span>{' '}
-            for data import — but avoid for lender submission (loses
+            for data import - but avoid for lender submission (loses
             formulas/formatting).
           </li>
           <li>
@@ -418,12 +418,12 @@ const EXCEL_TIPS: ExcelTip[] = [
             separate Notes sheet.
           </li>
           <li>
-            For secure data room upload: Export a &quot;Lender View&quot; version —
+            For secure data room upload: Export a &quot;Lender View&quot; version -
             remove sensitive borrower info if needed, keep rent roll core.
           </li>
           <li>
             If using Google Sheets for collaboration, export to Excel (.xlsx)
-            via File → Download — formulas usually carry over fine.
+            via File → Download - formulas usually carry over fine.
           </li>
         </ul>
       </div>
@@ -439,37 +439,37 @@ const VALUE_PROPS = [
   {
     icon: FileText,
     title: 'Step-by-Step Guidance on Key Prep Tasks',
-    text: 'Walks you through executive summaries, personal financial statements, and DSCR calculations — ensuring your package is complete, error-free, and built exactly to what lenders want.',
+    text: 'Walks you through executive summaries, personal financial statements, and DSCR calculations - ensuring your package is complete, error-free, and built exactly to what lenders want.',
   },
   {
     icon: Phone,
     title: 'Custom Scripts for Lender Outreach',
-    text: 'Tailored phone scripts and email templates for your specific deal — so you contact lenders professionally, build instant credibility, and move quickly to real conversations.',
+    text: 'Tailored phone scripts and email templates for your specific deal - so you contact lenders professionally, build instant credibility, and move quickly to real conversations.',
   },
   {
     icon: Shield,
     title: 'Secure Data Room for Easy, Safe Sharing',
-    text: 'Upload polished docs to our encrypted data room and grant targeted access to preferred lenders — cutting email chaos, protecting your info, and making collaboration seamless.',
+    text: 'Upload polished docs to our encrypted data room and grant targeted access to preferred lenders - cutting email chaos, protecting your info, and making collaboration seamless.',
   },
   {
     icon: Zap,
     title: 'Time-Saving Automation with Expert Insights',
-    text: 'Automates calculations, organizes documents, and flags issues early — slashing prep time in half while delivering insider tips that prevent common deal-killers.',
+    text: 'Automates calculations, organizes documents, and flags issues early - slashing prep time in half while delivering insider tips that prevent common deal-killers.',
   },
   {
     icon: Award,
     title: 'Higher Approval Rates and Better Terms',
-    text: 'Certifies you as a low-risk, high-quality borrower — leading to faster responses, stronger "yes" decisions, and more favorable rates from lenders who value preparation.',
+    text: 'Certifies you as a low-risk, high-quality borrower - leading to faster responses, stronger "yes" decisions, and more favorable rates from lenders who value preparation.',
   },
   {
     icon: Users,
     title: "Exclusive Access to K2's Expert Community",
-    text: 'Connects you directly to financing and CRE pros who prefer working with ready borrowers — a high-touch network built on mutual respect and real results.',
+    text: 'Connects you directly to financing and CRE pros who prefer working with ready borrowers - a high-touch network built on mutual respect and real results.',
   },
   {
     icon: DollarSign,
     title: 'Cost-Effective Alternative to Consultants',
-    text: 'Skip expensive $5K+ advisors — PrepCoach gives personalized, always-on coaching at a fraction of the cost, empowering you to handle more deals yourself.',
+    text: 'Skip expensive $5K+ advisors - PrepCoach gives personalized, always-on coaching at a fraction of the cost, empowering you to handle more deals yourself.',
   },
   {
     icon: Search,
@@ -479,12 +479,12 @@ const VALUE_PROPS = [
   {
     icon: FileSpreadsheet,
     title: 'Build a Professional, Lender-Ready Package Fast',
-    text: 'Generates polished outputs (summaries, tables, paragraphs) ready for your data room or submission — saving hours of formatting.',
+    text: 'Generates polished outputs (summaries, tables, paragraphs) ready for your data room or submission - saving hours of formatting.',
   },
   {
     icon: Clock,
     title: 'Ongoing Support for Every Deal',
-    text: 'Available in your member dashboard anytime, PrepCoach scales with you — whether prepping one property or building a portfolio.',
+    text: 'Available in your member dashboard anytime, PrepCoach scales with you - whether prepping one property or building a portfolio.',
   },
 ];
 
@@ -498,7 +498,7 @@ export default function PrepCoachPage() {
   return (
     <div className="flex flex-col">
       {/* ============================================================ */}
-      {/*  HERO — Meet PrepCoach                                        */}
+      {/*  HERO - Meet PrepCoach                                        */}
       {/* ============================================================ */}
       <section className="relative bg-gradient-to-br from-slate-50 to-slate-100 py-16 md:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent" />
@@ -520,7 +520,7 @@ export default function PrepCoachPage() {
             <p className="text-gray-500 max-w-2xl mx-auto leading-relaxed mb-4">
               K2 PrepCoach changes that. This proprietary AI agent acts as your
               24/7 personal coach. Built on decades of real CRE lending
-              expertise, it guides you through every step — so you show up
+              expertise, it guides you through every step - so you show up
               prepared, confident, and lender-ready.
             </p>
             <p className="text-sm text-gray-400 max-w-xl mx-auto mb-10">
@@ -575,7 +575,7 @@ export default function PrepCoachPage() {
               Massive Value at Every Step
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              From deal prep to lender outreach to closing — PrepCoach delivers
+              From deal prep to lender outreach to closing - PrepCoach delivers
               the edge that separates funded deals from rejected ones.
             </p>
           </div>
@@ -784,7 +784,7 @@ function PromptsSection() {
           <p className="text-gray-600 leading-relaxed">
             Each task below shows you exactly what PrepCoach will work on. Fill
             in your deal details, then hit{' '}
-            <strong>Launch PrepCoach</strong> — PrepCoach will take your info
+            <strong>Launch PrepCoach</strong> - PrepCoach will take your info
             and guide you step-by-step to a polished deliverable.
           </p>
         </div>
@@ -899,7 +899,7 @@ function PromptsSection() {
                       </Button>
                       <span className="text-xs text-gray-400">
                         {template.fields.length > 0
-                          ? 'Fields are optional — PrepCoach will ask for anything missing'
+                          ? 'Fields are optional - PrepCoach will ask for anything missing'
                           : 'PrepCoach will guide you interactively'}
                       </span>
                     </div>
@@ -911,7 +911,7 @@ function PromptsSection() {
         </div>
       </div>
 
-      {/* Controlled dialog — opens when a task is launched */}
+      {/* Controlled dialog - opens when a task is launched */}
       {launchTask && (
         <AssistantDialog
           defaultOpen
@@ -943,7 +943,7 @@ function ExcelTipsSection() {
           </h2>
           <p className="text-gray-600 leading-relaxed">
             Clean, consistent, lender-friendly formatting that makes your data
-            easy to review, audit, and trust. Lenders hate messy files — a
+            easy to review, audit, and trust. Lenders hate messy files - a
             polished Excel export shows you&apos;re prepared and respects their
             time.
           </p>
@@ -1012,52 +1012,52 @@ function LearnMoreDialog() {
     {
       icon: FileText,
       title: 'Step-by-Step Guidance on Key Prep Tasks',
-      text: 'PrepCoach walks you through must-have items like executive summaries, personal financial statements, and DSCR calculations — ensuring your package is complete, error-free, and built exactly to what lenders want.',
+      text: 'PrepCoach walks you through must-have items like executive summaries, personal financial statements, and DSCR calculations - ensuring your package is complete, error-free, and built exactly to what lenders want.',
     },
     {
       icon: Phone,
       title: 'Custom Scripts for Lender Outreach',
-      text: 'Get tailored phone scripts and email templates for your specific deal — so you contact lenders professionally, build instant credibility, and move quickly to real conversations instead of getting ghosted.',
+      text: 'Get tailored phone scripts and email templates for your specific deal - so you contact lenders professionally, build instant credibility, and move quickly to real conversations instead of getting ghosted.',
     },
     {
       icon: Shield,
       title: 'Secure Data Room for Easy, Safe Sharing',
-      text: 'Upload polished docs to our encrypted data room and grant targeted access to preferred lenders — cutting email chaos, protecting your info, and making collaboration seamless and professional.',
+      text: 'Upload polished docs to our encrypted data room and grant targeted access to preferred lenders - cutting email chaos, protecting your info, and making collaboration seamless and professional.',
     },
     {
       icon: Zap,
       title: 'Time-Saving Automation with Expert Insights',
-      text: 'Automates calculations, organizes documents, and flags issues early — slashing prep time in half while delivering insider tips that prevent common deal-killers and keep momentum high.',
+      text: 'Automates calculations, organizes documents, and flags issues early - slashing prep time in half while delivering insider tips that prevent common deal-killers and keep momentum high.',
     },
     {
       icon: Award,
       title: 'Higher Approval Rates and Better Terms',
-      text: 'PrepCoach certifies you as a low-risk, high-quality borrower — leading to faster responses, stronger "yes" decisions, and more favorable rates/terms from lenders who value preparation over junk submissions.',
+      text: 'PrepCoach certifies you as a low-risk, high-quality borrower - leading to faster responses, stronger "yes" decisions, and more favorable rates/terms from lenders who value preparation over junk submissions.',
     },
     {
       icon: Users,
       title: "Exclusive Access to K2's Expert Community",
-      text: 'As a K2 proprietary tool, PrepCoach connects you directly to our financing and CRE pros who prefer working with ready borrowers — creating a high-touch network built on mutual respect and real results.',
+      text: 'As a K2 proprietary tool, PrepCoach connects you directly to our financing and CRE pros who prefer working with ready borrowers - creating a high-touch network built on mutual respect and real results.',
     },
     {
       icon: DollarSign,
       title: 'Cost-Effective Alternative to Consultants',
-      text: 'Skip expensive $5K+ advisors — PrepCoach gives personalized, always-on coaching at a fraction of the cost, empowering you to handle more deals yourself while still getting pro-level guidance.',
+      text: 'Skip expensive $5K+ advisors - PrepCoach gives personalized, always-on coaching at a fraction of the cost, empowering you to handle more deals yourself while still getting pro-level guidance.',
     },
     {
       icon: Search,
       title: 'Spot & Fix Red Flags Before Lenders Do',
-      text: 'Analyzes your rent roll, financials, and package for hidden issues (rollover risk, weak DSCR, etc.) and provides fixes — helping you strengthen weak spots and avoid surprises that tank deals.',
+      text: 'Analyzes your rent roll, financials, and package for hidden issues (rollover risk, weak DSCR, etc.) and provides fixes - helping you strengthen weak spots and avoid surprises that tank deals.',
     },
     {
       icon: FileSpreadsheet,
       title: 'Build a Professional, Lender-Ready Package Fast',
-      text: 'Generates polished outputs (summaries, tables, paragraphs) ready for your data room or submission — saving hours of formatting and ensuring your materials look sharp and trustworthy from the start.',
+      text: 'Generates polished outputs (summaries, tables, paragraphs) ready for your data room or submission - saving hours of formatting and ensuring your materials look sharp and trustworthy from the start.',
     },
     {
       icon: Clock,
       title: 'Ongoing Support for Every Deal',
-      text: "Available in your member dashboard anytime, PrepCoach scales with you — whether you're prepping one property or building a portfolio — so you close more deals efficiently over time.",
+      text: "Available in your member dashboard anytime, PrepCoach scales with you - whether you're prepping one property or building a portfolio - so you close more deals efficiently over time.",
     },
   ];
 
@@ -1095,8 +1095,8 @@ function LearnMoreDialog() {
           <div className="space-y-4 text-gray-600 leading-relaxed">
             <p>
               Tired of killer opportunities slipping away because the financing
-              process is a mess? In the $150K–$5M commercial space — where big
-              banks drop the ball — unprepared borrowers face constant
+              process is a mess? In the $150K–$5M commercial space - where big
+              banks drop the ball - unprepared borrowers face constant
               rejections, revisions, and wasted time.
             </p>
             <p className="text-lg font-semibold text-primary">
@@ -1105,8 +1105,8 @@ function LearnMoreDialog() {
             <p>
               This proprietary AI agent, exclusive to K2 Commercial Finance
               members, acts as your 24/7 personal coach. Built on decades of
-              real CRE lending expertise, it guides you through every step —
-              especially financing — so you show up prepared, confident, and
+              real CRE lending expertise, it guides you through every step -
+              especially financing - so you show up prepared, confident, and
               lender-ready.
             </p>
             <div className="flex items-center gap-3 rounded-xl bg-slate-50 border border-slate-200 px-4 py-3">

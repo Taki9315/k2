@@ -75,7 +75,7 @@ const LOAN_PROGRAMS: LoanProgram[] = [
     name: 'Bridge Loans',
     subtitle: 'Short-term financing for transitional properties',
     description:
-      'Bridge loans cover 12–36 month terms for properties in transition — value-add, lease-up, or repositioning plays before permanent financing.',
+      'Bridge loans cover 12–36 month terms for properties in transition - value-add, lease-up, or repositioning plays before permanent financing.',
     lenderLooksFor: [
       'Clear business plan for stabilization',
       'Sponsor experience with similar projects',

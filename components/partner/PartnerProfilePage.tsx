@@ -547,7 +547,7 @@ function ContactForm({
           }),
         });
       } catch {
-        /* non-blocking — contact was already saved to DB */
+        /* non-blocking - contact was already saved to DB */
       }
 
       setSuccess(true);

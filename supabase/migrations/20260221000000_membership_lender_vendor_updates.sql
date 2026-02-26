@@ -1,5 +1,5 @@
 -- ============================================================================
--- K2 Commercial Finance — Membership, Lender & Vendor Updates
+-- K2 Commercial Finance - Membership, Lender & Vendor Updates
 -- Migration: 20260221000000_membership_lender_vendor_updates.sql
 -- ============================================================================
 

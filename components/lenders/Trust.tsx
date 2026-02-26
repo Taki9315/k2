@@ -16,7 +16,7 @@ export function Trust() {
           K2 is not a lead marketplace. Our borrowers go through a structured
           education process designed to align them with lender expectations before
           they ever submit a request. The result is a relationship-driven network
-          where lenders receive prepared, respectful, and informed applicants — not
+          where lenders receive prepared, respectful, and informed applicants - not
           cold inquiries. When you join K2, you join a community that values
           transparency, preparation, and long-term partnerships.
         </p>

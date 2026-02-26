@@ -52,7 +52,7 @@ export default function AboutPage() {
                 Our mission is to deliver actionable tools and education that
                 empower borrowers to understand exactly what lenders look for,
                 position their deals effectively, and navigate the financing
-                process with confidence—no hype, no guarantees, just honest,
+                process with confidence-no hype, no guarantees, just honest,
                 expert guidance based on 25+ years of real lending experience.
               </p>
 
@@ -81,7 +81,7 @@ export default function AboutPage() {
                   <p className="text-lg text-gray-600 leading-relaxed">
                     By getting you prepped and positioned right, we make it
                     easier for you to tap that expert support quickly and
-                    efficiently — leading to faster approvals, better terms, and
+                    efficiently - leading to faster approvals, better terms, and
                     deals that actually close.
                   </p>
                   <p className="text-lg text-gray-700 font-medium leading-relaxed">
@@ -120,7 +120,7 @@ export default function AboutPage() {
                 Borrowers still need the best possible terms on solid deals
                 without wasting months chasing dead ends. Lenders still want
                 clean, ready-to-close opportunities that respect their time and
-                underwriting guidelines—especially in our $150K–$5M sweet spot
+                underwriting guidelines-especially in our $150K–$5M sweet spot
                 where big banks often ignore or mishandle small commercial
                 transactions.
               </p>
@@ -146,7 +146,7 @@ export default function AboutPage() {
               {kenExpanded && (
                 <div className="space-y-5 border-l-4 border-primary/30 pl-5 animate-in fade-in slide-in-from-top-2 duration-300">
                   <p className="text-lg text-gray-600 leading-relaxed">
-                    That's exactly why I founded K2 in 2001—and why my business
+                    That's exactly why I founded K2 in 2001-and why my business
                     has always acted as the conduit. I screen out impossible
                     deals early, help borrowers prepare strong, lender-ready
                     financing requests, match them with the most likely sources
@@ -157,7 +157,7 @@ export default function AboutPage() {
                   <p className="text-lg text-gray-600 leading-relaxed">
                     What has changed recently is technology. Tools like AI,
                     automation, and streamlined digital workflows now make the
-                    entire process faster and more efficient—for prepared
+                    entire process faster and more efficient-for prepared
                     borrowers and busy experts alike.
                   </p>
                   <p className="text-lg text-gray-600 leading-relaxed">
@@ -190,14 +190,14 @@ export default function AboutPage() {
                     terms, with far less frustration.
                   </p>
                   <p className="text-lg text-gray-600 leading-relaxed">
-                    I'm here to keep doing what I've done since day one—helping
+                    I'm here to keep doing what I've done since day one-helping
                     serious small commercial investors and business owners turn
                     great opportunities into closed deals.
                   </p>
                   <p className="text-lg text-gray-700 font-medium leading-relaxed italic">
                     As a matter of principle, K2 receives zero compensation
                     until after a transaction closes. If we can't fund it, we
-                    haven't solved the problem—and we haven't earned a fee.
+                    haven't solved the problem-and we haven't earned a fee.
                   </p>
                   <p className="text-lg text-gray-600 leading-relaxed">
                     If that sounds like the kind of support you've been looking
@@ -246,7 +246,7 @@ export default function AboutPage() {
                 </h3>
                 <p className="text-gray-600">
                   Transparent fees and honest, expert guidance. We earn only
-                  when you succeed — no hidden costs, no surprises.
+                  when you succeed - no hidden costs, no surprises.
                 </p>
               </CardContent>
             </Card>

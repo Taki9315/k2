@@ -25,7 +25,7 @@ const HIGHLIGHTS = [
   {
     icon: Users,
     title: 'Pre-Qualified Borrowers',
-    text: 'Every borrower in our pipeline has completed structured preparation — educated, documented, and ready to transact.',
+    text: 'Every borrower in our pipeline has completed structured preparation - educated, documented, and ready to transact.',
   },
   {
     icon: TrendingUp,
@@ -86,9 +86,9 @@ export default function LenderNetworkPage() {
         .from('contact_inquiries')
         .insert({
           type: 'lender_network',
-          name: fullName || '—',
+          name: fullName || '-',
           email: formData.email,
-          message: messageParts.join('\n') || '—',
+          message: messageParts.join('\n') || '-',
         });
 
       if (submitError) throw submitError;
@@ -127,7 +127,7 @@ export default function LenderNetworkPage() {
           <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
             Access a steady pipeline of educated, documented, and lender-ready
             commercial borrowers. Our network connects quality lenders with
-            quality deals — saving time on both sides of the table.
+            quality deals - saving time on both sides of the table.
           </p>
         </div>
       </section>
@@ -141,7 +141,7 @@ export default function LenderNetworkPage() {
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               We do the heavy lifting on borrower preparation so you can focus
-              on what you do best — funding deals.
+              on what you do best - funding deals.
             </p>
           </div>
 
@@ -178,7 +178,7 @@ export default function LenderNetworkPage() {
                 K2 Commercial Finance educates and prepares borrowers through a
                 structured process before they ever reach your desk. Each borrower
                 completes our Financing Success Kit, goes through a full
-                intake, and receives a Transaction Executive Summary — so when you
+                intake, and receives a Transaction Executive Summary - so when you
                 see a deal, it&apos;s already organized and underwriteable.
               </p>
               <ul className="space-y-4">
@@ -186,7 +186,7 @@ export default function LenderNetworkPage() {
                   'Borrowers arrive prepared with documentation in hand',
                   'Deal packages include executive summaries with key financials',
                   'Matched to your lending criteria and property type focus',
-                  'Ongoing pipeline — not one-off referrals',
+                  'Ongoing pipeline - not one-off referrals',
                   'Full details, referral fee structure, and requirements shared after approval',
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
