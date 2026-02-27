@@ -11,29 +11,22 @@ import {
   Building2,
   CreditCard,
   BarChart3,
-  Settings,
   ChevronLeft,
   Leaf,
-  MessageCircle,
-  Calendar,
-  Briefcase,
+  Handshake,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { title: "Dashboard", path: "/admin", icon: LayoutDashboard },
   { title: "Users", path: "/admin/users", icon: Users },
-  { title: "Submissions", path: "/admin/submissions", icon: FileText },
-  { title: "Chat", path: "/admin/chat", icon: MessageCircle },
-  { title: "Meetings", path: "/admin/meetings", icon: Calendar },
-  { title: "Business Requests", path: "/admin/business-requests", icon: Briefcase },
   { title: "Content", path: "/admin/documents", icon: FolderOpen },
   { title: "Resources", path: "/admin/resources", icon: BookOpen },
+  { title: "Submissions", path: "/admin/submissions", icon: FileText },
   { title: "Providers", path: "/admin/providers", icon: Building2 },
+  { title: "Partners", path: "/admin/partners", icon: Handshake },
   { title: "Payments", path: "/admin/payments", icon: CreditCard },
   { title: "Analytics", path: "/admin/analytics", icon: BarChart3 },
-  { title: "Settings", path: "/admin/settings", icon: Settings },
-  { title: "Partners", path: "/admin/partners", icon: Building2 },
 ];
 
 interface AdminSidebarProps {
