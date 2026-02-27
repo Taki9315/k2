@@ -11,8 +11,7 @@ type AuthContextType = {
   signUp: (
     email: string,
     password: string,
-    fullName: string,
-    role: 'lender' | 'borrower'
+    fullName: string
   ) => Promise<void>;
   signOut: () => Promise<void>;
   hasMembership: boolean;
@@ -79,9 +78,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (
     email: string,
     password: string,
-    fullName: string,
-    role: 'lender' | 'borrower'
+    fullName: string
   ) => {
+    const role = 'borrower';
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -116,8 +116,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error('Error creating profile:', err);
       }
     }
-
-
   };
 
   const signOut = async () => {

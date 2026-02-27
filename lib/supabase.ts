@@ -14,6 +14,9 @@ export type Database = {
           email: string;
           full_name: string | null;
           avatar_url: string | null;
+          role: 'admin' | 'borrower' | 'lender' | 'network';
+          status: 'active' | 'inactive' | 'suspended';
+          preferred: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -22,6 +25,9 @@ export type Database = {
           email: string;
           full_name?: string | null;
           avatar_url?: string | null;
+          role?: 'admin' | 'borrower' | 'lender' | 'network';
+          status?: 'active' | 'inactive' | 'suspended';
+          preferred?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -30,6 +36,9 @@ export type Database = {
           email?: string;
           full_name?: string | null;
           avatar_url?: string | null;
+          role?: 'admin' | 'borrower' | 'lender' | 'network';
+          status?: 'active' | 'inactive' | 'suspended';
+          preferred?: boolean;
           updated_at?: string;
         };
       };
@@ -78,6 +87,7 @@ export type Database = {
           access_level: 'public' | 'members_only';
           video_url: string | null;
           article_content: string | null;
+          file_url: string | null;
           thumbnail_url: string | null;
           category: string;
           is_published: boolean;
