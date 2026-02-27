@@ -29,13 +29,13 @@ export default function PartnershipPage() {
 
     try {
       const { error: submitError } = await supabase
-        .from('contact_inquiries')
+        .from('providers')
         .insert({
-          type: 'partnership',
           name: formData.name,
           email: formData.email,
           company: formData.company,
-          message: formData.message,
+          description: formData.message,
+          status: 'pending',
         });
 
       if (submitError) throw submitError;

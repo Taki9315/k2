@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,10 @@ import {
   BarChart3,
   X,
   Maximize2,
+  Handshake,
+  Loader2,
 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 type Resource = {
   title: string;
@@ -66,6 +69,28 @@ const resources: Resource[] = [
 
 export default function ResourcePage() {
   const [activeResource, setActiveResource] = useState<Resource | null>(null);
+  const [approvedProviders, setApprovedProviders] = useState<any[]>([]);
+  const [loadingProviders, setLoadingProviders] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('providers')
+          .select('*')
+          .eq('status', 'approved')
+          .order('created_at', { ascending: false });
+
+        if (!error && data) {
+          setApprovedProviders(data);
+        }
+      } catch (err) {
+        console.error('Error fetching providers:', err);
+      } finally {
+        setLoadingProviders(false);
+      }
+    })();
+  }, []);
 
   const handleResourceClick = (resource: Resource) => {
     if (resource.external && resource.iframeable) {
@@ -229,6 +254,80 @@ export default function ResourcePage() {
           </div>
         </div>
       </section>
+
+      {/* Approved Partners from DB */}
+      {!loadingProviders && approvedProviders.length > 0 && (
+        <section className="py-12 md:py-16 bg-slate-50">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-900">Our Partners</h2>
+              <p className="mt-2 text-gray-600">
+                Trusted partners who share our mission to help borrowers succeed.
+              </p>
+            </div>
+            <div className="space-y-6">
+              {approvedProviders.map((provider) => (
+                <div key={provider.id} className="block group">
+                  <Card className="border-2 transition-all hover:shadow-lg hover:border-primary/30">
+                    <CardContent className="flex items-start gap-5 p-6 md:p-8">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <Handshake className="h-6 w-6" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {provider.company || provider.name}
+                          </h3>
+                          {provider.type && (
+                            <span className="shrink-0 rounded-full bg-slate-100 px-3 py-0.5 text-xs font-semibold text-slate-700">
+                              {provider.type}
+                            </span>
+                          )}
+                          {provider.state && (
+                            <span className="shrink-0 rounded-full bg-slate-100 px-3 py-0.5 text-xs font-semibold text-slate-700">
+                              {provider.state}
+                            </span>
+                          )}
+                          <span className="shrink-0 rounded-full bg-emerald-100 px-3 py-0.5 text-xs font-semibold text-emerald-700">
+                            Partner
+                          </span>
+                          {provider.website && (
+                            <a
+                              href={provider.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex"
+                            >
+                              <ExternalLink className="h-4 w-4 text-gray-400 hover:text-primary" />
+                            </a>
+                          )}
+                        </div>
+                        {provider.description && (
+                          <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                            {provider.description}
+                          </p>
+                        )}
+                        <p className="mt-1 text-xs text-gray-500">
+                          Contact: {provider.email}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {loadingProviders && (
+        <section className="py-8 bg-slate-50">
+          <div className="flex items-center justify-center">
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            <span className="ml-2 text-sm text-muted-foreground">Loading partners…</span>
+          </div>
+        </section>
+      )}
 
       <section className="border-t bg-slate-900 text-white py-16">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">

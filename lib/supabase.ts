@@ -119,6 +119,45 @@ export type Database = {
           created_at?: string;
         };
       };
+      providers: {
+        Row: {
+          id: string;
+          name: string;
+          email: string;
+          company: string;
+          type: string;
+          state: string;
+          website: string | null;
+          description: string;
+          status: 'pending' | 'approved' | 'declined';
+          admin_notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          email: string;
+          company?: string;
+          type?: string;
+          state?: string;
+          website?: string | null;
+          description?: string;
+          status?: 'pending' | 'approved' | 'declined';
+          admin_notes?: string | null;
+        };
+        Update: {
+          name?: string;
+          email?: string;
+          company?: string;
+          type?: string;
+          state?: string;
+          website?: string | null;
+          description?: string;
+          status?: 'pending' | 'approved' | 'declined';
+          admin_notes?: string | null;
+        };
+      };
     };
   };
 };
