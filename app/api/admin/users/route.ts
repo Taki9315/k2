@@ -47,7 +47,7 @@ export async function POST(request: Request) {
       await supabase.auth.admin.createUser({
         email,
         password: password || "123456",
-        email_confirm: false,
+        email_confirm: true,
         user_metadata: {
           full_name: name || "",
           role: role || "borrower",

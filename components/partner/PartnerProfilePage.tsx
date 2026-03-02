@@ -85,6 +85,8 @@ export type PartnerProfile = {
   min_loan: number | null;
   max_loan: number | null;
   property_types: string[] | null;
+  loan_programs: string[] | null;
+  searchable_tags: string[] | null;
   states_served: string[] | null;
   service_type: string | null;
   service_areas: string | null;
@@ -137,10 +139,10 @@ const SERVICE_TYPE_LABELS: Record<string, string> = {
 /*  MAIN COMPONENT                                                       */
 /* ══════════════════════════════════════════════════════════════════════ */
 export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
-  const { user, hasMembership } = useAuth();
+  const { user, isCertifiedBorrower, profile } = useAuth();
   const isLender = partner.partner_type === 'lender';
-  const backHref = isLender ? '/preferred-lenders' : '/membership';
-  const backLabel = isLender ? 'All Preferred Lenders' : 'Back';
+  const backHref = '/dashboard/resources';
+  const backLabel = 'Back to Partner Network';
 
   return (
     <div className="flex flex-col">
@@ -294,18 +296,31 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
                 </div>
               </div>
             )}
+
+            {isLender && partner.loan_programs && partner.loan_programs.length > 0 && (
+              <div className="mt-6">
+                <h3 className="font-semibold text-gray-900 mb-3">Loan Programs</h3>
+                <div className="flex flex-wrap gap-2">
+                  {partner.loan_programs.map((lp) => (
+                    <Badge key={lp} className="bg-primary/10 text-primary border-primary/20 text-sm">
+                      {lp}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </section>
       )}
 
-      {/* ── Video section (members only) ──────────────────────────────── */}
+      {/* ── Video section (certified borrowers only) ─────────────── */}
       {partner.video_url && (
         <section className="py-16 bg-slate-50">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
               Video Introduction
             </h2>
-            {hasMembership ? (
+            {isCertifiedBorrower ? (
               <div className="aspect-video rounded-xl overflow-hidden bg-black shadow-lg">
                 <iframe
                   src={partner.video_url}
@@ -319,7 +334,7 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
               <div className="aspect-video rounded-xl bg-slate-200 flex flex-col items-center justify-center text-center p-8">
                 <Lock className="h-12 w-12 text-slate-400 mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  Members-Only Video
+                  Certified Borrowers Only
                 </h3>
                 <p className="text-gray-600 mb-6 max-w-md">
                   This video is available exclusively to K2 Certified Borrowers.
@@ -335,14 +350,14 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
         </section>
       )}
 
-      {/* ── Documents section (members only) ──────────────────────────── */}
+      {/* ── Documents section (certified borrowers only) ──────────── */}
       {partner.documents && partner.documents.length > 0 && (
         <section className="py-16 bg-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
               Documents &amp; Resources
             </h2>
-            {hasMembership ? (
+            {isCertifiedBorrower ? (
               <div className="space-y-4">
                 {partner.documents.map((doc, i) => (
                   <a
@@ -439,8 +454,8 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
 
             {/* Right: form */}
             <div>
-              {hasMembership ? (
-                <ContactForm partner={partner} user={user} />
+              {isCertifiedBorrower ? (
+                <ContactForm partner={partner} user={user} profile={profile} />
               ) : (
                 <Card className="border-2">
                   <CardContent className="p-8 text-center">
@@ -477,19 +492,11 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
             support your commercial real estate goals.
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-            {isLender ? (
-              <Button size="lg" asChild>
-                <Link href="/preferred-lenders">
-                  View All Preferred Lenders
-                </Link>
-              </Button>
-            ) : (
-              <Button size="lg" asChild>
-                <Link href="/membership">
-                  Explore the K2 Network
-                </Link>
-              </Button>
-            )}
+            <Button size="lg" asChild>
+              <Link href="/dashboard/resources">
+                Browse Full Partner Network
+              </Link>
+            </Button>
             <Button
               size="lg"
               variant="outline"
@@ -513,14 +520,16 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
 function ContactForm({
   partner,
   user,
+  profile,
 }: {
   partner: PartnerProfile;
   user: { id: string; email?: string; user_metadata?: { full_name?: string } } | null;
+  profile: { full_name: string | null; phone: string | null; company: string | null } | null;
 }) {
   const [formData, setFormData] = useState({
-    name: user?.user_metadata?.full_name || '',
+    name: profile?.full_name || user?.user_metadata?.full_name || '',
     email: user?.email || '',
-    phone: '',
+    phone: profile?.phone || '',
     subject: '',
     message: '',
   });

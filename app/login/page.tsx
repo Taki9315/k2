@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/lib/supabase';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const AUTH_SIDE_IMAGE =
@@ -16,45 +15,41 @@ const AUTH_SIDE_IMAGE =
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signIn } = useAuth();
+  const { user, loading, signIn, isAdmin, isPartner, profile } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  // Track whether we just signed in so we can wait for profile to load
+  const pendingRedirect = useRef(false);
+
+  // Redirect after profile is loaded (signIn fires auth state change → profile fetch)
+  useEffect(() => {
+    if (!pendingRedirect.current) return;
+    if (loading || !user || !profile) return;
+
+    pendingRedirect.current = false;
+    if (isAdmin) {
+      router.push('/admin');
+    } else if (isPartner) {
+      router.push('/dashboard');
+    } else {
+      router.push('/dashboard');
+    }
+  }, [user, loading, profile, isAdmin, isPartner, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
+    setSubmitting(true);
 
     try {
       await signIn(email, password);
-
-      // Check if user is admin and route accordingly
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      const userRole = authUser?.user_metadata?.role;
-
-      if (userRole === 'admin') {
-        router.push('/admin');
-      } else {
-        // Also check profile table for role
-        if (authUser) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', authUser.id)
-            .maybeSingle();
-          if (profile?.role === 'admin') {
-            router.push('/admin');
-            return;
-          }
-        }
-        router.push('/dashboard');
-      }
+      pendingRedirect.current = true;
+      // The useEffect above will handle the redirect once the profile loads
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to sign in');
-    } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -71,12 +66,12 @@ export default function LoginPage() {
       >
         <div className="max-w-lg text-white">
           <p className="text-4xl font-semibold leading-tight">
-            K2 Commercial Finance Investor &amp; Business Loans
+            K2 Commercial Finance — Your CRE Financing Partner
           </p>
           <div className="mt-6 h-0.5 w-32 bg-emerald-400" />
           <p className="mt-6 text-base text-white/80">
-            Access the investor portal to review performance, documents, and
-            updates from the K2 Commercial Finance team.
+            Sign in to access your dashboard, PrepCoach templates, partner
+            network, and loan package tools.
           </p>
         </div>
       </section>
@@ -95,7 +90,7 @@ export default function LoginPage() {
               />
             </Link>
             <p className="mt-3 text-center text-xs font-semibold tracking-[0.2em] text-neutral-500">
-              INVESTOR PORTAL
+              MEMBER PORTAL
             </p>
           </div>
         </div>
@@ -143,7 +138,7 @@ export default function LoginPage() {
                 />
                 <div className="flex justify-end">
                   <Link
-                    href="/contact"
+                    href="/forgot-password"
                     className="text-xs text-neutral-500 hover:text-neutral-700"
                   >
                     Forgot your password?
@@ -151,8 +146,8 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Signing in...' : 'Sign In'}
+              <Button type="submit" className="w-full" disabled={submitting}>
+                {submitting ? 'Signing in...' : 'Sign In'}
               </Button>
 
               <Button

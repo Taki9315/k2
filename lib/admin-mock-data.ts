@@ -4,7 +4,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: "admin" | "borrower" | "lender" | "network";
+  role: "admin" | "borrower" | "certified" | "lender" | "vendor";
   status: "active" | "inactive" | "suspended";
   preferred: boolean;
   createdAt: string;
@@ -65,8 +65,8 @@ export const mockUsers: User[] = [
   { id: "5", name: "Lisa Anderson", email: "lisa@example.com", role: "borrower", status: "suspended", preferred: false, createdAt: "2024-04-01" },
   { id: "6", name: "Robert Taylor", email: "robert@example.com", role: "lender", status: "active", preferred: true, createdAt: "2024-04-12" },
   { id: "7", name: "Anna Martinez", email: "anna@example.com", role: "borrower", status: "active", preferred: false, createdAt: "2024-05-08" },
-  { id: "8", name: "David Brown", email: "david@example.com", role: "network", status: "active", preferred: true, createdAt: "2024-05-20" },
-  { id: "9", name: "Karen White", email: "karen@example.com", role: "network", status: "active", preferred: false, createdAt: "2024-06-01" },
+  { id: "8", name: "David Brown", email: "david@example.com", role: "vendor", status: "active", preferred: true, createdAt: "2024-05-20" },
+  { id: "9", name: "Karen White", email: "karen@example.com", role: "vendor", status: "active", preferred: false, createdAt: "2024-06-01" },
 ];
 
 export const mockSubmissions: Submission[] = [

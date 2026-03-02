@@ -58,7 +58,7 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     id: 'q7_expert_access',
     question:
-      'Do you want direct access to a team of CRE/financing experts, preferred lender connections, and tools like a secure data room to share polished packages?',
+      'Do you want direct access to a team of CRE/financing experts, K2 Preferred Lender connections, and tools like a secure data room to share polished packages?',
   },
 ];
 
@@ -117,7 +117,7 @@ const RESULTS: Record<PathType, QuizResult> = {
     body: "Based on your answers, you're in the window where speed and expert support matter most — planning financing in under 6 months, actively eyeing deals, or wanting direct access to pros and lenders. You don't have time for trial-and-error; one misstep could cost you the property.",
     bullets: [
       'Immediate access to K2 PrepCoach for step-by-step package building and red-flag fixes',
-      'Secure data room to upload/share polished docs with preferred lenders',
+      'Secure data room to upload/share polished docs with K2 Preferred Lenders',
       'Direct support from our CRE/financing experts who work best with prepared borrowers',
       'Priority lender connections and community network for faster approvals and better terms',
       'Full toolkit to position your deal as low-risk and fundable — no more rejections or weak offers',

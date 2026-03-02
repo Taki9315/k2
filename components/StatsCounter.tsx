@@ -11,7 +11,7 @@ type Stat = {
 const STATS: Stat[] = [
   { value: 200, suffix: '+', label: 'Borrowers Prepared' },
   { value: 50, suffix: 'M+', label: 'In Deals Supported' },
-  { value: 15, suffix: '+', label: 'Preferred Lenders' },
+  { value: 15, suffix: '+', label: 'K2 Preferred Lenders' },
   { value: 50, suffix: '+', label: 'Pages of Frameworks' },
 ];
 

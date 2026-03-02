@@ -449,7 +449,7 @@ const VALUE_PROPS = [
   {
     icon: Shield,
     title: 'Secure Data Room for Easy, Safe Sharing',
-    text: 'Upload polished docs to our encrypted data room and grant targeted access to preferred lenders - cutting email chaos, protecting your info, and making collaboration seamless.',
+    text: 'Upload polished docs to our encrypted data room and grant targeted access to K2 Preferred Lenders - cutting email chaos, protecting your info, and making collaboration seamless.',
   },
   {
     icon: Zap,
@@ -1022,7 +1022,7 @@ function LearnMoreDialog() {
     {
       icon: Shield,
       title: 'Secure Data Room for Easy, Safe Sharing',
-      text: 'Upload polished docs to our encrypted data room and grant targeted access to preferred lenders - cutting email chaos, protecting your info, and making collaboration seamless and professional.',
+      text: 'Upload polished docs to our encrypted data room and grant targeted access to K2 Preferred Lenders - cutting email chaos, protecting your info, and making collaboration seamless and professional.',
     },
     {
       icon: Zap,

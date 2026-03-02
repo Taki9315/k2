@@ -4,7 +4,7 @@ import { createServiceRoleClient } from "@/lib/supabase-server";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { id, email, full_name, role } = body;
+    const { id, email, full_name, role, phone, company } = body;
 
     if (!id || !email) {
       return NextResponse.json(
@@ -22,6 +22,8 @@ export async function POST(request: Request) {
         email,
         full_name: full_name || null,
         role: role || "borrower",
+        phone: phone || null,
+        company: company || null,
       },
       { onConflict: "id" }
     );

@@ -78,7 +78,7 @@ export default function BusinessRequestsPage() {
 
   return (
     <div>
-      <PageHeader title="Business Requests" description="Manage business requests from preferred users" action={{ label: "New Request", icon: Plus, onClick: () => setDialogOpen(true) }} />
+      <PageHeader title="Business Requests" description="Manage business requests from certified borrowers" action={{ label: "New Request", icon: Plus, onClick: () => setDialogOpen(true) }} />
       <DataTable data={requests} columns={columns} searchKey="userName" searchPlaceholder="Search requests..." />
       <BusinessRequestDialog open={dialogOpen} onOpenChange={setDialogOpen} onSave={handleAdd} />
       <ViewDialog open={!!viewReq} onOpenChange={() => setViewReq(null)} title="Business Request Details" fields={viewReq ? [

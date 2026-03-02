@@ -11,13 +11,17 @@ export default function AdminRouteLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, loading, isAdmin, profile } = useAuth();
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (loading) return;
+    if (!user) {
       router.replace("/login");
+    } else if (profile && !isAdmin) {
+      // Non-admin user trying to access admin routes
+      router.replace("/dashboard");
     }
-  }, [user, loading, router]);
+  }, [user, loading, isAdmin, profile, router]);
 
   if (loading) {
     return (
@@ -27,10 +31,10 @@ export default function AdminRouteLayout({
     );
   }
 
-  if (!user) {
+  if (!user || (profile && !isAdmin)) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Redirecting to sign in...</p>
+        <p className="text-muted-foreground">Redirecting...</p>
       </div>
     );
   }

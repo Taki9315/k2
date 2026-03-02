@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 
 export function Navigation() {
   const pathname = usePathname();
-  const { user, signOut, hasMembership } = useAuth();
+  const { user, signOut, isCertifiedBorrower, isPartner, isAdmin, fullName } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [contentDropdownOpen, setContentDropdownOpen] = useState(false);
   const [mobileContentOpen, setMobileContentOpen] = useState(false);
@@ -85,20 +85,30 @@ export function Navigation() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  {fullName && (
+                    <>
+                      <div className="px-2 py-1.5 text-sm font-medium text-gray-900">{fullName}</div>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard">Dashboard</Link>
                   </DropdownMenuItem>
-                  {hasMembership && (
+                  {isCertifiedBorrower && (
                     <DropdownMenuItem asChild>
-                      <Link href="/membership">Membership</Link>
+                      <Link href="/dashboard/resources">Partner Network</Link>
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuItem asChild>
-                    <Link href="/membership/preferred-lender">Lender Network</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/membership/preferred-vendor">Vendor Network</Link>
-                  </DropdownMenuItem>
+                  {isPartner && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/dashboard">Partner Portal</Link>
+                    </DropdownMenuItem>
+                  )}
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin">Admin Panel</Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem asChild>
                     <Link href="/profile">Profile</Link>
                   </DropdownMenuItem>
@@ -297,29 +307,24 @@ export function Navigation() {
                 >
                   Dashboard
                 </Link>
-                {hasMembership && (
+                {isCertifiedBorrower && (
                   <Link
-                    href="/membership"
+                    href="/dashboard/resources"
                     className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Membership
+                    Partner Network
                   </Link>
                 )}
-                <Link
-                  href="/membership/preferred-lender"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Lender Network
-                </Link>
-                <Link
-                  href="/membership/preferred-vendor"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Vendor Network
-                </Link>
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Admin Panel
+                  </Link>
+                )}
                 <Link
                   href="/profile"
                   className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"

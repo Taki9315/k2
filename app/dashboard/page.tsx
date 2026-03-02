@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { AssistantDialog } from '@/components/assistant/AssistantDialog';
 import {
@@ -22,6 +23,11 @@ import {
   Compass,
   Handshake,
   Building2,
+  Lock,
+  Shield,
+  Sparkles,
+  Upload,
+  CheckCircle2,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
@@ -44,7 +50,7 @@ type Submission = {
 };
 
 export default function DashboardPage() {
-  const { user, loading, hasMembership } = useAuth();
+  const { user, loading, isCertifiedBorrower, isKitBuyer, isAdmin, fullName } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [recentContent, setRecentContent] = useState<any[]>([]);
@@ -68,7 +74,6 @@ export default function DashboardPage() {
 
   const fetchOrders = async () => {
     if (!user) return;
-
     try {
       const { data, error } = await supabase
         .from('orders')
@@ -76,7 +81,6 @@ export default function DashboardPage() {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(5);
-
       if (error) throw error;
       setOrders(data || []);
     } catch (error) {
@@ -92,40 +96,25 @@ export default function DashboardPage() {
         .eq('is_published', true)
         .order('created_at', { ascending: false })
         .limit(3);
-
       if (error) {
-        // Table may not exist yet — silently ignore
         console.warn('Content table not available yet:', error.message);
         setRecentContent([]);
         return;
       }
       setRecentContent(data || []);
     } catch (error) {
-      // Silently handle — content section is optional
       setRecentContent([]);
     }
   };
 
   const fetchSubmissions = async () => {
     try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      if (!session?.access_token) {
-        return;
-      }
-
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) return;
       const response = await fetch('/api/submissions', {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
+        headers: { Authorization: `Bearer ${session.access_token}` },
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to load submissions');
-      }
-
+      if (!response.ok) throw new Error('Failed to load submissions');
       const data = (await response.json()) as { submissions?: Submission[] };
       setSubmissions(data.submissions ?? []);
     } catch (error) {
@@ -141,21 +130,55 @@ export default function DashboardPage() {
     );
   }
 
+  const displayName = fullName || user.email?.split('@')[0] || 'there';
+
+  /* ── Kit buyer: first 4 PrepCoach tasks ─────────────────────────── */
+  const kitPrepCoachTasks = [
+    { icon: FileText, label: 'Executive Summary', href: '/prepcoach#executive-summary' },
+    { icon: Phone, label: 'Lender Scripts', href: '/prepcoach#lender-scripts' },
+    { icon: BarChart3, label: 'Calculate DSCR', href: '/prepcoach#dscr-calculator' },
+    { icon: DollarSign, label: 'Financial Statement', href: '/prepcoach#personal-financial-statement' },
+  ];
+
+  /* ── Certified borrower: all PrepCoach tasks ────────────────────── */
+  const fullPrepCoachTasks = [
+    ...kitPrepCoachTasks,
+    { icon: Compass, label: 'General Onboarding', href: '/prepcoach#onboarding' },
+  ];
+
   return (
     <div className="flex flex-col bg-slate-50 min-h-screen">
+      {/* ── Header ───────────────────────────────────────────────── */}
       <section className="bg-white border-b py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Welcome back, {user.email?.split('@')[0]}!
-          </h1>
+          <div className="flex items-center gap-3 flex-wrap">
+            <h1 className="text-3xl font-bold text-gray-900">
+              Welcome back, {displayName}!
+            </h1>
+            {isCertifiedBorrower && (
+              <Badge className="bg-primary/10 text-primary border-primary/20 gap-1">
+                <Shield className="h-3 w-3" />
+                Certified Borrower
+              </Badge>
+            )}
+            {isAdmin && (
+              <Badge variant="outline" className="gap-1">
+                <Shield className="h-3 w-3" />
+                Admin
+              </Badge>
+            )}
+          </div>
           <p className="text-primary/90 mt-2">
-            Here's an overview of your learning journey
+            {isCertifiedBorrower
+              ? 'Your full K2 dashboard — partner network, PrepCoach, and deal room.'
+              : 'Here\'s an overview of your learning journey'}
           </p>
         </div>
       </section>
 
       <section className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* ── Status cards ─────────────────────────────────────── */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card>
               <CardContent className="p-6">
@@ -163,7 +186,7 @@ export default function DashboardPage() {
                   <div>
                     <p className="text-sm text-primary/90 mb-1">Status</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      {hasMembership ? 'Member' : 'Free'}
+                      {isCertifiedBorrower ? 'Certified' : isAdmin ? 'Admin' : 'Kit Owner'}
                     </p>
                   </div>
                   <Award className="h-12 w-12 text-primary/90" />
@@ -191,7 +214,7 @@ export default function DashboardPage() {
                   <div>
                     <p className="text-sm text-primary/90 mb-1">Resources</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      {hasMembership ? 'Unlimited' : 'Free'}
+                      {isCertifiedBorrower ? 'Full Access' : 'Limited'}
                     </p>
                   </div>
                   <BookOpen className="h-12 w-12 text-primary/90" />
@@ -205,7 +228,7 @@ export default function DashboardPage() {
                   <div>
                     <p className="text-sm text-primary/90 mb-1">Progress</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      {hasMembership ? 'Active' : 'Getting Started'}
+                      {isCertifiedBorrower ? 'Active' : 'Getting Started'}
                     </p>
                   </div>
                   <TrendingUp className="h-12 w-12 text-primary/90" />
@@ -216,19 +239,45 @@ export default function DashboardPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
-              {!hasMembership && (
-                <Card className="bg-gradient-to-br from-slate-900 to-slate-800 text-white">
-                  <CardContent className="p-8">
-                    <h2 className="text-2xl font-bold mb-4">
-                      Unlock Full Access
+
+              {/* ── Kit buyer upgrade CTA ─────────────────────────── */}
+              {isKitBuyer && (
+                <Card className="bg-gradient-to-br from-slate-900 to-slate-800 text-white overflow-hidden relative">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-bl-full" />
+                  <CardContent className="p-8 relative">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Sparkles className="h-5 w-5 text-yellow-400" />
+                      <span className="text-sm font-semibold text-yellow-400 uppercase tracking-wider">
+                        Upgrade Available
+                      </span>
+                    </div>
+                    <h2 className="text-2xl font-bold mb-3">
+                      Become a K2 Certified Borrower
                     </h2>
-                    <p className="text-primary-foreground mb-6">
-                      Join our membership program for exclusive content, live
-                      Q&A sessions, and personalized guidance.
+                    <p className="text-slate-300 mb-2 max-w-lg">
+                      As a kit owner, you have access to our core templates. Upgrade to unlock:
                     </p>
+                    <ul className="text-slate-300 text-sm space-y-1.5 mb-6">
+                      <li className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                        Full K2 Partner Network (100+ lenders & vendors)
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                        All PrepCoach templates & AI coaching
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                        Private Deal Room for document submissions
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                        Certified Borrower badge & priority support
+                      </li>
+                    </ul>
                     <Button variant="secondary" size="lg" asChild>
-                      <Link href="/membership">
-                        Explore Membership
+                      <Link href="/membership/certified-borrower">
+                        Enroll Now
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Link>
                     </Button>
@@ -236,6 +285,30 @@ export default function DashboardPage() {
                 </Card>
               )}
 
+              {/* ── Download Kit (kit buyers only) ───────────────── */}
+              {isKitBuyer && (
+                <Card className="border-primary/20 bg-primary/5">
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <BookOpen className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Download Your Success Kit</h3>
+                        <p className="text-sm text-gray-600">Access your purchased kit materials</p>
+                      </div>
+                    </div>
+                    <Button size="sm" asChild className="mt-2">
+                      <Link href="/workbook">
+                        Get Success Kit
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* ── K2 PrepCoach Tasks ────────────────────────────── */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -245,16 +318,12 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-gray-600 mb-4">
-                    Select a task to get step-by-step AI coaching for your loan package.
+                    {isCertifiedBorrower
+                      ? 'Select a task to get step-by-step AI coaching for your loan package.'
+                      : 'Get started with these core templates. Upgrade to access all PrepCoach tasks.'}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {[
-                      { icon: FileText, label: 'Executive Summary', href: '/prepcoach#executive-summary' },
-                      { icon: DollarSign, label: 'Financial Statement', href: '/prepcoach#personal-financial-statement' },
-                      { icon: BarChart3, label: 'Calculate DSCR', href: '/prepcoach#dscr-calculator' },
-                      { icon: Phone, label: 'Lender Scripts', href: '/prepcoach#lender-scripts' },
-                      { icon: Compass, label: 'General Onboarding', href: '/prepcoach#onboarding' },
-                    ].map((task) => (
+                    {(isCertifiedBorrower ? fullPrepCoachTasks : kitPrepCoachTasks).map((task) => (
                       <Button
                         key={task.label}
                         variant="outline"
@@ -269,15 +338,31 @@ export default function DashboardPage() {
                       </Button>
                     ))}
                   </div>
-                  <Button variant="link" size="sm" asChild className="mt-3 px-0">
-                    <Link href="/prepcoach">
-                      View all PrepCoach templates
-                      <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                    </Link>
-                  </Button>
+
+                  {isKitBuyer ? (
+                    <div className="mt-4 p-3 rounded-lg bg-slate-50 border border-slate-200">
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Lock className="h-4 w-4 text-muted-foreground" />
+                        <span>
+                          <Link href="/prepcoach" className="text-primary hover:underline font-medium">
+                            View all templates
+                          </Link>
+                          {' '}— some require Certified Borrower access
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <Button variant="link" size="sm" asChild className="mt-3 px-0">
+                      <Link href="/prepcoach">
+                        View all PrepCoach templates
+                        <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                      </Link>
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
 
+              {/* ── K2 Partner Network ────────────────────────────── */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -286,33 +371,52 @@ export default function DashboardPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Browse our vetted preferred lenders and trusted vendors for your
-                    commercial real estate needs.
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <Button variant="outline" size="sm" asChild className="justify-start gap-2 h-auto py-2.5">
-                      <Link href="/dashboard/resources?filter=lender">
-                        <Building2 className="h-4 w-4 text-primary flex-shrink-0" />
-                        <span className="text-sm">Preferred Lenders</span>
-                      </Link>
-                    </Button>
-                    <Button variant="outline" size="sm" asChild className="justify-start gap-2 h-auto py-2.5">
-                      <Link href="/dashboard/resources?filter=vendor">
-                        <ShoppingBag className="h-4 w-4 text-primary flex-shrink-0" />
-                        <span className="text-sm">Trusted Vendors</span>
-                      </Link>
-                    </Button>
-                  </div>
-                  <Button variant="link" size="sm" asChild className="mt-3 px-0">
-                    <Link href="/dashboard/resources">
-                      View all partners
-                      <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                    </Link>
-                  </Button>
+                  {isCertifiedBorrower ? (
+                    <>
+                      <p className="text-sm text-gray-600 mb-4">
+                        Browse our vetted preferred lenders and trusted vendors for your
+                        commercial real estate needs.
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <Button variant="outline" size="sm" asChild className="justify-start gap-2 h-auto py-2.5">
+                          <Link href="/dashboard/resources?filter=lender">
+                            <Building2 className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span className="text-sm">Preferred Lenders</span>
+                          </Link>
+                        </Button>
+                        <Button variant="outline" size="sm" asChild className="justify-start gap-2 h-auto py-2.5">
+                          <Link href="/dashboard/resources?filter=vendor">
+                            <ShoppingBag className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span className="text-sm">Trusted Vendors</span>
+                          </Link>
+                        </Button>
+                      </div>
+                      <Button variant="link" size="sm" asChild className="mt-3 px-0">
+                        <Link href="/dashboard/resources">
+                          View all partners
+                          <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                        </Link>
+                      </Button>
+                    </>
+                  ) : (
+                    <div className="text-center py-4">
+                      <Lock className="h-8 w-8 text-slate-300 mx-auto mb-3" />
+                      <p className="text-sm text-gray-600 mb-3">
+                        Access our network of 100+ preferred lenders and trusted vendors
+                        when you become a Certified Borrower.
+                      </p>
+                      <Button size="sm" asChild>
+                        <Link href="/membership/certified-borrower">
+                          Upgrade to Access
+                          <ArrowRight className="ml-1.5 h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
+              {/* ── Recent Content ────────────────────────────────── */}
               <Card>
                 <CardHeader>
                   <CardTitle>Recent Content</CardTitle>
@@ -349,70 +453,91 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
+              {/* ── Loan Package Submissions / Deal Room ──────────── */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Loan Package Submissions</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Upload className="h-5 w-5 text-primary" />
+                    Loan Package Submissions
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {submissions.length === 0 ? (
-                    <div className="space-y-4">
-                      <p className="text-primary/90">
-                        No submissions yet. Start your first guided loan package
-                        intake.
-                      </p>
-                      <AssistantDialog
-                        triggerLabel="Open PrepCoach"
-                        triggerVariant="default"
-                      />
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {submissions.slice(0, 5).map((submission) => (
-                        <div
-                          key={submission.id}
-                          className="rounded-lg border p-3 text-sm"
-                        >
-                          <div className="flex items-center justify-between gap-3">
-                            <p className="font-semibold text-gray-900">
-                              {submission.summary_text
-                                ? 'Summary Generated'
-                                : 'Intake Saved'}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {new Date(
-                                submission.created_at
-                              ).toLocaleDateString()}
-                            </p>
-                          </div>
-                          <p className="mt-1 line-clamp-2 text-xs text-gray-600">
-                            {submission.summary_text ??
-                              'Summary not generated yet. Open assistant to continue.'}
+                  {isCertifiedBorrower ? (
+                    <>
+                      {submissions.length === 0 ? (
+                        <div className="space-y-4">
+                          <p className="text-primary/90">
+                            No submissions yet. Start your first guided loan package intake.
                           </p>
+                          <AssistantDialog
+                            triggerLabel="Open PrepCoach"
+                            triggerVariant="default"
+                          />
                         </div>
-                      ))}
-                      <AssistantDialog
-                        triggerLabel="Start New Package"
-                        triggerVariant="outline"
-                        triggerClassName="w-full"
-                      />
+                      ) : (
+                        <div className="space-y-3">
+                          {submissions.slice(0, 5).map((submission) => (
+                            <div
+                              key={submission.id}
+                              className="rounded-lg border p-3 text-sm"
+                            >
+                              <div className="flex items-center justify-between gap-3">
+                                <p className="font-semibold text-gray-900">
+                                  {submission.summary_text ? 'Summary Generated' : 'Intake Saved'}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {new Date(submission.created_at).toLocaleDateString()}
+                                </p>
+                              </div>
+                              <p className="mt-1 line-clamp-2 text-xs text-gray-600">
+                                {submission.summary_text ?? 'Summary not generated yet. Open assistant to continue.'}
+                              </p>
+                            </div>
+                          ))}
+                          <AssistantDialog
+                            triggerLabel="Start New Package"
+                            triggerVariant="outline"
+                            triggerClassName="w-full"
+                          />
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="text-center py-4">
+                      <Lock className="h-8 w-8 text-slate-300 mx-auto mb-3" />
+                      <p className="text-sm text-gray-600 mb-1 font-medium">
+                        Upload Documents to Your Private Deal Room
+                      </p>
+                      <p className="text-sm text-gray-500 mb-3">
+                        Certified Borrowers can submit loan packages directly to their private deal room.
+                      </p>
+                      <Button size="sm" variant="outline" asChild>
+                        <Link href="/membership/certified-borrower">
+                          Upgrade to Access
+                          <ArrowRight className="ml-1.5 h-4 w-4" />
+                        </Link>
+                      </Button>
                     </div>
                   )}
                 </CardContent>
               </Card>
             </div>
 
+            {/* ── Sidebar ────────────────────────────────────────── */}
             <div className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Quick Links</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <Button variant="outline" className="w-full" asChild>
-                    <Link href="/dashboard/resources">
-                      <Handshake className="mr-2 h-4 w-4" />
-                      Partner Resources
-                    </Link>
-                  </Button>
+                  {isCertifiedBorrower && (
+                    <Button variant="outline" className="w-full" asChild>
+                      <Link href="/dashboard/resources">
+                        <Handshake className="mr-2 h-4 w-4" />
+                        Partner Network
+                      </Link>
+                    </Button>
+                  )}
                   <Button variant="outline" className="w-full" asChild>
                     <Link href="/content">Browse Content</Link>
                   </Button>
@@ -422,19 +547,32 @@ export default function DashboardPage() {
                       PrepCoach Templates
                     </Link>
                   </Button>
-                  {!hasMembership && (
+                  {isKitBuyer && (
                     <Button variant="outline" className="w-full" asChild>
-                      <Link href="/workbook">Get Success Kit</Link>
+                      <Link href="/workbook">
+                        <BookOpen className="mr-2 h-4 w-4" />
+                        Get Success Kit
+                      </Link>
                     </Button>
                   )}
-                  <AssistantDialog
-                    triggerLabel="PrepCoach"
-                    triggerVariant="outline"
-                    triggerClassName="w-full"
-                  />
+                  {isCertifiedBorrower && (
+                    <AssistantDialog
+                      triggerLabel="PrepCoach"
+                      triggerVariant="outline"
+                      triggerClassName="w-full"
+                    />
+                  )}
                   <Button variant="outline" className="w-full" asChild>
                     <Link href="/profile">Edit Profile</Link>
                   </Button>
+                  {isAdmin && (
+                    <Button variant="outline" className="w-full" asChild>
+                      <Link href="/admin">
+                        <Shield className="mr-2 h-4 w-4" />
+                        Admin Panel
+                      </Link>
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
 
@@ -462,6 +600,28 @@ export default function DashboardPage() {
                         </div>
                       ))}
                     </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Upgrade nudge for kit buyers in sidebar */}
+              {isKitBuyer && (
+                <Card className="border-primary/30 bg-primary/5">
+                  <CardContent className="p-5">
+                    <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 text-primary" />
+                      Ready to Level Up?
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Join our Certified Borrower program for full partner access,
+                      deal room, and priority support.
+                    </p>
+                    <Button size="sm" className="w-full" asChild>
+                      <Link href="/membership/certified-borrower">
+                        Enroll Now
+                        <ArrowRight className="ml-1.5 h-4 w-4" />
+                      </Link>
+                    </Button>
                   </CardContent>
                 </Card>
               )}

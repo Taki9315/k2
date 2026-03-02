@@ -27,7 +27,7 @@ type ContentItem = {
 export default function ContentDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { user, hasMembership } = useAuth();
+  const { user, isCertifiedBorrower } = useAuth();
   const [content, setContent] = useState<ContentItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
@@ -38,7 +38,7 @@ export default function ContentDetailPage() {
         await fetchContent(params.slug as string);
       }
     })();
-  }, [params.slug, user, hasMembership]);
+  }, [params.slug, user, isCertifiedBorrower]);
 
   const fetchContent = async (slug: string) => {
     try {
@@ -60,7 +60,7 @@ export default function ContentDetailPage() {
 
       const canAccess =
         data.access_level === 'public' ||
-        (data.access_level === 'members_only' && hasMembership);
+        (data.access_level === 'members_only' && isCertifiedBorrower);
 
       setHasAccess(canAccess);
 
@@ -98,15 +98,15 @@ export default function ContentDetailPage() {
           <CardContent className="p-12 text-center">
             <Lock className="h-16 w-16 text-gray-400 mx-auto mb-6" />
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              Members-Only Content
+              Certified Borrower Content
             </h1>
             <p className="text-lg text-gray-600 mb-8">
-              This content is exclusive to our membership program. Join today to
-              access this and all other member resources.
+              This content is exclusive to K2 Certified Borrowers. Become
+              certified today to access this and all other premium resources.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/membership">Join Membership</Link>
+                <Link href="/membership/certified-borrower">Become Certified – $249</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <Link href="/content">Browse Free Content</Link>
@@ -192,9 +192,9 @@ export default function ContentDetailPage() {
             <Button size="lg" variant="outline" asChild>
               <Link href="/content">More Free Content</Link>
             </Button>
-            {!hasMembership && (
+            {!isCertifiedBorrower && (
               <Button size="lg" asChild>
-                <Link href="/membership">Join Membership</Link>
+                <Link href="/membership/certified-borrower">Become Certified</Link>
               </Button>
             )}
           </div>

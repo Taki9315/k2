@@ -58,7 +58,7 @@ export default function MeetingsPage() {
 
   return (
     <div>
-      <PageHeader title="Meetings" description="Schedule and manage meetings with preferred users" action={{ label: "New Meeting", icon: Plus, onClick: () => setDialogOpen(true) }} />
+      <PageHeader title="Meetings" description="Schedule and manage meetings with certified borrowers and partners" action={{ label: "New Meeting", icon: Plus, onClick: () => setDialogOpen(true) }} />
       <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {meetings.map((m) => (
           <div key={m.id} className="rounded-2xl border border-border bg-card p-5 hover:shadow-md transition-shadow">

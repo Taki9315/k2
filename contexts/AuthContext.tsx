@@ -4,28 +4,75 @@ import { createContext, useContext, useEffect, useState, useCallback, useRef } f
 import { supabase } from '@/lib/supabase';
 import type { User } from '@supabase/supabase-js';
 
+export type UserRole = 'borrower' | 'certified' | 'lender' | 'vendor' | 'admin';
+
+export type UserProfile = {
+  id: string;
+  email: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  role: UserRole;
+  status: string;
+  preferred: boolean;
+  phone: string | null;
+  company: string | null;
+  workbook_purchased: boolean;
+  certified_at: string | null;
+};
+
 type AuthContextType = {
   user: User | null;
+  profile: UserProfile | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (
     email: string,
     password: string,
-    fullName: string
+    fullName: string,
+    phone?: string,
+    company?: string
   ) => Promise<void>;
   signOut: () => Promise<void>;
+  /** @deprecated Use isCertifiedBorrower instead */
   hasMembership: boolean;
   checkMembership: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
+  // Convenience role helpers
+  fullName: string;
+  isCertifiedBorrower: boolean;
+  isKitBuyer: boolean;
+  isPartner: boolean;
+  isAdmin: boolean;
+  userRole: UserRole;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [hasMembership, setHasMembership] = useState(false);
   // Guard against double-init in StrictMode / fast remounts
   const initRef = useRef(false);
+
+  const fetchProfile = useCallback(async (uid: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', uid)
+        .maybeSingle();
+
+      if (!error && data) {
+        setProfile(data as UserProfile);
+        return data as UserProfile;
+      }
+    } catch {
+      // Profile table might not exist yet
+    }
+    return null;
+  }, []);
 
   const checkMembership = useCallback(async (uid?: string) => {
     const userId = uid;
@@ -61,7 +108,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const u = session?.user ?? null;
       setUser(u);
       setLoading(false);
-      if (u) checkMembership(u.id);
+      if (u) {
+        checkMembership(u.id);
+        fetchProfile(u.id);
+      }
     });
 
     // Listen for auth changes
@@ -72,8 +122,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(u);
         if (u) {
           checkMembership(u.id);
+          fetchProfile(u.id);
         } else {
           setHasMembership(false);
+          setProfile(null);
         }
       }
     );
@@ -82,7 +134,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [checkMembership]);
+  }, [checkMembership, fetchProfile]);
 
   const signIn = useCallback(async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
@@ -95,7 +147,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = useCallback(async (
     email: string,
     password: string,
-    fullName: string
+    fullName: string,
+    phone?: string,
+    company?: string
   ) => {
     const role = 'borrower';
 
@@ -123,6 +177,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             email,
             full_name: fullName,
             role,
+            phone: phone || null,
+            company: company || null,
           }),
         });
         if (!res.ok) {
@@ -137,18 +193,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
+    setProfile(null);
   }, []);
+
+  const refreshProfile = useCallback(async () => {
+    if (user) {
+      await fetchProfile(user.id);
+    }
+  }, [user, fetchProfile]);
+
+  // Derived role helpers
+  const userRole: UserRole = profile?.role || 'borrower';
+  const isCertifiedBorrower = profile?.preferred === true || userRole === 'certified';
+  const isKitBuyer = !isCertifiedBorrower && (userRole === 'borrower');
+  const isPartner = userRole === 'lender' || userRole === 'vendor';
+  const isAdmin = userRole === 'admin';
+  const fullName = profile?.full_name || user?.user_metadata?.full_name || '';
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        profile,
         loading,
         signIn,
         signUp,
         signOut,
-        hasMembership,
+        hasMembership: hasMembership || isCertifiedBorrower,
         checkMembership: () => checkMembership(user?.id),
+        refreshProfile,
+        fullName,
+        isCertifiedBorrower,
+        isKitBuyer,
+        isPartner,
+        isAdmin,
+        userRole,
       }}
     >
       {children}

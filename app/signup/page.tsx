@@ -18,6 +18,8 @@ export default function SignupPage() {
   const { signUp } = useAuth();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [company, setCompany] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -40,7 +42,7 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      await signUp(email, password, fullName);
+      await signUp(email, password, fullName, phone || undefined, company || undefined);
       router.push('/dashboard');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to create account');
@@ -62,12 +64,12 @@ export default function SignupPage() {
       >
         <div className="max-w-lg text-white">
           <p className="text-4xl font-semibold leading-tight">
-            K2 Commercial Finance Investor &amp; Business Loans
+            K2 Commercial Finance — Your CRE Financing Partner
           </p>
           <div className="mt-6 h-0.5 w-32 bg-emerald-400" />
           <p className="mt-6 text-base text-white/80">
-            Access the investor portal to review performance, documents, and
-            updates from the K2 Commercial Finance team.
+            Create an account to access the K2 Success Kit, PrepCoach templates,
+            and tools to help you secure commercial real estate financing.
           </p>
         </div>
       </section>
@@ -86,7 +88,7 @@ export default function SignupPage() {
               />
             </Link>
             <p className="mt-3 text-center text-xs font-semibold tracking-[0.2em] text-neutral-500">
-              INVESTOR PORTAL
+              MEMBER PORTAL
             </p>
           </div>
         </div>
@@ -98,20 +100,20 @@ export default function SignupPage() {
                 Create your account
               </h1>
               <p className="mt-2 text-center text-sm text-neutral-500">
-                Start your financing education journey today
+                Start your commercial financing journey today
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
               {error && (
                 <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="fullName" className="text-xs text-neutral-600">
-                  Full Name
+                  Full Name *
                 </Label>
                 <Input
                   id="fullName"
@@ -123,9 +125,9 @@ export default function SignupPage() {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-xs text-neutral-600">
-                  Email
+                  Email *
                 </Label>
                 <Input
                   id="email"
@@ -137,9 +139,36 @@ export default function SignupPage() {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="phone" className="text-xs text-neutral-600">
+                    Phone
+                  </Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="(555) 123-4567"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="company" className="text-xs text-neutral-600">
+                    Company
+                  </Label>
+                  <Input
+                    id="company"
+                    type="text"
+                    placeholder="Acme LLC"
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
                 <Label htmlFor="password" className="text-xs text-neutral-600">
-                  Password
+                  Password *
                 </Label>
                 <Input
                   id="password"
@@ -154,12 +183,12 @@ export default function SignupPage() {
                 </p>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label
                   htmlFor="confirmPassword"
                   className="text-xs text-neutral-600"
                 >
-                  Confirm Password
+                  Confirm Password *
                 </Label>
                 <Input
                   id="confirmPassword"

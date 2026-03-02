@@ -88,7 +88,7 @@ export default function ContentPage() {
           variant={c.access_level === "public" ? "secondary" : "default"}
           className="text-xs"
         >
-          {c.access_level === "public" ? "Free" : "Members Only"}
+          {c.access_level === "public" ? "Free" : "Certified Only"}
         </Badge>
       ),
     },

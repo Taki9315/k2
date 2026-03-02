@@ -66,9 +66,10 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
               <SelectTrigger className="bg-secondary"><SelectValue /></SelectTrigger>
               <SelectContent className="bg-card">
                 <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="borrower">Borrower</SelectItem>
+                <SelectItem value="borrower">Borrower (Kit Buyer)</SelectItem>
+                <SelectItem value="certified">Certified Borrower</SelectItem>
                 <SelectItem value="lender">Lender</SelectItem>
-                <SelectItem value="network">Network</SelectItem>
+                <SelectItem value="vendor">Vendor</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -84,7 +85,10 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
             </Select>
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="preferred">Preferred Status</Label>
+            <div>
+              <Label htmlFor="preferred">Certified Borrower</Label>
+              <p className="text-xs text-muted-foreground mt-0.5">Full access to partner network, deal room & PrepCoach</p>
+            </div>
             <Switch id="preferred" checked={preferred} onCheckedChange={setPreferred} />
           </div>
         </div>

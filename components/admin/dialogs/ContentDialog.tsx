@@ -271,7 +271,7 @@ export function ContentDialog({
                 </SelectTrigger>
                 <SelectContent className="bg-card">
                   <SelectItem value="public">Free</SelectItem>
-                  <SelectItem value="members_only">Members Only</SelectItem>
+                  <SelectItem value="members_only">Certified Only</SelectItem>
                 </SelectContent>
               </Select>
             </div>

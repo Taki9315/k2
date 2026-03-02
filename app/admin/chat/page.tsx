@@ -56,12 +56,12 @@ export default function ChatPage() {
 
   return (
     <div>
-      <PageHeader title="Chat" description="Communicate with preferred borrowers, lenders & networks" />
+      <PageHeader title="Chat" description="Communicate with certified borrowers, lenders & vendors" />
       <div className="mt-4 grid gap-4 lg:grid-cols-[280px_1fr] h-[calc(100vh-220px)]">
         {/* Contact list */}
         <div className="rounded-2xl border border-border bg-card overflow-y-auto">
           <div className="p-3 border-b border-border">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Preferred Users</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Certified Members</p>
           </div>
           {preferredUsers.map((u) => (
             <button

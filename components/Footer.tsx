@@ -106,7 +106,7 @@ export function Footer() {
                   href="/membership"
                   className="text-sm text-primary/90 hover:text-primary transition-colors"
                 >
-                  Membership Program
+                  Certified Borrower Program
                 </Link>
               </li>
               <li>

@@ -39,6 +39,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { FileUpload } from '@/components/admin/FileUpload';
+import { TagInput } from '@/components/ui/tag-input';
 
 type InquiryRow = {
   id: string;
@@ -82,6 +83,8 @@ type PartnerRow = {
   video_url: string | null;
   documents: { name: string; url: string; description?: string }[];
   highlights: { icon: string; label: string }[];
+  loan_programs: string[] | null;
+  searchable_tags: string[] | null;
   is_published: boolean;
   featured: boolean;
   created_at: string;
@@ -116,6 +119,52 @@ const SERVICE_TYPES = [
   { value: 'architecture', label: 'Architecture / Engineering' },
   { value: 'surveying', label: 'Surveying' },
   { value: 'other', label: 'Other' },
+];
+
+const LOAN_PROGRAM_SUGGESTIONS = [
+  { value: 'sba_7a', label: 'SBA 7(a)' },
+  { value: 'sba_504', label: 'SBA 504' },
+  { value: 'bridge_loan', label: 'Bridge Loan' },
+  { value: 'hard_money', label: 'Hard Money' },
+  { value: 'fix_and_flip', label: 'Fix & Flip' },
+  { value: 'construction', label: 'Construction' },
+  { value: 'stated_income', label: 'Stated Income' },
+  { value: 'dscr', label: 'DSCR Loan' },
+  { value: 'short_term_rental', label: 'Short-Term Rental' },
+  { value: 'long_term_rental', label: 'Long-Term Rental' },
+  { value: 'commercial_mortgage', label: 'Commercial Mortgage' },
+  { value: 'conventional', label: 'Conventional' },
+  { value: 'usda', label: 'USDA' },
+  { value: 'mezzanine', label: 'Mezzanine' },
+  { value: 'line_of_credit', label: 'Line of Credit' },
+  { value: 'equipment_financing', label: 'Equipment Financing' },
+  { value: 'accounts_receivable', label: 'Accounts Receivable' },
+  { value: 'cmbs', label: 'CMBS' },
+  { value: 'portfolio_loan', label: 'Portfolio Loan' },
+  { value: 'ground_up', label: 'Ground-Up Construction' },
+];
+
+const PROPERTY_TYPE_SUGGESTIONS = [
+  { value: 'multifamily', label: 'Multifamily' },
+  { value: 'office', label: 'Office' },
+  { value: 'retail', label: 'Retail' },
+  { value: 'industrial', label: 'Industrial' },
+  { value: 'warehouse', label: 'Warehouse' },
+  { value: 'mixed_use', label: 'Mixed Use' },
+  { value: 'hotel_hospitality', label: 'Hotel / Hospitality' },
+  { value: 'self_storage', label: 'Self Storage' },
+  { value: 'mobile_home_park', label: 'Mobile Home Park' },
+  { value: 'medical', label: 'Medical / Healthcare' },
+  { value: 'restaurant', label: 'Restaurant' },
+  { value: 'gas_station', label: 'Gas Station' },
+  { value: 'car_wash', label: 'Car Wash' },
+  { value: 'land', label: 'Land' },
+  { value: '1_4_unit', label: '1-4 Unit Residential' },
+  { value: '5_plus_unit', label: '5+ Unit Residential' },
+  { value: 'single_family', label: 'Single Family' },
+  { value: 'special_purpose', label: 'Special Purpose' },
+  { value: 'daycare', label: 'Daycare / Childcare' },
+  { value: 'assisted_living', label: 'Assisted Living' },
 ];
 
 const ICON_OPTIONS = [
@@ -350,7 +399,7 @@ export default function AdminPartnersPage() {
               Partner Management
             </h1>
             <p className="text-gray-600 mt-1">
-              Create and manage Preferred Lender and Vendor profile pages.
+              Manage partner profiles for the K2 lender and vendor network.
             </p>
           </div>
           <Button
@@ -744,8 +793,10 @@ function PartnerForm({
     lending_focus: partner?.lending_focus || '',
     min_loan: partner?.min_loan?.toString() || '',
     max_loan: partner?.max_loan?.toString() || '',
-    property_types: partner?.property_types?.join(', ') || '',
+    property_types: partner?.property_types || ([] as string[]),
     states_served: partner?.states_served?.join(', ') || '',
+    loan_programs: partner?.loan_programs || ([] as string[]),
+    searchable_tags: partner?.searchable_tags || ([] as string[]),
     service_type: partner?.service_type || '',
     service_areas: partner?.service_areas || '',
     video_url: partner?.video_url || '',
@@ -798,8 +849,14 @@ function PartnerForm({
         lending_focus: isLender ? form.lending_focus || null : null,
         min_loan: isLender && form.min_loan ? parseFloat(form.min_loan) : null,
         max_loan: isLender && form.max_loan ? parseFloat(form.max_loan) : null,
-        property_types: isLender && form.property_types
-          ? form.property_types.split(',').map((s) => s.trim()).filter(Boolean)
+        property_types: isLender && form.property_types && (form.property_types as string[]).length > 0
+          ? (form.property_types as string[])
+          : null,
+        loan_programs: isLender && form.loan_programs && (form.loan_programs as string[]).length > 0
+          ? (form.loan_programs as string[])
+          : null,
+        searchable_tags: (form.searchable_tags as string[]).length > 0
+          ? (form.searchable_tags as string[])
           : null,
         states_served:
           form.states_served
@@ -1106,22 +1163,27 @@ function PartnerForm({
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="property_types">
-                      Property Types{' '}
-                      <span className="text-xs text-gray-400 font-normal">
-                        (comma-separated)
-                      </span>
-                    </Label>
-                    <Input
-                      id="property_types"
-                      placeholder="e.g. Multifamily, Office, Retail, Industrial"
-                      value={form.property_types}
-                      onChange={(e) =>
-                        setForm((p) => ({
-                          ...p,
-                          property_types: e.target.value,
-                        }))
+                    <Label>Property Types</Label>
+                    <TagInput
+                      value={form.property_types as string[]}
+                      onChange={(tags) =>
+                        setForm((p) => ({ ...p, property_types: tags }))
                       }
+                      placeholder="Add property types…"
+                      suggestions={PROPERTY_TYPE_SUGGESTIONS}
+                      allowCustom
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Loan Programs</Label>
+                    <TagInput
+                      value={form.loan_programs as string[]}
+                      onChange={(tags) =>
+                        setForm((p) => ({ ...p, loan_programs: tags }))
+                      }
+                      placeholder="Add loan programs…"
+                      suggestions={LOAN_PROGRAM_SUGGESTIONS}
+                      allowCustom
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -1202,6 +1264,24 @@ function PartnerForm({
                   </div>
                 </>
               )}
+
+              {/* Searchable Tags (shared by lender & vendor) */}
+              <div className="space-y-1.5 pt-4 border-t mt-4">
+                <Label>
+                  Searchable Tags / Keywords{' '}
+                  <span className="text-xs text-gray-400 font-normal">
+                    (additional keywords borrowers can search by)
+                  </span>
+                </Label>
+                <TagInput
+                  value={form.searchable_tags as string[]}
+                  onChange={(tags) =>
+                    setForm((p) => ({ ...p, searchable_tags: tags }))
+                  }
+                  placeholder="Add searchable keywords…"
+                  allowCustom
+                />
+              </div>
             </CardContent>
           </Card>
 
@@ -1216,7 +1296,7 @@ function PartnerForm({
                 <Label htmlFor="video_url">
                   Video URL{' '}
                   <span className="text-xs text-gray-400 font-normal">
-                    (embed URL - members only)
+                    (embed URL - certified borrowers only)
                   </span>
                 </Label>
                 <Input
@@ -1233,7 +1313,7 @@ function PartnerForm({
               {/* Documents */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <Label>Documents (members only)</Label>
+                  <Label>Documents (certified borrowers only)</Label>
                   <Button
                     type="button"
                     variant="outline"
@@ -1307,7 +1387,7 @@ function PartnerForm({
           </Card>
 
           {/* ── Section 5: Highlights / Badges ───────────────────────── */}
-          <Card>
+          {/* <Card>
             <CardContent className="p-6 space-y-5">
               <div className="flex items-center justify-between border-b pb-3">
                 <h2 className="text-xl font-bold text-gray-900">
@@ -1371,7 +1451,7 @@ function PartnerForm({
                 </div>
               ))}
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* ── Section 6: Publishing ────────────────────────────────── */}
           <Card>

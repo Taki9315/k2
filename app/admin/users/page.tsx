@@ -29,7 +29,7 @@ export interface UserProfile {
   email: string;
   full_name: string | null;
   avatar_url: string | null;
-  role: "admin" | "borrower" | "lender" | "network";
+  role: "admin" | "borrower" | "certified" | "lender" | "vendor";
   status: "active" | "inactive" | "suspended";
   preferred: boolean;
   created_at: string;
@@ -182,7 +182,7 @@ export default function UsersPage() {
           </span>
           {u.preferred && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-              <Star className="h-3 w-3 fill-primary" /> Preferred
+              <Star className="h-3 w-3 fill-primary" /> Certified Borrower
             </span>
           )}
         </div>
@@ -305,7 +305,7 @@ export default function UsersPage() {
     <div>
       <PageHeader
         title="Users"
-        description="Manage borrowers, lenders, and networks"
+        description="Manage borrowers, certified borrowers, lenders, and vendors"
         action={{
           label: "Add User",
           icon: UserPlus,
@@ -356,8 +356,8 @@ export default function UsersPage() {
                   value: <StatusBadge status={viewUser.status} />,
                 },
                 {
-                  label: "Preferred",
-                  value: viewUser.preferred ? "Yes ⭐" : "No",
+                  label: "Certified Borrower",
+                  value: viewUser.preferred ? "Yes ✅" : "No",
                 },
                 { label: "Joined", value: viewUser.createdAt },
               ]

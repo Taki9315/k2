@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState, useMemo, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -22,6 +22,9 @@ import {
   Lock,
   Users,
   Handshake,
+  SlidersHorizontal,
+  X,
+  ChevronDown,
 } from 'lucide-react';
 
 type PartnerCard = {
@@ -34,10 +37,14 @@ type PartnerCard = {
   tagline: string | null;
   contact_name: string | null;
   lender_type: string | null;
+  lending_focus: string | null;
   service_type: string | null;
   min_loan: number | null;
   max_loan: number | null;
   states_served: string[] | null;
+  property_types: string[] | null;
+  loan_programs: string[] | null;
+  searchable_tags: string[] | null;
   service_areas: string | null;
   highlights: { icon: string; label: string }[];
   featured: boolean;
@@ -77,13 +84,146 @@ function formatCurrency(num: number): string {
   return `$${num.toLocaleString()}`;
 }
 
-export default function DashboardResourcesPage() {
-  const { user, loading, hasMembership } = useAuth();
+/* ── Filter dropdown options ─────────────────────────────────────── */
+const LOAN_PROGRAM_OPTIONS = [
+  { value: 'SBA 7(a)', label: 'SBA 7(a)' },
+  { value: 'SBA 504', label: 'SBA 504' },
+  { value: 'Bridge Loan', label: 'Bridge Loan' },
+  { value: 'Hard Money', label: 'Hard Money' },
+  { value: 'Fix & Flip', label: 'Fix & Flip' },
+  { value: 'Construction', label: 'Construction' },
+  { value: 'Stated Income', label: 'Stated Income' },
+  { value: 'DSCR Loan', label: 'DSCR Loan' },
+  { value: 'Short-Term Rental', label: 'Short-Term Rental' },
+  { value: 'Long-Term Rental', label: 'Long-Term Rental' },
+  { value: 'Commercial Mortgage', label: 'Commercial Mortgage' },
+  { value: 'Conventional', label: 'Conventional' },
+  { value: 'USDA', label: 'USDA' },
+  { value: 'Mezzanine', label: 'Mezzanine' },
+  { value: 'Line of Credit', label: 'Line of Credit' },
+  { value: 'Equipment Financing', label: 'Equipment Financing' },
+  { value: 'CMBS', label: 'CMBS' },
+  { value: 'Portfolio Loan', label: 'Portfolio Loan' },
+  { value: 'Ground-Up Construction', label: 'Ground-Up Construction' },
+];
+
+const PROPERTY_TYPE_OPTIONS = [
+  { value: 'Multifamily', label: 'Multifamily' },
+  { value: 'Office', label: 'Office' },
+  { value: 'Retail', label: 'Retail' },
+  { value: 'Industrial', label: 'Industrial' },
+  { value: 'Warehouse', label: 'Warehouse' },
+  { value: 'Mixed Use', label: 'Mixed Use' },
+  { value: 'Hotel / Hospitality', label: 'Hotel / Hospitality' },
+  { value: 'Self Storage', label: 'Self Storage' },
+  { value: 'Mobile Home Park', label: 'Mobile Home Park' },
+  { value: 'Medical / Healthcare', label: 'Medical / Healthcare' },
+  { value: 'Restaurant', label: 'Restaurant' },
+  { value: 'Gas Station', label: 'Gas Station' },
+  { value: 'Car Wash', label: 'Car Wash' },
+  { value: 'Land', label: 'Land' },
+  { value: '1-4 Unit Residential', label: '1-4 Unit Residential' },
+  { value: '5+ Unit Residential', label: '5+ Unit Residential' },
+  { value: 'Single Family', label: 'Single Family' },
+  { value: 'Special Purpose', label: 'Special Purpose' },
+  { value: 'Assisted Living', label: 'Assisted Living' },
+];
+
+const LENDER_TYPE_OPTIONS = [
+  { value: 'bank', label: 'Bank' },
+  { value: 'credit_union', label: 'Credit Union' },
+  { value: 'cdfi', label: 'CDFI' },
+  { value: 'sba_lender', label: 'SBA Lender' },
+  { value: 'private_lender', label: 'Private / Direct Lender' },
+  { value: 'hard_money', label: 'Hard Money Lender' },
+  { value: 'bridge_lender', label: 'Bridge Lender' },
+  { value: 'life_company', label: 'Life Company' },
+  { value: 'agency', label: 'Agency Lender' },
+];
+
+/* ── Dropdown filter component ───────────────────────────────────── */
+function FilterDropdown({
+  label,
+  icon: Icon,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  icon: React.ElementType;
+  options: { value: string; label: string }[];
+  value: string;
+  onChange: (val: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className={`inline-flex items-center gap-1.5 h-9 px-3 rounded-lg border text-sm font-medium transition-colors ${
+          value
+            ? 'border-primary bg-primary/5 text-primary'
+            : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
+        }`}
+      >
+        <Icon className="h-3.5 w-3.5" />
+        <span className="max-w-[140px] truncate">
+          {value
+            ? options.find((o) => o.value === value)?.label || value
+            : label}
+        </span>
+        <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute top-full left-0 z-50 mt-1 w-56 max-h-64 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
+            <button
+              type="button"
+              onClick={() => { onChange(''); setOpen(false); }}
+              className="w-full px-3 py-2 text-left text-sm text-gray-400 hover:bg-gray-50"
+            >
+              All {label}s
+            </button>
+            {options.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => { onChange(opt.value); setOpen(false); }}
+                className={`w-full px-3 py-2 text-left text-sm hover:bg-gray-50 transition-colors ${
+                  value === opt.value ? 'bg-primary/5 text-primary font-medium' : 'text-gray-700'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function DashboardResourcesPageInner() {
+  const { user, loading, isCertifiedBorrower } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [partners, setPartners] = useState<PartnerCard[]>([]);
   const [fetching, setFetching] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'lender' | 'vendor'>('all');
+
+  // Filters
+  const [filter, setFilter] = useState<'all' | 'lender' | 'vendor'>(
+    (searchParams.get('filter') as 'all' | 'lender' | 'vendor') || 'all'
+  );
   const [search, setSearch] = useState('');
+  const [loanProgram, setLoanProgram] = useState('');
+  const [propertyType, setPropertyType] = useState('');
+  const [lenderType, setLenderType] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+
+  const activeFilterCount = [loanProgram, propertyType, lenderType].filter(Boolean).length;
 
   useEffect(() => {
     if (!loading && !user) {
@@ -100,7 +240,7 @@ export default function DashboardResourcesPage() {
       const { data, error } = await supabase
         .from('partner_profiles')
         .select(
-          'id, partner_type, slug, company_name, logo_url, contact_picture_url, tagline, contact_name, lender_type, service_type, min_loan, max_loan, states_served, service_areas, highlights, featured'
+          'id, partner_type, slug, company_name, logo_url, contact_picture_url, tagline, contact_name, lender_type, lending_focus, service_type, min_loan, max_loan, states_served, property_types, loan_programs, searchable_tags, service_areas, highlights, featured'
         )
         .eq('is_published', true)
         .order('featured', { ascending: false })
@@ -115,15 +255,47 @@ export default function DashboardResourcesPage() {
     }
   };
 
-  const filtered = partners
-    .filter((p) => filter === 'all' || p.partner_type === filter)
-    .filter(
-      (p) =>
-        !search ||
-        p.company_name.toLowerCase().includes(search.toLowerCase()) ||
-        p.tagline?.toLowerCase().includes(search.toLowerCase()) ||
-        p.contact_name?.toLowerCase().includes(search.toLowerCase())
-    );
+  const clearAllFilters = () => {
+    setSearch('');
+    setLoanProgram('');
+    setPropertyType('');
+    setLenderType('');
+    setFilter('all');
+  };
+
+  const filtered = useMemo(() => {
+    return partners
+      .filter((p) => filter === 'all' || p.partner_type === filter)
+      .filter((p) => {
+        if (!search) return true;
+        const q = search.toLowerCase();
+        return (
+          p.company_name.toLowerCase().includes(q) ||
+          p.tagline?.toLowerCase().includes(q) ||
+          p.contact_name?.toLowerCase().includes(q) ||
+          p.lending_focus?.toLowerCase().includes(q) ||
+          p.loan_programs?.some((lp) => lp.toLowerCase().includes(q)) ||
+          p.property_types?.some((pt) => pt.toLowerCase().includes(q)) ||
+          p.searchable_tags?.some((t) => t.toLowerCase().includes(q))
+        );
+      })
+      .filter((p) => {
+        if (!loanProgram) return true;
+        return p.loan_programs?.some(
+          (lp) => lp.toLowerCase() === loanProgram.toLowerCase()
+        );
+      })
+      .filter((p) => {
+        if (!propertyType) return true;
+        return p.property_types?.some(
+          (pt) => pt.toLowerCase() === propertyType.toLowerCase()
+        );
+      })
+      .filter((p) => {
+        if (!lenderType) return true;
+        return p.lender_type === lenderType;
+      });
+  }, [partners, filter, search, loanProgram, propertyType, lenderType]);
 
   if (loading || !user) {
     return (
@@ -149,7 +321,7 @@ export default function DashboardResourcesPage() {
             K2 Partner Resources
           </h1>
           <p className="text-slate-300 max-w-2xl">
-            Browse our vetted network of preferred lenders and trusted vendors.
+            Browse our vetted network of K2 Preferred Lenders and trusted vendors.
             Click any partner to view their full profile, documents, and contact form.
           </p>
         </div>
@@ -157,7 +329,8 @@ export default function DashboardResourcesPage() {
 
       {/* Filters */}
       <section className="py-6 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+          {/* Row 1: Type tabs + search */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <div className="flex gap-2">
               {[
@@ -184,15 +357,119 @@ export default function DashboardResourcesPage() {
                 </Button>
               ))}
             </div>
-            <div className="relative sm:ml-auto w-full sm:w-72">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search partners..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
-              />
+            <div className="flex items-center gap-2 sm:ml-auto">
+              <div className="relative w-full sm:w-72">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search by name, keyword, loan type…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              <Button
+                variant={showFilters ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setShowFilters(!showFilters)}
+                className="gap-1.5 shrink-0"
+              >
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+                Filters
+                {activeFilterCount > 0 && (
+                  <span className="ml-1 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground px-1">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </Button>
             </div>
+          </div>
+
+          {/* Row 2: Advanced filter dropdowns (collapsible) */}
+          {showFilters && (
+            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-100">
+              <span className="text-xs font-medium text-gray-500 mr-1">Filter by:</span>
+              {(filter === 'all' || filter === 'lender') && (
+                <>
+                  <FilterDropdown
+                    label="Loan Program"
+                    icon={DollarSign}
+                    options={LOAN_PROGRAM_OPTIONS}
+                    value={loanProgram}
+                    onChange={setLoanProgram}
+                  />
+                  <FilterDropdown
+                    label="Property Type"
+                    icon={Building2}
+                    options={PROPERTY_TYPE_OPTIONS}
+                    value={propertyType}
+                    onChange={setPropertyType}
+                  />
+                  <FilterDropdown
+                    label="Lender Type"
+                    icon={Shield}
+                    options={LENDER_TYPE_OPTIONS}
+                    value={lenderType}
+                    onChange={setLenderType}
+                  />
+                </>
+              )}
+              {activeFilterCount > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearAllFilters}
+                  className="text-xs text-muted-foreground hover:text-foreground gap-1"
+                >
+                  <X className="h-3 w-3" />
+                  Clear all
+                </Button>
+              )}
+            </div>
+          )}
+
+          {/* Active filter chips */}
+          {activeFilterCount > 0 && !showFilters && (
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-xs text-gray-500">Active filters:</span>
+              {loanProgram && (
+                <Badge variant="secondary" className="gap-1 text-xs">
+                  {loanProgram}
+                  <button type="button" onClick={() => setLoanProgram('')} className="ml-0.5 hover:text-destructive">
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              )}
+              {propertyType && (
+                <Badge variant="secondary" className="gap-1 text-xs">
+                  {propertyType}
+                  <button type="button" onClick={() => setPropertyType('')} className="ml-0.5 hover:text-destructive">
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              )}
+              {lenderType && (
+                <Badge variant="secondary" className="gap-1 text-xs">
+                  {LENDER_TYPE_OPTIONS.find((o) => o.value === lenderType)?.label || lenderType}
+                  <button type="button" onClick={() => setLenderType('')} className="ml-0.5 hover:text-destructive">
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              )}
+            </div>
+          )}
+
+          {/* Results count */}
+          <div className="text-xs text-muted-foreground">
+            Showing {filtered.length} of {partners.length} partner{partners.length !== 1 ? 's' : ''}
+            {(search || activeFilterCount > 0) && (
+              <button
+                type="button"
+                onClick={clearAllFilters}
+                className="ml-2 text-primary hover:underline"
+              >
+                Reset
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -331,7 +608,7 @@ export default function DashboardResourcesPage() {
 
                       {/* Highlight badges */}
                       {partner.highlights && partner.highlights.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mb-4">
+                        <div className="flex flex-wrap gap-1.5 mb-3">
                           {partner.highlights.slice(0, 3).map((h, i) => (
                             <span
                               key={i}
@@ -340,6 +617,34 @@ export default function DashboardResourcesPage() {
                               {h.label}
                             </span>
                           ))}
+                        </div>
+                      )}
+
+                      {/* Loan programs / property types tags */}
+                      {((partner.loan_programs && partner.loan_programs.length > 0) ||
+                        (partner.property_types && partner.property_types.length > 0)) && (
+                        <div className="flex flex-wrap gap-1 mb-4">
+                          {partner.loan_programs?.slice(0, 3).map((lp, i) => (
+                            <span
+                              key={`lp-${i}`}
+                              className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary"
+                            >
+                              {lp}
+                            </span>
+                          ))}
+                          {partner.property_types?.slice(0, 2).map((pt, i) => (
+                            <span
+                              key={`pt-${i}`}
+                              className="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700"
+                            >
+                              {pt}
+                            </span>
+                          ))}
+                          {((partner.loan_programs?.length ?? 0) + (partner.property_types?.length ?? 0)) > 5 && (
+                            <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500">
+                              +{(partner.loan_programs?.length ?? 0) + (partner.property_types?.length ?? 0) - 5} more
+                            </span>
+                          )}
                         </div>
                       )}
 
@@ -359,7 +664,7 @@ export default function DashboardResourcesPage() {
       </section>
 
       {/* CTA for non-members */}
-      {!hasMembership && (
+      {!isCertifiedBorrower && (
         <section className="py-12 bg-white border-t">
           <div className="max-w-3xl mx-auto px-4 text-center">
             <Lock className="h-10 w-10 text-slate-400 mx-auto mb-4" />
@@ -380,5 +685,17 @@ export default function DashboardResourcesPage() {
         </section>
       )}
     </div>
+  );
+}
+
+export default function DashboardResourcesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <p className="text-primary/90">Loading...</p>
+      </div>
+    }>
+      <DashboardResourcesPageInner />
+    </Suspense>
   );
 }
