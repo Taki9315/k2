@@ -18,6 +18,8 @@ export type UserProfile = {
   company: string | null;
   workbook_purchased: boolean;
   certified_at: string | null;
+  referral_code: string | null;
+  membership_number: string | null;
 };
 
 type AuthContextType = {
@@ -41,9 +43,11 @@ type AuthContextType = {
   fullName: string;
   isCertifiedBorrower: boolean;
   isKitBuyer: boolean;
+  isBasicBorrower: boolean;
   isPartner: boolean;
   isAdmin: boolean;
   userRole: UserRole;
+  membershipNumber: string | null;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -204,11 +208,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Derived role helpers
   const userRole: UserRole = profile?.role || 'borrower';
-  const isCertifiedBorrower = profile?.preferred === true || userRole === 'certified';
-  const isKitBuyer = !isCertifiedBorrower && (userRole === 'borrower');
+  const isCertifiedBorrower = userRole === 'certified' || (userRole === 'borrower' && profile?.preferred === true);
+  const isKitBuyer = !isCertifiedBorrower && userRole === 'borrower' && profile?.workbook_purchased === true;
+  const isBasicBorrower = !isCertifiedBorrower && userRole === 'borrower' && !profile?.workbook_purchased;
   const isPartner = userRole === 'lender' || userRole === 'vendor';
   const isAdmin = userRole === 'admin';
   const fullName = profile?.full_name || user?.user_metadata?.full_name || '';
+  const membershipNumber = profile?.membership_number || null;
 
   return (
     <AuthContext.Provider
@@ -225,9 +231,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         fullName,
         isCertifiedBorrower,
         isKitBuyer,
+        isBasicBorrower,
         isPartner,
         isAdmin,
         userRole,
+        membershipNumber,
       }}
     >
       {children}

@@ -2,6 +2,7 @@
 // Membership page - focused on K2 Certified Borrower
 
 import Link from 'next/link';
+import { CheckoutButton } from '@/components/CheckoutButton';
 
 export default function MembershipPage() {
   return (
@@ -17,15 +18,15 @@ export default function MembershipPage() {
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             Expert guidance, automated deal tools, and direct access to our
-            Preferred Lender network - all for a one-time $249 fee with
+            Preferred Lender network - all for a one-time $250 fee with
             lifetime access.
           </p>
-          <a
-            href="/membership/certified-borrower"
-            className="inline-block bg-primary text-white font-semibold py-3 px-8 rounded-lg hover:bg-primary/90 transition shadow-lg shadow-primary/20"
-          >
-            Get Started - $249 One-Time
-          </a>
+          <CheckoutButton
+            product="certified"
+            label="Get Started — $250 One-Time"
+            size="lg"
+            className="text-lg px-8 py-3 shadow-lg shadow-primary/20"
+          />
         </div>
       </section>
 
@@ -51,7 +52,7 @@ export default function MembershipPage() {
               <ul className="text-gray-600 list-disc pl-5 space-y-2">
                 <li>Full transaction management platform</li>
                 <li>Readiness checklists &amp; document review</li>
-                <li>K2 Summit AI chatbot - your CRE co-pilot</li>
+                <li>K2 PrepCoach chatbot - your CRE co-pilot</li>
                 <li>Real-time lender activity tracking</li>
               </ul>
             </div>
@@ -131,7 +132,7 @@ export default function MembershipPage() {
                 your corner.
               </p>
               <p className="text-gray-600 mb-8 leading-relaxed">
-                For a one-time $249 fee, you get lifetime access to our full
+                For a one-time $250 fee, you get lifetime access to our full
                 transaction management system, our Preferred Lender network,
                 monthly live Q&amp;A sessions, document review and feedback, and
                 more. And when you close with a K2 Preferred Lender, you
@@ -177,8 +178,8 @@ export default function MembershipPage() {
           </div>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { num: '1', text: 'Pay $249 once - get instant lifetime access' },
-              { num: '2', text: 'Build & polish your deal with Summit AI & checklists' },
+              { num: '1', text: 'Pay $250 once - get instant lifetime access' },
+              { num: '2', text: 'Build & polish your deal with PrepCoach & checklists' },
               { num: '3', text: 'Submit to Preferred Lenders (or K2 shops broader)' },
               { num: '4', text: 'Close your deal - collect $1,500 credit' },
             ].map((step) => (

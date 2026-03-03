@@ -15,6 +15,7 @@ import {
 import { User, Menu, X, ChevronDown } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 
 export function Navigation() {
   const pathname = usePathname();
@@ -35,15 +36,24 @@ export function Navigation() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/about', label: 'About' },
-    { href: '/workbook', label: 'Success Kit' },
-    { href: '/membership', label: 'Certified Borrower' },
-    ...(user ? [{ href: '/prepcoach', label: 'PrepCoach' }] : []),
-    { href: '/Resource', label: 'Resources' },
-    { href: '/contact', label: 'Contact' },
-  ];
+  // When logged in: simplified focused nav (no sales/marketing pages)
+  // When logged out: full public marketing nav
+  const navLinks = user
+    ? [
+        { href: '/dashboard', label: 'Dashboard' },
+        { href: '/prepcoach', label: 'PrepCoach' },
+        { href: '/content', label: 'Free Content' },
+        { href: '/Resource', label: 'Resources' },
+        { href: '/contact', label: 'Contact' },
+      ]
+    : [
+        { href: '/', label: 'Home' },
+        { href: '/about', label: 'About' },
+        { href: '/workbook', label: 'Success Kit' },
+        { href: '/membership', label: 'Certified Borrower' },
+        { href: '/Resource', label: 'Resources' },
+        { href: '/contact', label: 'Contact' },
+      ];
 
   const contentSubLinks = [
     // { href: '/content?tab=loan-programs', label: 'Loan Programs' },
@@ -222,6 +232,9 @@ export function Navigation() {
           </div>
         </div>
       </nav>
+
+      {/* Page breadcrumbs */}
+      <Breadcrumbs />
 
       {/* Mobile menu */}
       {mobileMenuOpen && (

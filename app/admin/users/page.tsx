@@ -32,6 +32,8 @@ export interface UserProfile {
   role: "admin" | "borrower" | "certified" | "lender" | "vendor";
   status: "active" | "inactive" | "suspended";
   preferred: boolean;
+  workbook_purchased: boolean;
+  membership_number: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -45,8 +47,14 @@ function toDialogUser(p: UserProfile) {
     role: p.role,
     status: p.status ?? "active",
     preferred: p.preferred ?? false,
+    workbook_purchased: p.workbook_purchased ?? false,
     createdAt: p.created_at?.split("T")[0] ?? "",
   };
+}
+
+/** Check if a user profile represents a certified borrower */
+function isCertified(u: UserProfile) {
+  return u.role === "certified" || (u.role === "borrower" && u.preferred);
 }
 
 type DialogUser = ReturnType<typeof toDialogUser>;
@@ -82,7 +90,7 @@ export default function UsersPage() {
   }, [fetchUsers]);
 
   const handleSaveUser = async (
-    data: { id?: string; name: string; email: string; role: string; status: string; preferred: boolean }
+    data: { id?: string; name: string; email: string; role: string; status: string; preferred: boolean; workbook_purchased?: boolean }
   ) => {
     try {
       const isNew = !data.id;
@@ -97,6 +105,7 @@ export default function UsersPage() {
                 role: data.role,
                 status: data.status,
                 preferred: data.preferred,
+                workbook_purchased: data.workbook_purchased ?? false,
               }
             : {
                 id: data.id,
@@ -105,6 +114,7 @@ export default function UsersPage() {
                 role: data.role,
                 status: data.status,
                 preferred: data.preferred,
+                workbook_purchased: data.workbook_purchased ?? false,
               }
         ),
       });
@@ -180,9 +190,19 @@ export default function UsersPage() {
           <span className="font-medium text-foreground">
             {u.full_name || u.email}
           </span>
-          {u.preferred && (
+          {isCertified(u) && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
               <Star className="h-3 w-3 fill-primary" /> Certified Borrower
+            </span>
+          )}
+          {u.role === "borrower" && !isCertified(u) && u.workbook_purchased && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-600">
+              Kit Owner
+            </span>
+          )}
+          {u.membership_number && (
+            <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-mono text-gray-600">
+              {u.membership_number}
             </span>
           )}
         </div>
@@ -236,7 +256,7 @@ export default function UsersPage() {
             >
               <Pencil className="h-3.5 w-3.5" />
             </Button>
-            {u.preferred && (
+            {isCertified(u) && (
               <>
                 <Button
                   variant="ghost"
@@ -357,7 +377,11 @@ export default function UsersPage() {
                 },
                 {
                   label: "Certified Borrower",
-                  value: viewUser.preferred ? "Yes ✅" : "No",
+                  value: viewUser.role === "certified" || viewUser.preferred ? "Yes ✅" : "No",
+                },
+                {
+                  label: "Kit Purchased",
+                  value: viewUser.workbook_purchased ? "Yes ✅" : "No",
                 },
                 { label: "Joined", value: viewUser.createdAt },
               ]

@@ -1,8 +1,8 @@
-// app/membership/certified-borrower-sample/page.tsx
-// SAMPLE PAGE - Concise Certified Borrower sales page for client review
-// View at: /membership/certified-borrower-sample
+// app/membership/certified-borrower/page.tsx
+// Certified Borrower sales page with Stripe checkout
 
 import Link from 'next/link';
+import { CheckoutButton } from '@/components/CheckoutButton';
 import {
   Shield,
   Zap,
@@ -30,7 +30,7 @@ import {
 
 const TRUST_BADGES = [
   { icon: Zap, label: 'Lifetime Access' },
-  { icon: Brain, label: 'K2 Summit AI' },
+  { icon: Brain, label: 'K2 PrepCoach' },
   { icon: Lock, label: 'Secure Data Room' },
   { icon: Send, label: 'Direct Submission' },
   { icon: DollarSign, label: '$1,500 Credit' },
@@ -47,7 +47,7 @@ const WHO_BULLETS = [
 const FEATURES = [
   {
     icon: Brain,
-    title: 'K2 Summit AI Chatbot - Your CRE Co-Pilot',
+    title: 'K2 PrepCoach - Your CRE Co-Pilot',
     desc: 'Always available, trained on real K2 closings.',
     bullets: [
       'Instant deal health score + fix list',
@@ -105,8 +105,8 @@ const FEATURES = [
 ];
 
 const STEPS = [
-  { num: '1', text: 'Pay $249 once → instant access' },
-  { num: '2', text: 'Build & polish deal with Summit AI & checklists' },
+  { num: '1', text: 'Pay $250 once → instant access' },
+  { num: '2', text: 'Build & polish deal with PrepCoach & checklists' },
   { num: '3', text: 'Submit to Preferred Lenders (or K2 shops broader)' },
   { num: '4', text: 'Close → collect $1,500 credit' },
 ];
@@ -114,7 +114,7 @@ const STEPS = [
 const TESTIMONIALS = [
   {
     quote:
-      'K2 Summit AI fixed issues I missed. First submission approved fast.',
+      'K2 PrepCoach fixed issues I missed. First submission approved fast.',
     author: 'Michael R.',
     role: 'First-Time CRE Borrower',
   },
@@ -151,7 +151,7 @@ export default function CertifiedBorrowerSample() {
           </h1>
 
           <p className="text-xl md:text-2xl text-slate-600 mb-6">
-            One-Time $249 - Professional Financing Tools
+            One-Time $250 - Professional Financing Tools
           </p>
 
           <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-4 leading-relaxed">
@@ -183,13 +183,12 @@ export default function CertifiedBorrowerSample() {
           </div>
 
           {/* CTA */}
-          <Link
-            href="/membership/certified-borrower"
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30"
-          >
-            Join Now - $249 (One-Time)
-            <ArrowRight className="h-5 w-5" />
-          </Link>
+          <CheckoutButton
+            product="certified"
+            label="Join Now — $250 (One-Time)"
+            size="lg"
+            className="text-lg px-8 py-4 shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30"
+          />
         </div>
       </section>
 
@@ -376,7 +375,7 @@ export default function CertifiedBorrowerSample() {
             </div>
 
             <p className="text-sm text-gray-500 text-center italic">
-              Disclosed upfront. Never charged to you. Your outcomes drive ours.
+              Disclosed upfront. No hidden fees. Your outcomes drive ours.
             </p>
           </div>
         </div>
@@ -479,17 +478,16 @@ export default function CertifiedBorrowerSample() {
             Ready?
           </h2>
           <p className="text-lg text-slate-300 mb-10 max-w-xl mx-auto">
-            One-time $249 unlocks the tools and network that win better deals.
+            One-time $250 unlocks the tools and network that win better deals.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-            <Link
-              href="/membership/certified-borrower"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-primary/30 transition-all hover:bg-primary/90 hover:shadow-xl"
-            >
-              Become Certified - $249 (One-Time)
-              <ArrowRight className="h-5 w-5" />
-            </Link>
+            <CheckoutButton
+              product="certified"
+              label="Become Certified — $250 (One-Time)"
+              size="lg"
+              className="text-lg px-8 py-4 shadow-lg shadow-primary/30 transition-all hover:shadow-xl"
+            />
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -516,7 +514,7 @@ export default function CertifiedBorrowerSample() {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <p className="text-xs text-gray-500">
             Lifetime access. $1,500 credit from Preferred Lender at close.
-            Lender-paid fees only on funded Preferred deals. Terms apply.
+            Lender-paid fees only on funded Preferred deals. $250 one-time. Terms apply.
           </p>
         </div>
       </section>

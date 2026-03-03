@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   Leaf,
   Handshake,
+  DollarSign,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +24,7 @@ const navItems = [
   { title: "Resources", path: "/admin/resources", icon: BookOpen },
   { title: "Submissions", path: "/admin/submissions", icon: FileText },
   { title: "Partners", path: "/admin/partners", icon: Handshake },
+  { title: "Commissions", path: "/admin/commissions", icon: DollarSign },
   { title: "Payments", path: "/admin/payments", icon: CreditCard },
   { title: "Analytics", path: "/admin/analytics", icon: BarChart3 },
 ];

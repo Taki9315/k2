@@ -1,12 +1,14 @@
 import OpenAI from 'openai';
 import { NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/supabase-server';
-import { TASK_SYSTEM_PROMPTS } from '@/lib/assistant/tasks';
+import { TASK_SYSTEM_PROMPTS, KIT_BUYER_SYSTEM_PROMPT } from '@/lib/assistant/tasks';
 
 type AskQuestionPayload = {
   question?: string;
   taskId?: string;
   history?: { role: 'user' | 'assistant'; content: string }[];
+  /** 'kit' for kit buyers, 'certified' for certified borrowers */
+  userTier?: 'kit' | 'certified';
 };
 
 const DEFAULT_SYSTEM_PROMPT =
@@ -36,6 +38,7 @@ export async function POST(request: Request) {
     const question = body.question?.trim();
     const taskId = body.taskId;
     const history = body.history;
+    const userTier = body.userTier;
 
     if (!question) {
       return NextResponse.json(
@@ -45,10 +48,15 @@ export async function POST(request: Request) {
     }
 
     /* ---- Build system prompt ---- */
-    const systemContent =
-      taskId && TASK_SYSTEM_PROMPTS[taskId]
-        ? TASK_SYSTEM_PROMPTS[taskId]
-        : DEFAULT_SYSTEM_PROMPT;
+    let systemContent: string;
+    if (userTier === 'kit') {
+      // Kit buyers get restricted AI scope
+      systemContent = KIT_BUYER_SYSTEM_PROMPT;
+    } else if (taskId && TASK_SYSTEM_PROMPTS[taskId]) {
+      systemContent = TASK_SYSTEM_PROMPTS[taskId];
+    } else {
+      systemContent = DEFAULT_SYSTEM_PROMPT;
+    }
 
     /* ---- Build messages array ---- */
     type InputMsg = { role: 'system' | 'user' | 'assistant'; content: string };

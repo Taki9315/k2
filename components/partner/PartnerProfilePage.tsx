@@ -39,6 +39,8 @@ import {
   BadgeCheck,
 } from 'lucide-react';
 
+import { PreferredPartnerBadge } from '@/components/PreferredPartnerBadge';
+
 /* ── Icon map for stored highlight icons ──────────────────────────────── */
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Building2,
@@ -449,6 +451,15 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
                     <span>Visit Website</span>
                   </a>
                 )}
+              </div>
+
+              {/* Partner badge */}
+              <div className="mt-8">
+                <PreferredPartnerBadge
+                  partnerType={partner.partner_type}
+                  companyName={partner.company_name}
+                  variant="full"
+                />
               </div>
             </div>
 

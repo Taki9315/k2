@@ -160,6 +160,60 @@ export type Database = {
           admin_notes?: string | null;
         };
       };
+      referral_commissions: {
+        Row: {
+          id: string;
+          partner_id: string;
+          buyer_id: string;
+          product: string;
+          referral_code: string;
+          commission_amount: number;
+          status: 'pending' | 'paid';
+          order_stripe_payment_intent: string | null;
+          paid_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          partner_id: string;
+          buyer_id: string;
+          product: string;
+          referral_code: string;
+          commission_amount: number;
+          status?: 'pending' | 'paid';
+          order_stripe_payment_intent?: string | null;
+          paid_at?: string | null;
+        };
+        Update: {
+          status?: 'pending' | 'paid';
+          paid_at?: string | null;
+        };
+      };
+      deal_room_files: {
+        Row: {
+          id: string;
+          user_id: string;
+          file_name: string;
+          file_path: string;
+          file_size: number;
+          mime_type: string;
+          category: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          file_name: string;
+          file_path: string;
+          file_size: number;
+          mime_type: string;
+          category?: string;
+        };
+        Update: {
+          file_name?: string;
+          category?: string;
+        };
+      };
     };
   };
 };

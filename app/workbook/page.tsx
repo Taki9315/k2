@@ -1,13 +1,17 @@
+'use client';
+
 import Image from 'next/image';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import Link from 'next/link';
+import { CheckoutButton } from '@/components/CheckoutButton';
 import {
   ArrowRight,
   CheckCircle2,
   Download,
   Star,
   Shield,
+  X,
 } from 'lucide-react';
 
 const SUCCESSKIT_HERO_IMAGE =
@@ -59,8 +63,98 @@ const SUCCESSKIT_FEATURES = [
 ];
 
 export default function WorkbookPage() {
+  const [showGuarantee, setShowGuarantee] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const currentSectionRef = useRef(-1);
+  const hasTriggeredRef = useRef(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      if (hasTriggeredRef.current) return;
+
+      const sections = container.querySelectorAll('section');
+      if (!sections.length) return;
+
+      // Find which section is currently most visible
+      const viewportMiddle = window.scrollY + window.innerHeight / 2;
+      let currentIdx = 0;
+      sections.forEach((sec, idx) => {
+        const rect = sec.getBoundingClientRect();
+        const sectionTop = rect.top + window.scrollY;
+        if (viewportMiddle >= sectionTop) {
+          currentIdx = idx;
+        }
+      });
+
+      // First scroll sets the baseline
+      if (currentSectionRef.current === -1) {
+        currentSectionRef.current = currentIdx;
+        return;
+      }
+
+      // If user scrolled to a different section, show the card
+      if (currentIdx !== currentSectionRef.current) {
+        currentSectionRef.current = currentIdx;
+        hasTriggeredRef.current = true;
+        setShowGuarantee(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const dismissPopup = () => {
+    setShowGuarantee(false);
+    setDismissed(true);
+  };
+
   return (
-    <div className="flex flex-col">
+    <div ref={containerRef} className="flex flex-col">
+      {/* Slide-in Prepared Borrower Guarantee card (bottom-left) */}
+      <div
+        className={`fixed bottom-6 left-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] transition-all duration-500 ease-out ${
+          showGuarantee && !dismissed
+            ? 'translate-x-0 opacity-100'
+            : '-translate-x-[120%] opacity-0 pointer-events-none'
+        }`}
+      >
+        <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-200 p-6">
+          <button
+            onClick={dismissPopup}
+            className="absolute top-3 right-3 p-1 rounded-full hover:bg-gray-100 transition-colors"
+            aria-label="Close"
+          >
+            <X className="h-4 w-4 text-gray-400" />
+          </button>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Shield className="h-6 w-6 text-primary" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 leading-tight pr-6">
+              The Prepared Borrower Guarantee
+            </h3>
+          </div>
+          <p className="text-sm text-gray-600 leading-relaxed mb-5">
+            If you don&apos;t feel more confident, more organized, and better
+            equipped to approach lenders after using the Kit, return it within
+            30&nbsp;days for a full refund.
+          </p>
+          <CheckoutButton
+            product="kit"
+            size="default"
+            className="w-full"
+          >
+            Get the Success Kit — $15
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </CheckoutButton>
+        </div>
+      </div>
+
       <section className="bg-gradient-to-br from-slate-50 to-slate-100 py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -86,15 +180,17 @@ export default function WorkbookPage() {
                 to get financing-ready before you apply.
               </p>
               <div className="flex items-baseline gap-3 mb-6">
-                <span className="text-5xl font-bold text-gray-900">$14.95</span>
+                <span className="text-5xl font-bold text-gray-900">$15</span>
                 <span className="text-gray-500">Instant PDF Download</span>
               </div>
-              <Button size="lg" asChild className="text-lg px-8 py-6 w-full sm:w-auto">
-                <Link href="/signup">
-                  Get Started
-                  <Download className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
+              <CheckoutButton
+                product="kit"
+                size="lg"
+                className="text-lg px-8 py-6 w-full sm:w-auto"
+              >
+                Get Started
+                <Download className="ml-2 h-5 w-5" />
+              </CheckoutButton>
               <p className="text-sm text-gray-500 mt-4">
                 Instant PDF download. No subscription required.
               </p>
@@ -166,12 +262,14 @@ export default function WorkbookPage() {
                   </li>
                 ))}
               </ul>
-              <Button size="lg" asChild className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300">
-                <Link href="/signup">
-                  Get the Financing Success Kit - $15
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
+              <CheckoutButton
+                product="kit"
+                size="lg"
+                className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
+              >
+                Get the Financing Success Kit - $15
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </CheckoutButton>
             </div>
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-emerald-50/50 rounded-3xl -rotate-2 scale-105" />
@@ -267,15 +365,18 @@ export default function WorkbookPage() {
             Download the Success Kit and start preparing today
           </p>
           <div className="flex items-baseline gap-3 justify-center mb-8">
-            <span className="text-5xl font-bold">$14.95</span>
+            <span className="text-5xl font-bold">$15</span>
             <span className="text-slate-300">Instant PDF Download</span>
           </div>
-          <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6">
-            <Link href="/signup">
-              Get Started
-              <Download className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
+          <CheckoutButton
+            product="kit"
+            variant="secondary"
+            size="lg"
+            className="text-lg px-8 py-6"
+          >
+            Get Started
+            <Download className="ml-2 h-5 w-5" />
+          </CheckoutButton>
           <p className="text-sm text-slate-400 mt-4">
             Instant access. Lifetime updates.
           </p>

@@ -13,7 +13,7 @@ import { supabase } from '@/lib/supabase';
 import { Shield, Building2, Phone, Mail, User } from 'lucide-react';
 
 export default function ProfilePage() {
-  const { user, loading, profile, isCertifiedBorrower, isPartner, isAdmin, userRole, refreshProfile } = useAuth();
+  const { user, loading, profile, isCertifiedBorrower, isKitBuyer, isBasicBorrower, isPartner, isAdmin, userRole, refreshProfile } = useAuth();
   const router = useRouter();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -85,7 +85,9 @@ export default function ProfilePage() {
       return <Badge className="bg-primary/10 text-primary border-primary/20 gap-1"><Shield className="h-3 w-3" />Certified Borrower</Badge>;
     if (isPartner)
       return <Badge variant="secondary" className="gap-1"><Building2 className="h-3 w-3" />{userRole === 'lender' ? 'Lender' : 'Vendor'}</Badge>;
-    return <Badge variant="secondary">Kit Buyer</Badge>;
+    if (isKitBuyer)
+      return <Badge variant="secondary">Kit Owner</Badge>;
+    return <Badge variant="secondary">Borrower</Badge>;
   };
 
   return (

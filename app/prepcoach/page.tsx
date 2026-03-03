@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AssistantDialog } from '@/components/assistant/AssistantDialog';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   Dialog,
   DialogContent,
@@ -37,6 +38,7 @@ import {
   Clock,
   Award,
   Info,
+  Lock,
 } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
@@ -60,6 +62,8 @@ type TaskTemplate = {
   description: string;     // educational blurb shown to user
   fields: TaskField[];
   buildPrompt: (values: Record<string, string>) => string;
+  /** If true, kit buyers can access this prompt. Otherwise certified only. */
+  availableForKit?: boolean;
 };
 
 const TASK_TEMPLATES: TaskTemplate[] = [
@@ -71,6 +75,7 @@ const TASK_TEMPLATES: TaskTemplate[] = [
     subtitle:
       'Create a lender-ready 1-page Executive Summary for your commercial loan request.',
     icon: <FileText className="h-6 w-6" />,
+    availableForKit: true,
     description:
       'PrepCoach will guide you through building a compelling Executive Summary - ' +
       'the single most important document in your loan package. Fill in your deal ' +
@@ -101,6 +106,7 @@ const TASK_TEMPLATES: TaskTemplate[] = [
     subtitle:
       'Build a professional PFS that lenders actually want to see - accurate, organized, no fluff.',
     icon: <DollarSign className="h-6 w-6" />,
+    availableForKit: true,
     description:
       'PrepCoach will walk you through every section of your Personal Financial ' +
       'Statement - assets, liabilities, net worth, and contingent liabilities. ' +
@@ -126,6 +132,7 @@ const TASK_TEMPLATES: TaskTemplate[] = [
     subtitle:
       'Know exactly where you stand on Debt Service Coverage Ratio before approaching lenders.',
     icon: <BarChart3 className="h-6 w-6" />,
+    availableForKit: true,
     description:
       'DSCR is the #1 metric lenders check. PrepCoach will walk you through the ' +
       'full calculation and tell you exactly where you stand. Enter your numbers below.',
@@ -153,6 +160,7 @@ const TASK_TEMPLATES: TaskTemplate[] = [
     subtitle:
       'Professional, concise scripts so you contact lenders without sounding desperate.',
     icon: <Phone className="h-6 w-6" />,
+    availableForKit: true,
     description:
       'PrepCoach will create phone scripts, email templates, and voicemail versions ' +
       'customized to your deal. Fill in your deal snapshot below.',
@@ -180,6 +188,7 @@ const TASK_TEMPLATES: TaskTemplate[] = [
     subtitle:
       "Not sure where to start? PrepCoach will guide you to the right next step.",
     icon: <Compass className="h-6 w-6" />,
+    availableForKit: false,
     description:
       "If you're not sure which task to tackle first, start here. Tell PrepCoach " +
       "a bit about your situation and it will recommend your best next step.",
@@ -686,7 +695,7 @@ export default function PrepCoachPage() {
               }`}
             >
               <Bot className="inline h-4 w-4 mr-1.5 -mt-0.5" />
-              Prompt Templates
+              PrepCoach Prompts
             </button>
             <button
               onClick={() => setActiveTab('excel')}
@@ -749,6 +758,7 @@ export default function PrepCoachPage() {
 /* ------------------------------------------------------------------ */
 
 function PromptsSection() {
+  const { user, isCertifiedBorrower, isKitBuyer } = useAuth();
   const [openId, setOpenId] = useState<string | null>(null);
   const [fieldValues, setFieldValues] = useState<
     Record<string, Record<string, string>>
@@ -779,7 +789,7 @@ function PromptsSection() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-10">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-            PrepCoach Tasks
+            PrepCoach Prompts
           </h2>
           <p className="text-gray-600 leading-relaxed">
             Each task below shows you exactly what PrepCoach will work on. Fill
@@ -797,18 +807,24 @@ function PromptsSection() {
               (f) => (values[f.key] ?? '').trim().length > 0
             ).length;
 
+            // Kit buyers can only access prompts marked as availableForKit
+            const isLocked = isKitBuyer && template.availableForKit === false;
+
             return (
               <Card
                 key={template.id}
                 className={`border-2 transition-all duration-200 ${
-                  isOpen
+                  isLocked
+                    ? 'border-slate-200 bg-slate-50/50 opacity-80'
+                    : isOpen
                     ? 'border-primary/40 shadow-lg'
                     : 'border-slate-200 hover:border-primary/20 hover:shadow-md'
                 }`}
               >
                 <button
-                  onClick={() => toggle(template.id)}
-                  className="w-full text-left"
+                  onClick={() => isLocked ? undefined : toggle(template.id)}
+                  className={`w-full text-left ${isLocked ? 'cursor-default' : ''}`}
+                  disabled={isLocked}
                 >
                   <CardContent className="flex items-center gap-4 p-5 md:p-6">
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -832,12 +848,24 @@ function PromptsSection() {
                       <p className="text-sm text-gray-500 mt-0.5">
                         {template.subtitle}
                       </p>
+                      {isLocked && (
+                        <div className="flex items-center gap-1.5 mt-1.5">
+                          <Lock className="h-3.5 w-3.5 text-amber-500" />
+                          <span className="text-xs font-medium text-amber-600">
+                            Certified Borrower access required
+                          </span>
+                        </div>
+                      )}
                     </div>
-                    <ChevronDown
-                      className={`h-5 w-5 shrink-0 text-gray-400 transition-transform duration-300 ${
-                        isOpen ? 'rotate-180' : ''
-                      }`}
-                    />
+                    {isLocked ? (
+                      <Lock className="h-5 w-5 shrink-0 text-slate-400" />
+                    ) : (
+                      <ChevronDown
+                        className={`h-5 w-5 shrink-0 text-gray-400 transition-transform duration-300 ${
+                          isOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    )}
                   </CardContent>
                 </button>
 
@@ -909,6 +937,26 @@ function PromptsSection() {
             );
           })}
         </div>
+
+        {/* Kit buyer upgrade CTA */}
+        {isKitBuyer && (
+          <div className="mt-8 rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 p-6 text-center">
+            <Lock className="h-8 w-8 text-primary mx-auto mb-3" />
+            <h3 className="text-lg font-bold text-white mb-2">
+              Unlock All PrepCoach Prompts
+            </h3>
+            <p className="text-sm text-slate-300 mb-4 max-w-md mx-auto">
+              Certified Borrowers get unlimited access to all PrepCoach prompts,
+              free-text AI coaching, the full partner network, and more.
+            </p>
+            <Button size="lg" asChild>
+              <Link href="/membership/certified-borrower">
+                Become a Certified Borrower
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Controlled dialog - opens when a task is launched */}

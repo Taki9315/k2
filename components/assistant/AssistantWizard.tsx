@@ -169,7 +169,8 @@ export function AssistantWizard({
   initialPrompt,
   initialTaskId,
 }: AssistantWizardProps) {
-  const { user } = useAuth();
+  const { user, isKitBuyer } = useAuth();
+  const userTier = isKitBuyer ? 'kit' : 'certified';
 
   const [mode, setMode] = useState<WizardMode>('greeting');
   const [answers, setAnswers] = useState<Answers>({});
@@ -255,6 +256,7 @@ export function AssistantWizard({
             question: initialPrompt,
             taskId: initialTaskId,
             history: [],
+            userTier,
           }),
         });
         if (!res.ok) throw new Error(await parseErrorMessage(res));
@@ -428,7 +430,7 @@ export function AssistantWizard({
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ question: q }),
+        body: JSON.stringify({ question: q, userTier }),
       });
 
       if (!res.ok) throw new Error(await parseErrorMessage(res));
@@ -501,6 +503,7 @@ export function AssistantWizard({
           question: q,
           taskId: activeTaskId,
           history: updatedHistory.slice(-20),
+          userTier,
         }),
       });
 
