@@ -11,6 +11,7 @@ import {
   DollarSign,
   FileText,
   Loader2,
+  Lock,
   MessageSquare,
   Phone,
   Sparkles,
@@ -169,8 +170,12 @@ export function AssistantWizard({
   initialPrompt,
   initialTaskId,
 }: AssistantWizardProps) {
-  const { user, isKitBuyer } = useAuth();
+  const { user, isKitBuyer, isBasicBorrower, isCertifiedBorrower } = useAuth();
   const userTier = isKitBuyer ? 'kit' : 'certified';
+  /** Certified borrowers get full access (tasks, freeform, intake) */
+  const canAskFreeform = isCertifiedBorrower;
+  /** Borrower / kit buyer can ONLY do Full Deal Intake — no tasks, no freeform */
+  const canUseTasks = isCertifiedBorrower;
 
   const [mode, setMode] = useState<WizardMode>('greeting');
   const [answers, setAnswers] = useState<Answers>({});
@@ -516,6 +521,33 @@ export function AssistantWizard({
         ...prev,
         { role: 'assistant', content: answer },
       ]);
+
+      // Auto-save task output as a generated document if it's substantive (>500 chars)
+      if (answer.length > 500 && activeTaskId) {
+        const taskDef = PREPCOACH_TASKS.find((t) => t.id === activeTaskId);
+        try {
+          const docToken = await getAccessToken();
+          await fetch('/api/generated-documents', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${docToken}`,
+            },
+            body: JSON.stringify({
+              title: `${taskDef?.title || 'PrepCoach Output'} — ${new Date().toLocaleDateString()}`,
+              documentType: activeTaskId,
+              content: answer,
+              taskId: activeTaskId,
+              metadata: {
+                userPrompt: q,
+                generatedAt: new Date().toISOString(),
+              },
+            }),
+          });
+        } catch (docErr) {
+          console.error('Failed to save generated document:', docErr);
+        }
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to get AI response'
@@ -703,6 +735,30 @@ export function AssistantWizard({
         await updateSubmission(activeSubId, { summaryText: fullSummary });
       }
 
+      // Save generated document to Supabase
+      try {
+        const docToken = await getAccessToken();
+        await fetch('/api/generated-documents', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${docToken}`,
+          },
+          body: JSON.stringify({
+            title: `Executive Summary — ${new Date().toLocaleDateString()}`,
+            documentType: 'executive-summary',
+            content: fullSummary,
+            taskId: 'executive-summary',
+            metadata: {
+              submissionId: activeSubId || null,
+              generatedAt: new Date().toISOString(),
+            },
+          }),
+        });
+      } catch (docErr) {
+        console.error('Failed to save generated document:', docErr);
+      }
+
       setSubmissionSaved(false);
       setMode('summary');
     } catch (err) {
@@ -879,76 +935,121 @@ export function AssistantWizard({
 
   const greetingBlock = mode === 'greeting' && (
     <div className="space-y-3">
-      {/* Task buttons */}
-      <div className={compact ? 'grid gap-2' : 'grid gap-3 sm:grid-cols-2'}>
-        {PREPCOACH_TASKS.map((task) => (
+      {/* Certified borrowers: task buttons + freeform + intake */}
+      {canUseTasks && (
+        <>
+          <div className={compact ? 'grid gap-2' : 'grid gap-3 sm:grid-cols-2'}>
+            {PREPCOACH_TASKS.map((task) => (
+              <Button
+                key={task.id}
+                variant="outline"
+                className={
+                  compact
+                    ? 'justify-start gap-2 py-4 text-left text-sm h-auto'
+                    : 'justify-start gap-2 py-5 text-left h-auto'
+                }
+                onClick={() => handleTaskSelect(task.id)}
+              >
+                {TASK_ICON_MAP[task.iconName]}
+                <div className="min-w-0">
+                  <div className="font-semibold">{task.title}</div>
+                  {!compact && (
+                    <div className="text-xs text-slate-500">{task.subtitle}</div>
+                  )}
+                </div>
+              </Button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2 pt-1">
+            <div className="h-px flex-1 bg-slate-200" />
+            <span className="text-xs text-slate-400">or</span>
+            <div className="h-px flex-1 bg-slate-200" />
+          </div>
+
+          <div className={compact ? 'grid gap-2' : 'grid gap-3 sm:grid-cols-2'}>
+            <Button
+              variant="ghost"
+              className="justify-start gap-2 text-slate-600 h-auto"
+              onClick={() => handleGreetingChoice('freeform')}
+            >
+              <MessageSquare className="h-4 w-4 shrink-0" />
+              <span className="text-sm">Ask a Quick Question</span>
+            </Button>
+            <Button
+              variant="ghost"
+              className="justify-start gap-2 text-slate-600 h-auto"
+              onClick={() => handleGreetingChoice('intake')}
+            >
+              <ClipboardList className="h-4 w-4 shrink-0" />
+              <span className="text-sm">Full Deal Intake</span>
+            </Button>
+          </div>
+        </>
+      )}
+
+      {/* Borrower / kit buyer: ONLY Full Deal Intake */}
+      {!canUseTasks && (
+        <div className="space-y-4">
+          <p className="text-sm text-slate-500">
+            Start your guided loan package intake. PrepCoach will walk you through each question step by step.
+          </p>
           <Button
-            key={task.id}
-            variant="outline"
-            className={
-              compact
-                ? 'justify-start gap-2 py-4 text-left text-sm h-auto'
-                : 'justify-start gap-2 py-5 text-left h-auto'
-            }
-            onClick={() => handleTaskSelect(task.id)}
+            className="w-full justify-center gap-2 py-5 h-auto"
+            onClick={() => handleGreetingChoice('intake')}
           >
-            {TASK_ICON_MAP[task.iconName]}
-            <div className="min-w-0">
-              <div className="font-semibold">{task.title}</div>
-              {!compact && (
-                <div className="text-xs text-slate-500">{task.subtitle}</div>
-              )}
-            </div>
+            <ClipboardList className="h-5 w-5 shrink-0" />
+            <span className="font-semibold">Start Full Deal Intake</span>
           </Button>
-        ))}
-      </div>
-
-      {/* Divider */}
-      <div className="flex items-center gap-2 pt-1">
-        <div className="h-px flex-1 bg-slate-200" />
-        <span className="text-xs text-slate-400">or</span>
-        <div className="h-px flex-1 bg-slate-200" />
-      </div>
-
-      {/* Secondary options */}
-      <div className={compact ? 'grid gap-2' : 'grid gap-3 sm:grid-cols-2'}>
-        <Button
-          variant="ghost"
-          className="justify-start gap-2 text-slate-600 h-auto"
-          onClick={() => handleGreetingChoice('freeform')}
-        >
-          <MessageSquare className="h-4 w-4 shrink-0" />
-          <span className="text-sm">Ask a Quick Question</span>
-        </Button>
-        <Button
-          variant="ghost"
-          className="justify-start gap-2 text-slate-600 h-auto"
-          onClick={() => handleGreetingChoice('intake')}
-        >
-          <ClipboardList className="h-4 w-4 shrink-0" />
-          <span className="text-sm">Full Deal Intake</span>
-        </Button>
-      </div>
+          <div className="flex items-center gap-2 px-3 py-2.5 text-xs text-slate-400 border border-dashed border-slate-200 rounded-lg">
+            <Lock className="h-3.5 w-3.5 flex-shrink-0" />
+            <span>PrepCoach tasks &amp; free chat require <a href="/membership/certified-borrower" className="text-primary hover:underline font-medium">Certified Borrower</a> access</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 
   const taskBlock = mode === 'task' && (
     <div className="space-y-3">
-      <form onSubmit={handleTaskSubmit} className="flex gap-2">
-        <Input
-          value={freeformInput}
-          onChange={(e) => setFreeformInput(e.target.value)}
-          placeholder="Type your answer..."
-          disabled={isAskingAI}
-        />
-        <Button type="submit" disabled={isAskingAI || !freeformInput.trim()}>
-          {isAskingAI ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Bot className="h-4 w-4" />
-          )}
-        </Button>
-      </form>
+      {/* Certified borrowers get free text input to converse with PrepCoach */}
+      {canAskFreeform ? (
+        <form onSubmit={handleTaskSubmit} className="flex gap-2">
+          <Input
+            value={freeformInput}
+            onChange={(e) => setFreeformInput(e.target.value)}
+            placeholder="Type your answer..."
+            disabled={isAskingAI}
+          />
+          <Button type="submit" disabled={isAskingAI || !freeformInput.trim()}>
+            {isAskingAI ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Bot className="h-4 w-4" />
+            )}
+          </Button>
+        </form>
+      ) : (
+        /* Non-certified users: read-only — no follow-up chat */
+        !isAskingAI && (
+          <div className="rounded-lg border border-dashed border-slate-200 bg-slate-50/50 px-4 py-3 flex items-center gap-2 text-xs text-slate-400">
+            <Lock className="h-3.5 w-3.5 flex-shrink-0" />
+            <span>
+              Follow-up chat requires{' '}
+              <a href="/membership/certified-borrower" className="text-primary hover:underline font-medium">
+                Certified Borrower
+              </a>{' '}
+              access. Select another task below.
+            </span>
+          </div>
+        )
+      )}
+      {isAskingAI && !canAskFreeform && (
+        <div className="flex items-center text-sm text-slate-500">
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Generating response...
+        </div>
+      )}
       {!isAskingAI && (
         <Button
           variant="ghost"

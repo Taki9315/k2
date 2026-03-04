@@ -1,0 +1,215 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { FileText, Eye, Download, Search, User, Clock, Tag } from "lucide-react";
+import { PageHeader } from "@/components/admin/PageHeader";
+import { DataTable, type Column } from "@/components/admin/DataTable";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { supabase } from "@/lib/supabase";
+
+type GeneratedDocRow = {
+  id: string;
+  title: string;
+  document_type: string;
+  task_id: string | null;
+  content: string;
+  metadata: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+  profiles?: {
+    full_name: string | null;
+    email: string | null;
+  };
+};
+
+const DOCUMENT_TYPE_LABELS: Record<string, string> = {
+  "executive-summary": "Executive Summary",
+  pfs: "Personal Financial Statement",
+  dscr: "DSCR Calculator",
+  "lender-scripts": "Lender Scripts",
+  onboarding: "General Coaching",
+};
+
+export default function AdminGeneratedDocumentsPage() {
+  const [documents, setDocuments] = useState<GeneratedDocRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [total, setTotal] = useState(0);
+  const [previewDoc, setPreviewDoc] = useState<GeneratedDocRow | null>(null);
+
+  const fetchDocuments = useCallback(async () => {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session?.access_token) return;
+
+      const response = await fetch("/api/admin/generated-documents", {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (!response.ok) return;
+
+      const data = (await response.json()) as {
+        documents: GeneratedDocRow[];
+        total: number;
+      };
+      setDocuments(data.documents ?? []);
+      setTotal(data.total ?? 0);
+    } catch (error) {
+      console.error("Error fetching generated documents:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchDocuments();
+  }, [fetchDocuments]);
+
+  const columns: Column<GeneratedDocRow>[] = [
+    {
+      key: "title",
+      header: "Document Title",
+      render: (doc) => (
+        <div className="min-w-[200px]">
+          <div className="flex items-center gap-2">
+            <FileText className="h-4 w-4 text-primary flex-shrink-0" />
+            <span className="font-medium text-foreground">{doc.title}</span>
+          </div>
+          <p className="text-xs text-muted-foreground mt-0.5 ml-6 truncate max-w-[300px]">
+            {doc.content.slice(0, 120)}...
+          </p>
+        </div>
+      ),
+    },
+    {
+      key: "document_type",
+      header: "Type",
+      render: (doc) => (
+        <Badge variant="outline" className="capitalize text-xs">
+          <Tag className="h-3 w-3 mr-1" />
+          {DOCUMENT_TYPE_LABELS[doc.document_type] || doc.document_type.replace(/-/g, " ")}
+        </Badge>
+      ),
+    },
+    {
+      key: "user_id" as keyof GeneratedDocRow,
+      header: "Created By",
+      render: (doc) => (
+        <div className="flex items-center gap-2">
+          <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+            <User className="h-3.5 w-3.5 text-primary" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-foreground truncate">
+              {doc.profiles?.full_name || "Unknown"}
+            </p>
+            <p className="text-xs text-muted-foreground truncate">
+              {doc.profiles?.email || doc.user_id.slice(0, 8) + "..."}
+            </p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "created_at",
+      header: "Created Date",
+      render: (doc) => (
+        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <Clock className="h-3.5 w-3.5" />
+          {new Date(doc.created_at).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })}
+        </div>
+      ),
+    },
+    {
+      key: "actions" as string,
+      header: "Actions",
+      render: (doc) => (
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setPreviewDoc(doc)}
+            className="h-8 px-2"
+          >
+            <Eye className="h-4 w-4" />
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-muted-foreground">Loading documents...</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <PageHeader
+        title="Generated Documents"
+        description={`${total} document${total !== 1 ? "s" : ""} generated by users via PrepCoach`}
+      />
+
+      <DataTable
+        data={documents}
+        columns={columns}
+        searchKey="title"
+        searchPlaceholder="Search documents by title..."
+      />
+
+      {/* Document preview dialog */}
+      {previewDoc && (
+        <Dialog open onOpenChange={() => setPreviewDoc(null)}>
+          <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-primary" />
+                {previewDoc.title}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="outline" className="capitalize">
+                  {DOCUMENT_TYPE_LABELS[previewDoc.document_type] ||
+                    previewDoc.document_type.replace(/-/g, " ")}
+                </Badge>
+                <Badge variant="secondary">
+                  {previewDoc.profiles?.full_name || previewDoc.user_id.slice(0, 8)}
+                </Badge>
+                <Badge variant="secondary">
+                  {new Date(previewDoc.created_at).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </Badge>
+              </div>
+              <div className="rounded-lg border bg-slate-50 p-6">
+                <pre className="whitespace-pre-wrap text-sm text-gray-700 font-sans leading-relaxed">
+                  {previewDoc.content}
+                </pre>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
+  );
+}

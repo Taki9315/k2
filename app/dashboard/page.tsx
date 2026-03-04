@@ -58,12 +58,22 @@ type Submission = {
   created_at: string;
 };
 
+type GeneratedDocument = {
+  id: string;
+  title: string;
+  document_type: string;
+  content: string;
+  task_id: string | null;
+  created_at: string;
+};
+
 export default function DashboardPage() {
   const { user, loading, isCertifiedBorrower, isKitBuyer, isBasicBorrower, isAdmin, fullName, membershipNumber } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [recentContent, setRecentContent] = useState<any[]>([]);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [generatedDocs, setGeneratedDocs] = useState<GeneratedDocument[]>([]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -77,6 +87,7 @@ export default function DashboardPage() {
         await fetchOrders();
         await fetchRecentContent();
         await fetchSubmissions();
+        await fetchGeneratedDocs();
       }
     })();
   }, [user]);
@@ -128,6 +139,21 @@ export default function DashboardPage() {
       setSubmissions(data.submissions ?? []);
     } catch (error) {
       console.error('Error fetching submissions:', error);
+    }
+  };
+
+  const fetchGeneratedDocs = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) return;
+      const response = await fetch('/api/generated-documents', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (!response.ok) return;
+      const data = (await response.json()) as { documents?: GeneratedDocument[] };
+      setGeneratedDocs(data.documents ?? []);
+    } catch (error) {
+      console.error('Error fetching generated documents:', error);
     }
   };
 
@@ -553,6 +579,70 @@ export default function DashboardPage() {
                   )}
                 </CardContent>
               </Card>
+
+              {/* ── My Generated Documents ────────────────────────── */}
+              {(isKitBuyer || isCertifiedBorrower) && (
+                <Card className="border-0 shadow-sm overflow-hidden">
+                  <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b pb-4">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="flex items-center gap-2.5 text-lg">
+                        <div className="h-8 w-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                          <FileText className="h-4.5 w-4.5 text-blue-600" />
+                        </div>
+                        My Documents
+                      </CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-5">
+                    {generatedDocs.length === 0 ? (
+                      <div className="text-center py-6">
+                        <div className="h-16 w-16 rounded-2xl bg-blue-50 flex items-center justify-center mx-auto mb-4">
+                          <FileText className="h-8 w-8 text-blue-200" />
+                        </div>
+                        <p className="text-sm text-gray-500 mb-1 font-medium">No documents yet</p>
+                        <p className="text-xs text-gray-400 max-w-xs mx-auto">
+                          Use PrepCoach to generate executive summaries, financial statements, and more. Your documents will appear here.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {generatedDocs.slice(0, 5).map((doc) => (
+                          <div
+                            key={doc.id}
+                            className="rounded-xl border border-slate-100 p-4 hover:border-slate-200 transition-colors"
+                          >
+                            <div className="flex items-center justify-between gap-3 mb-1">
+                              <div className="flex items-center gap-2 min-w-0">
+                                <div className="h-2 w-2 rounded-full bg-blue-400 flex-shrink-0" />
+                                <p className="font-medium text-sm text-gray-900 truncate">
+                                  {doc.title}
+                                </p>
+                              </div>
+                              <span className="text-xs text-gray-400 flex items-center gap-1 flex-shrink-0">
+                                <Clock className="h-3 w-3" />
+                                {new Date(doc.created_at).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <div className="ml-4 flex items-center gap-2">
+                              <Badge variant="outline" className="text-[10px] capitalize">
+                                {doc.document_type.replace(/-/g, ' ')}
+                              </Badge>
+                              <p className="text-xs text-gray-500 line-clamp-1">
+                                {doc.content.slice(0, 100)}...
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                        {generatedDocs.length > 5 && (
+                          <p className="text-xs text-center text-gray-400 pt-1">
+                            +{generatedDocs.length - 5} more documents
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
 
               {/* ── K2 Partner Network ────────────────────────────── */}
               <Card className="border-0 shadow-sm overflow-hidden">

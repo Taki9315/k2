@@ -14,6 +14,7 @@ import {
   Leaf,
   Handshake,
   DollarSign,
+  Bot,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +22,7 @@ const navItems = [
   { title: "Dashboard", path: "/admin", icon: LayoutDashboard },
   { title: "Users", path: "/admin/users", icon: Users },
   { title: "Content", path: "/admin/documents", icon: FolderOpen },
+  { title: "Generated Docs", path: "/admin/generated-documents", icon: Bot },
   { title: "Resources", path: "/admin/resources", icon: BookOpen },
   { title: "Submissions", path: "/admin/submissions", icon: FileText },
   { title: "Partners", path: "/admin/partners", icon: Handshake },

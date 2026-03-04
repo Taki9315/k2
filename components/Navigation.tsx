@@ -19,7 +19,7 @@ import { Breadcrumbs } from '@/components/Breadcrumbs';
 
 export function Navigation() {
   const pathname = usePathname();
-  const { user, signOut, isCertifiedBorrower, isPartner, isAdmin, fullName } = useAuth();
+  const { user, signOut, isCertifiedBorrower, isKitBuyer, isPartner, isAdmin, fullName } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [contentDropdownOpen, setContentDropdownOpen] = useState(false);
   const [mobileContentOpen, setMobileContentOpen] = useState(false);
@@ -36,22 +36,41 @@ export function Navigation() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // When logged in: simplified focused nav (no sales/marketing pages)
+  // When logged in: role-based nav
   // When logged out: full public marketing nav
   const navLinks = user
-    ? [
-        { href: '/dashboard', label: 'Dashboard' },
-        { href: '/prepcoach', label: 'PrepCoach' },
-        { href: '/content', label: 'Free Content' },
-        { href: '/Resource', label: 'Resources' },
-        { href: '/contact', label: 'Contact' },
-      ]
+    ? (() => {
+        const links: { href: string; label: string }[] = [
+          { href: '/dashboard', label: 'Dashboard' },
+        ];
+
+        if (isCertifiedBorrower) {
+          // Full access: PrepCoach, content, resources, etc.
+          links.push({ href: '/prepcoach', label: 'PrepCoach' });
+          links.push({ href: '/content', label: 'Content' });
+          links.push({ href: '/Resource', label: 'Resources' });
+          links.push({ href: '/contact', label: 'Contact' });
+        } else if (isKitBuyer) {
+          // Kit buyer: show Certified Borrower upsell
+          links.push({ href: '/membership/certified-borrower', label: 'Certified Borrower' });
+          links.push({ href: '/content', label: 'Content' });
+          links.push({ href: '/contact', label: 'Contact' });
+        } else {
+          // Basic borrower: show Certified Borrower + Success Kit upsells
+          links.push({ href: '/membership/certified-borrower', label: 'Certified Borrower' });
+          links.push({ href: '/workbook', label: 'Success Kit' });
+          links.push({ href: '/content', label: 'Content' });
+          links.push({ href: '/contact', label: 'Contact' });
+        }
+
+        return links;
+      })()
     : [
         { href: '/', label: 'Home' },
         { href: '/about', label: 'About' },
         { href: '/workbook', label: 'Success Kit' },
-        { href: '/membership', label: 'Certified Borrower' },
-        { href: '/Resource', label: 'Resources' },
+        { href: '/membership', label: 'Membership' },
+        { href: '/content', label: 'Content' },
         { href: '/contact', label: 'Contact' },
       ];
 
@@ -160,58 +179,45 @@ export function Navigation() {
       {/* Navigation bar below header - centered (green) */}
       <nav className="border-t border-primary bg-primary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center items-center h-14">
-            <div className="hidden md:flex items-center space-x-8">
+          <div className="flex justify-center items-center h-12">
+            <div className="hidden md:flex items-center space-x-6">
               {navLinks.map((link) => {
-                // Insert the Free Content dropdown after About
-                if (link.href === '/workbook') {
+                // Content link gets a dropdown for sub-categories
+                if (link.href === '/content') {
                   return (
-                    <div key="content-dropdown" className="flex items-center space-x-8">
-                      {/* Free Content dropdown */}
-                      <div ref={contentDropdownRef} className="relative">
-                        <button
-                          onClick={() => setContentDropdownOpen(!contentDropdownOpen)}
-                          className={cn(
-                            'inline-flex items-center gap-1 text-sm font-medium transition-colors hover:opacity-90',
-                            pathname.startsWith('/content') ? 'text-primary-foreground' : 'text-primary-foreground/90'
-                          )}
-                        >
-                          Free Content
-                          <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', contentDropdownOpen && 'rotate-180')} />
-                        </button>
-                        {contentDropdownOpen && (
-                          <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-48 rounded-lg border border-slate-200 bg-white py-2 shadow-xl z-50">
-                            <Link
-                              href="/content"
-                              onClick={() => setContentDropdownOpen(false)}
-                              className="block px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-slate-50 transition-colors"
-                            >
-                              All Content
-                            </Link>
-                            <div className="my-1 h-px bg-slate-100" />
-                            {contentSubLinks.map((sub) => (
-                              <Link
-                                key={sub.href}
-                                href={sub.href}
-                                onClick={() => setContentDropdownOpen(false)}
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-50 hover:text-gray-900 transition-colors"
-                              >
-                                {sub.label}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      {/* Workbook link */}
-                      <Link
-                        href={link.href}
+                    <div key="content-dropdown" ref={contentDropdownRef} className="relative">
+                      <button
+                        onClick={() => setContentDropdownOpen(!contentDropdownOpen)}
                         className={cn(
-                          'text-sm font-medium transition-colors hover:opacity-90',
-                          pathname === link.href ? 'text-primary-foreground' : 'text-primary-foreground/90'
+                          'inline-flex items-center gap-1 text-sm font-medium transition-colors hover:opacity-90',
+                          pathname.startsWith('/content') ? 'text-primary-foreground' : 'text-primary-foreground/80'
                         )}
                       >
                         {link.label}
-                      </Link>
+                        <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', contentDropdownOpen && 'rotate-180')} />
+                      </button>
+                      {contentDropdownOpen && (
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-44 rounded-lg border border-slate-200 bg-white py-1.5 shadow-xl z-50">
+                          <Link
+                            href="/content"
+                            onClick={() => setContentDropdownOpen(false)}
+                            className="block px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-slate-50 transition-colors"
+                          >
+                            All Content
+                          </Link>
+                          <div className="my-1 h-px bg-slate-100" />
+                          {contentSubLinks.map((sub) => (
+                            <Link
+                              key={sub.href}
+                              href={sub.href}
+                              onClick={() => setContentDropdownOpen(false)}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-50 hover:text-gray-900 transition-colors"
+                            >
+                              {sub.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   );
                 }
@@ -221,7 +227,7 @@ export function Navigation() {
                     href={link.href}
                     className={cn(
                       'text-sm font-medium transition-colors hover:opacity-90',
-                      pathname === link.href ? 'text-primary-foreground' : 'text-primary-foreground/90'
+                      pathname === link.href ? 'text-primary-foreground' : 'text-primary-foreground/80'
                     )}
                   >
                     {link.label}
@@ -241,11 +247,10 @@ export function Navigation() {
         <div className="md:hidden border-t border-primary bg-primary">
           <div className="px-2 pt-2 pb-3 space-y-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {navLinks.map((link) => {
-              // Insert Free Content expandable section before Workbook
-              if (link.href === '/workbook') {
+              // Content dropdown with sub-links
+              if (link.href === '/content') {
                 return (
                   <div key="mobile-content-group">
-                    {/* Free Content toggle */}
                     <button
                       onClick={() => setMobileContentOpen(!mobileContentOpen)}
                       className={cn(
@@ -255,7 +260,7 @@ export function Navigation() {
                           : 'text-primary-foreground/90 hover:bg-primary/90'
                       )}
                     >
-                      Free Content
+                      {link.label}
                       <ChevronDown className={cn('h-4 w-4 transition-transform', mobileContentOpen && 'rotate-180')} />
                     </button>
                     {mobileContentOpen && (
@@ -279,19 +284,6 @@ export function Navigation() {
                         ))}
                       </div>
                     )}
-                    {/* Workbook link */}
-                    <Link
-                      href={link.href}
-                      className={cn(
-                        'block px-3 py-2 rounded-md text-base font-medium',
-                        pathname === link.href
-                          ? 'bg-primary/80 text-primary-foreground'
-                          : 'text-primary-foreground/90 hover:bg-primary/90'
-                      )}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {link.label}
-                    </Link>
                   </div>
                 );
               }
