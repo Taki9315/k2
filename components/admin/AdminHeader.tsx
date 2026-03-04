@@ -1,12 +1,13 @@
 "use client";
 
-import { Bell, LogOut, Menu, Search } from "lucide-react";
+import { LogOut, Menu, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
+import { NotificationBell } from "./NotificationBell";
 
 interface AdminHeaderProps {
   onMenuToggle: () => void;
@@ -69,10 +70,7 @@ export function AdminHeader({ onMenuToggle }: AdminHeaderProps) {
           <LogOut className="h-4 w-4" />
           Sign out
         </Button>
-        <Button variant="ghost" size="icon" className="relative rounded-xl">
-          <Bell className="h-4 w-4 text-muted-foreground" />
-          <span className="absolute right-2 top-2 h-2 w-2 rounded-full gradient-green" />
-        </Button>
+        <NotificationBell />
         <div className="flex items-center gap-2">
           <Avatar className="h-8 w-8 rounded-xl">
             <AvatarFallback className="rounded-xl gradient-green text-xs text-primary-foreground">

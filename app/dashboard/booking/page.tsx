@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
-import { ArrowLeft, Calendar, Lock, Shield, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, Lock, Shield, CheckCircle2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 /**
@@ -59,10 +59,13 @@ export default function BookingPage() {
           </h1>
           <p className="text-gray-600 mb-6">
             Schedule a one-on-one transaction review with a K2 expert. This
-            feature is available to Certified Borrowers.
+            feature is available exclusively to Certified Borrowers.
           </p>
-          <Button asChild>
-            <Link href="/membership/certified-borrower">Become Certified</Link>
+          <Button asChild size="lg">
+            <Link href="/membership/certified-borrower">
+              Upgrade to Certified Borrower
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
           </Button>
         </div>
       </div>

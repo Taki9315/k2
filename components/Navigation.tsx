@@ -75,9 +75,7 @@ export function Navigation() {
       ];
 
   const contentSubLinks = [
-    // { href: '/content?tab=loan-programs', label: 'Loan Programs' },
-    // { href: '/content?tab=lender-types', label: 'Lender Types' },
-    // { href: '/content?tab=property-types', label: 'Property Types' },
+    { href: '/content/success-kit', label: 'Success Kit' },
     { href: '/content?tab=videos', label: 'Videos' },
     { href: '/content?tab=articles', label: 'Articles' },
   ];

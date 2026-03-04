@@ -6,8 +6,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { LoanTypesGuide } from '@/components/LoanTypesGuide';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { PlayCircle, FileText, Search, Filter } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { PlayCircle, FileText, Search, Filter, BookOpen, Shield, ArrowRight } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   Select,
   SelectContent,
@@ -28,6 +30,8 @@ type ContentItem = {
 };
 
 export default function ContentHubPage() {
+  const { user, isCertifiedBorrower, isKitBuyer } = useAuth();
+  const hasPaidAccess = isCertifiedBorrower || isKitBuyer;
   const [content, setContent] = useState<ContentItem[]>([]);
   const [filteredContent, setFilteredContent] = useState<ContentItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -103,6 +107,42 @@ export default function ContentHubPage() {
           </p>
         </div>
       </section>
+
+      {/* Success Kit featured card for paid users */}
+      {hasPaidAccess && (
+        <section className="py-8 bg-white border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Link href="/content/success-kit" className="group">
+              <Card className="border-2 border-primary/20 hover:border-primary/40 hover:shadow-lg transition-all bg-gradient-to-r from-primary/5 to-emerald-50/50">
+                <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
+                  <div className="h-20 w-20 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                    <BookOpen className="h-10 w-10 text-primary" />
+                  </div>
+                  <div className="flex-1 text-center sm:text-left">
+                    <div className="flex items-center gap-2 justify-center sm:justify-start mb-1">
+                      <h3 className="text-lg font-bold text-gray-900">
+                        Financing Success Kit
+                      </h3>
+                      <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">
+                        <Shield className="h-3 w-3 mr-0.5" />
+                        Member
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Read your Success Kit in our interactive flipbook viewer. 50+ pages,
+                      15 templates — browse online or download anytime.
+                    </p>
+                  </div>
+                  <Button className="gap-2 flex-shrink-0">
+                    Read Now
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+        </section>
+      )}
 
       <section className="py-12 bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

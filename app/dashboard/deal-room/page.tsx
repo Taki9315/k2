@@ -18,9 +18,12 @@ import {
   Shield,
   Lock,
   CheckCircle2,
-  File,
+  Clock,
+  XCircle,
   Image as ImageIcon,
   Table2,
+  Download,
+  MessageSquare,
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -39,6 +42,9 @@ type DealRoomFile = {
   file_size: number;
   mime_type: string;
   category: string;
+  review_status: 'pending' | 'approved' | 'declined';
+  admin_note: string | null;
+  reviewed_at: string | null;
   created_at: string;
 };
 
@@ -56,7 +62,7 @@ function fileIcon(mimeType: string) {
 }
 
 export default function DealRoomPage() {
-  const { user, loading, isCertifiedBorrower, isAdmin } = useAuth();
+  const { user, loading, isCertifiedBorrower, isKitBuyer, isAdmin } = useAuth();
   const router = useRouter();
   const [files, setFiles] = useState<DealRoomFile[]>([]);
   const [fetching, setFetching] = useState(true);
@@ -69,7 +75,7 @@ export default function DealRoomPage() {
     if (!loading && !user) router.push('/login');
   }, [user, loading, router]);
 
-  const hasAccess = isCertifiedBorrower || isAdmin;
+  const hasAccess = isCertifiedBorrower || isKitBuyer || isAdmin;
 
   const fetchFiles = useCallback(async () => {
     if (!user) return;
@@ -151,6 +157,31 @@ export default function DealRoomPage() {
     setDeletingId(null);
   };
 
+  const handleDownload = async (file: DealRoomFile) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) throw new Error('Not authenticated');
+
+      const res = await fetch(`/api/deal-room/download?fileId=${file.id}`, {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (!res.ok) throw new Error('Download failed');
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = file.file_name;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error('Download error:', err);
+      alert('Failed to download. Please try again.');
+    }
+  };
+
   if (loading || !user) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
@@ -166,13 +197,13 @@ export default function DealRoomPage() {
         <div className="text-center max-w-md">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Deal Room</h1>
           <p className="text-gray-600 mb-6">
-            The Deal Room is available to K2 Certified Borrowers. Upload your
+            The Deal Room is available to paid members. Upload your
             loan documents, organize by category, and prepare for lender
             submission.
           </p>
           <Button asChild>
-            <Link href="/membership/certified-borrower">
-              Become Certified
+            <Link href="/workbook">
+              Get the Success Kit
             </Link>
           </Button>
         </div>
@@ -305,44 +336,82 @@ export default function DealRoomPage() {
                     {group.files.map((file) => {
                       const Icon = fileIcon(file.mime_type);
                       return (
-                        <div
-                          key={file.id}
-                          className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
-                        >
-                          <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
-                            <Icon className="h-5 w-5 text-slate-500" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">
-                              {file.file_name}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {formatFileSize(file.file_size)} •{' '}
-                              {new Date(file.created_at).toLocaleDateString()}
-                            </p>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Badge
-                              variant="outline"
-                              className="text-xs bg-green-50 text-green-700 border-green-200 gap-1"
-                            >
-                              <CheckCircle2 className="h-3 w-3" />
-                              Uploaded
-                            </Badge>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-red-500 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0"
-                              onClick={() => handleDelete(file.id)}
-                              disabled={deletingId === file.id}
-                            >
-                              {deletingId === file.id ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
+                        <div key={file.id} className="py-3 first:pt-0 last:pb-0">
+                          <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+                              <Icon className="h-5 w-5 text-slate-500" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-900 truncate">
+                                {file.file_name}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {formatFileSize(file.file_size)} •{' '}
+                                {new Date(file.created_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Badge
+                                variant="outline"
+                                className="text-xs bg-slate-50 text-slate-600 border-slate-200"
+                              >
+                                {CATEGORIES.find(c => c.value === file.category)?.label || file.category}
+                              </Badge>
+                              {file.review_status === 'approved' ? (
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs bg-green-50 text-green-700 border-green-200 gap-1"
+                                >
+                                  <CheckCircle2 className="h-3 w-3" />
+                                  Approved
+                                </Badge>
+                              ) : file.review_status === 'declined' ? (
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs bg-red-50 text-red-700 border-red-200 gap-1"
+                                >
+                                  <XCircle className="h-3 w-3" />
+                                  Declined
+                                </Badge>
                               ) : (
-                                <Trash2 className="h-4 w-4" />
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200 gap-1"
+                                >
+                                  <Clock className="h-3 w-3" />
+                                  Pending Review
+                                </Badge>
                               )}
-                            </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-slate-500 hover:text-primary hover:bg-primary/5 h-8 w-8 p-0"
+                                onClick={() => handleDownload(file)}
+                                title="Download"
+                              >
+                                <Download className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-red-500 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0"
+                                onClick={() => handleDelete(file.id)}
+                                disabled={deletingId === file.id}
+                              >
+                                {deletingId === file.id ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Trash2 className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </div>
                           </div>
+                          {file.admin_note && (
+                            <div className="ml-[52px] mt-2 flex items-start gap-2 rounded-lg bg-blue-50 border border-blue-200 px-3 py-2">
+                              <MessageSquare className="h-3.5 w-3.5 text-blue-500 mt-0.5 shrink-0" />
+                              <p className="text-xs text-blue-700">{file.admin_note}</p>
+                            </div>
+                          )}
                         </div>
                       );
                     })}

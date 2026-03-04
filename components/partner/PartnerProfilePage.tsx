@@ -162,15 +162,15 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             {/* Logo */}
             {partner.logo_url ? (
-              <div className="flex-shrink-0 w-24 h-24 rounded-xl bg-white flex items-center justify-center overflow-hidden border-2 border-white/20">
+              <div className="flex-shrink-0 w-32 h-32 rounded-xl bg-white flex items-center justify-center overflow-hidden border-2 border-white/20">
                 <img
                   src={partner.logo_url}
                   alt={partner.company_name}
-                  className="w-full h-full object-contain p-2"
+                  className="w-full h-full object-contain p-3"
                 />
               </div>
             ) : partner.contact_picture_url ? (
-              <div className="flex-shrink-0 w-24 h-24 rounded-full overflow-hidden border-2 border-white/20">
+              <div className="flex-shrink-0 w-32 h-32 rounded-full overflow-hidden border-2 border-white/20">
                 <img
                   src={partner.contact_picture_url}
                   alt={partner.contact_name || partner.company_name}
@@ -178,8 +178,8 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
                 />
               </div>
             ) : (
-              <div className="flex-shrink-0 w-24 h-24 rounded-xl bg-white/10 flex items-center justify-center border-2 border-white/20">
-                <Building2 className="h-12 w-12 text-white/50" />
+              <div className="flex-shrink-0 w-32 h-32 rounded-xl bg-white/10 flex items-center justify-center border-2 border-white/20">
+                <Building2 className="h-16 w-16 text-white/50" />
               </div>
             )}
 
@@ -553,6 +553,12 @@ function ContactForm({
     setError('');
     setLoading(true);
 
+    // Auto-tag the message with K2 Certified Borrower status
+    const certifiedTag = '[K2 Certified Borrower]';
+    const taggedMessage = formData.message.startsWith(certifiedTag)
+      ? formData.message
+      : `${certifiedTag}\n\n${formData.message}`;
+
     try {
       // Save to database
       const { error: dbError } = await supabase
@@ -564,7 +570,7 @@ function ContactForm({
           sender_email: formData.email,
           sender_phone: formData.phone || null,
           subject: formData.subject || null,
-          message: formData.message,
+          message: taggedMessage,
         });
 
       if (dbError) throw dbError;
@@ -582,7 +588,8 @@ function ContactForm({
             senderEmail: formData.email,
             senderPhone: formData.phone,
             subject: formData.subject,
-            message: formData.message,
+            message: taggedMessage,
+            isCertifiedBorrower: true,
           }),
         });
       } catch {

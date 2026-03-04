@@ -25,6 +25,7 @@ import {
   SlidersHorizontal,
   X,
   ChevronDown,
+  Target,
 } from 'lucide-react';
 
 type PartnerCard = {
@@ -221,9 +222,10 @@ function DashboardResourcesPageInner() {
   const [loanProgram, setLoanProgram] = useState('');
   const [propertyType, setPropertyType] = useState('');
   const [lenderType, setLenderType] = useState('');
+  const [lendingFocus, setLendingFocus] = useState('');
   const [showFilters, setShowFilters] = useState(false);
 
-  const activeFilterCount = [loanProgram, propertyType, lenderType].filter(Boolean).length;
+  const activeFilterCount = [loanProgram, propertyType, lenderType, lendingFocus].filter(Boolean).length;
 
   useEffect(() => {
     if (!loading && !user) {
@@ -260,6 +262,7 @@ function DashboardResourcesPageInner() {
     setLoanProgram('');
     setPropertyType('');
     setLenderType('');
+    setLendingFocus('');
     setFilter('all');
   };
 
@@ -294,8 +297,12 @@ function DashboardResourcesPageInner() {
       .filter((p) => {
         if (!lenderType) return true;
         return p.lender_type === lenderType;
+      })
+      .filter((p) => {
+        if (!lendingFocus) return true;
+        return p.lending_focus?.toLowerCase().includes(lendingFocus.toLowerCase());
       });
-  }, [partners, filter, search, loanProgram, propertyType, lenderType]);
+  }, [partners, filter, search, loanProgram, propertyType, lenderType, lendingFocus]);
 
   if (loading || !user) {
     return (
@@ -413,6 +420,18 @@ function DashboardResourcesPageInner() {
                   />
                 </>
               )}
+              {/* Lending Focus text filter */}
+              {(filter === 'all' || filter === 'lender') && (
+                <div className="relative">
+                  <Input
+                    placeholder="Lending Focus…"
+                    value={lendingFocus}
+                    onChange={(e) => setLendingFocus(e.target.value)}
+                    className="h-9 w-44 text-sm pl-8"
+                  />
+                  <Target className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                </div>
+              )}
               {activeFilterCount > 0 && (
                 <Button
                   variant="ghost"
@@ -451,6 +470,14 @@ function DashboardResourcesPageInner() {
                 <Badge variant="secondary" className="gap-1 text-xs">
                   {LENDER_TYPE_OPTIONS.find((o) => o.value === lenderType)?.label || lenderType}
                   <button type="button" onClick={() => setLenderType('')} className="ml-0.5 hover:text-destructive">
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              )}
+              {lendingFocus && (
+                <Badge variant="secondary" className="gap-1 text-xs">
+                  Focus: {lendingFocus}
+                  <button type="button" onClick={() => setLendingFocus('')} className="ml-0.5 hover:text-destructive">
                     <X className="h-3 w-3" />
                   </button>
                 </Badge>
@@ -515,15 +542,15 @@ function DashboardResourcesPageInner() {
                       <div className="flex items-center gap-4">
                         {/* Logo or picture */}
                         {partner.logo_url ? (
-                          <div className="flex-shrink-0 w-14 h-14 rounded-lg bg-white flex items-center justify-center overflow-hidden">
+                          <div className="flex-shrink-0 w-20 h-20 rounded-xl bg-white flex items-center justify-center overflow-hidden">
                             <img
                               src={partner.logo_url}
                               alt={partner.company_name}
-                              className="w-full h-full object-contain p-1.5"
+                              className="w-full h-full object-contain p-2"
                             />
                           </div>
                         ) : partner.contact_picture_url ? (
-                          <div className="flex-shrink-0 w-14 h-14 rounded-full overflow-hidden border-2 border-white/30">
+                          <div className="flex-shrink-0 w-20 h-20 rounded-full overflow-hidden border-2 border-white/30">
                             <img
                               src={partner.contact_picture_url}
                               alt={partner.contact_name || partner.company_name}
@@ -531,7 +558,7 @@ function DashboardResourcesPageInner() {
                             />
                           </div>
                         ) : (
-                          <div className="flex-shrink-0 w-14 h-14 rounded-lg bg-white/10 flex items-center justify-center">
+                          <div className="flex-shrink-0 w-20 h-20 rounded-xl bg-white/10 flex items-center justify-center">
                             {partner.partner_type === 'lender' ? (
                               <Building2 className="h-7 w-7 text-white/50" />
                             ) : (

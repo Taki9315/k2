@@ -45,6 +45,17 @@ export default function LoginPage() {
 
     try {
       await signIn(email, password);
+      // Notify admin about login
+      fetch('/api/admin/notifications/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'login',
+          title: 'User signed in',
+          message: email,
+          user_email: email,
+        }),
+      }).catch(() => {}); // fire-and-forget
       pendingRedirect.current = true;
       // The useEffect above will handle the redirect once the profile loads
     } catch (err: unknown) {

@@ -39,6 +39,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { cn } from '@/lib/utils';
 
 type Order = {
   id: string;
@@ -219,12 +220,12 @@ export default function DashboardPage() {
       icon: Upload,
       title: 'Deal Room',
       description: 'Upload documents for lender review',
-      href: isCertifiedBorrower ? '/dashboard/deal-room' : '/membership/certified-borrower',
-      btnLabel: isCertifiedBorrower ? 'Open Deal Room' : 'Upgrade to Access',
+      href: (isCertifiedBorrower || isKitBuyer) ? '/dashboard/deal-room' : '/membership/certified-borrower',
+      btnLabel: (isCertifiedBorrower || isKitBuyer) ? 'Open Deal Room' : 'Upgrade to Access',
       gradient: 'from-gray-900/5 to-gray-800/5',
       iconBg: 'bg-gray-100 text-gray-800',
       available: true,
-      locked: !isCertifiedBorrower,
+      locked: !(isCertifiedBorrower || isKitBuyer),
     },
     {
       icon: Calendar,
@@ -272,27 +273,28 @@ export default function DashboardPage() {
                   : 'Track your progress, access resources, and prepare for financing success.'}
               </p>
               <div className="flex items-center gap-2 flex-wrap">
-                {isCertifiedBorrower && (
-                  <Badge className="bg-primary/20 text-primary border-primary/30 gap-1 backdrop-blur-sm">
-                    <Shield className="h-3 w-3" />
-                    Certified Borrower
-                  </Badge>
-                )}
+                {/* Always show both tier badges — gray out the missing one */}
+                <Badge className={cn(
+                  'gap-1',
+                  (isKitBuyer || isCertifiedBorrower)
+                    ? 'bg-white/10 text-white/90 border-white/20'
+                    : 'bg-white/5 text-white/30 border-white/10'
+                )}>
+                  <BookOpen className="h-3 w-3" />
+                  Kit Buyer
+                </Badge>
+                <Badge className={cn(
+                  'gap-1',
+                  isCertifiedBorrower
+                    ? 'bg-primary/20 text-primary border-primary/30'
+                    : 'bg-white/5 text-white/30 border-white/10'
+                )}>
+                  <Shield className="h-3 w-3" />
+                  Certified Borrower
+                </Badge>
                 {isCertifiedBorrower && membershipNumber && (
                   <Badge className="bg-white/10 text-white/80 border-white/20 gap-1 font-mono text-xs">
                     {membershipNumber}
-                  </Badge>
-                )}
-                {isKitBuyer && (
-                  <Badge className="bg-white/10 text-white/90 border-white/20 gap-1">
-                    <BookOpen className="h-3 w-3" />
-                    Kit Owner
-                  </Badge>
-                )}
-                {isBasicBorrower && (
-                  <Badge className="bg-white/10 text-white/90 border-white/20 gap-1">
-                    <User className="h-3 w-3" />
-                    Borrower
                   </Badge>
                 )}
                 {isAdmin && (
@@ -551,6 +553,19 @@ export default function DashboardPage() {
                       : 'Get started with core templates. Upgrade to unlock all tasks.'}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* View All first */}
+                    <Link
+                      href="/prepcoach"
+                      className="group flex items-center gap-3 rounded-xl border border-primary/20 bg-primary/5 p-3.5 hover:border-primary/40 hover:bg-primary/10 transition-all duration-200"
+                    >
+                      <div className="h-10 w-10 rounded-lg bg-primary/20 text-primary flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                        <Bot className="h-5 w-5" />
+                      </div>
+                      <span className="text-sm font-medium text-primary group-hover:text-primary">
+                        View All Tasks
+                      </span>
+                      <ChevronRight className="h-4 w-4 text-primary/50 ml-auto group-hover:translate-x-0.5 transition-all" />
+                    </Link>
                     {prepTasks.map((task) => (
                       <Link
                         key={task.label}

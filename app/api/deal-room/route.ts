@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest, createServiceRoleClient } from '@/lib/supabase-server';
+import { createAdminNotification } from '@/lib/admin-notifications';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_TYPES = [
@@ -48,9 +49,15 @@ async function ensureTable(supabase: ReturnType<typeof createServiceRoleClient>)
           file_size integer NOT NULL,
           mime_type text NOT NULL,
           category text NOT NULL DEFAULT 'general',
+          review_status text NOT NULL DEFAULT 'pending'
+            CHECK (review_status IN ('pending', 'approved', 'declined')),
+          admin_note text,
+          reviewed_at timestamptz,
+          reviewed_by uuid REFERENCES profiles(id),
           created_at timestamptz DEFAULT now()
         );
         CREATE INDEX IF NOT EXISTS idx_deal_room_files_user ON deal_room_files(user_id);
+        CREATE INDEX IF NOT EXISTS idx_deal_room_files_status ON deal_room_files(review_status);
         ALTER TABLE deal_room_files ENABLE ROW LEVEL SECURITY;
         CREATE POLICY IF NOT EXISTS "service_role_full_deal_room"
           ON deal_room_files FOR ALL TO service_role USING (true) WITH CHECK (true);
@@ -64,21 +71,22 @@ async function ensureTable(supabase: ReturnType<typeof createServiceRoleClient>)
   }
 }
 
-/** Check if current user has deal-room access */
+/** Check if current user has deal-room access (kit buyers + certified + admin) */
 async function checkAccess(
   supabase: ReturnType<typeof createServiceRoleClient>,
   userId: string
 ) {
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, preferred')
+    .select('role, preferred, workbook_purchased')
     .eq('id', userId)
     .maybeSingle();
 
   return (
     profile?.role === 'certified' ||
     profile?.preferred === true ||
-    profile?.role === 'admin'
+    profile?.role === 'admin' ||
+    profile?.workbook_purchased === true
   );
 }
 
@@ -193,6 +201,21 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
+
+    // Notify admin about new upload
+    const { data: uploaderProfile } = await supabase
+      .from('profiles')
+      .select('full_name, email')
+      .eq('id', user.id)
+      .maybeSingle();
+    await createAdminNotification({
+      type: 'upload',
+      title: 'New document uploaded',
+      message: `${file.name} (${category})`,
+      user_id: user.id,
+      user_name: uploaderProfile?.full_name || null,
+      user_email: uploaderProfile?.email || user.email || null,
+    });
 
     return NextResponse.json({ file: record });
   } catch (err: any) {

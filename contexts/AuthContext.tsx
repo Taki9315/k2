@@ -196,9 +196,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signOut = useCallback(async () => {
+    // Notify admin about logout (fire-and-forget)
+    if (user) {
+      fetch('/api/admin/notifications/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'logout',
+          title: 'User signed out',
+          message: profile?.email || user.email,
+          user_id: user.id,
+          user_name: profile?.full_name || null,
+          user_email: profile?.email || user.email || null,
+        }),
+      }).catch(() => {});
+    }
     await supabase.auth.signOut();
     setProfile(null);
-  }, []);
+  }, [user, profile]);
 
   const refreshProfile = useCallback(async () => {
     if (user) {
