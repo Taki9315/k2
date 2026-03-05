@@ -2,11 +2,17 @@ import { NextResponse } from 'next/server';
 import { createServiceRoleClient } from '@/lib/supabase-server';
 
 type ContactPartnerPayload = {
-  partner_id: string;
-  name: string;
-  email: string;
+  partner_id?: string;
+  partnerId?: string;
+  name?: string;
+  senderName?: string;
+  email?: string;
+  senderEmail?: string;
   phone?: string;
+  senderPhone?: string;
   message: string;
+  subject?: string;
+  isCertifiedBorrower?: boolean;
 };
 
 /**
@@ -21,7 +27,14 @@ export async function POST(request: Request) {
   try {
     const body = (await request.json()) as ContactPartnerPayload;
 
-    if (!body.partner_id || !body.name || !body.email || !body.message) {
+    // Normalize field names (client may send either camelCase or snake_case)
+    const partnerId = body.partner_id || body.partnerId;
+    const senderName = body.name || body.senderName;
+    const senderEmail = body.email || body.senderEmail;
+    const senderPhone = body.phone || body.senderPhone;
+    const isCertified = body.isCertifiedBorrower === true;
+
+    if (!partnerId || !senderName || !senderEmail || !body.message) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -34,7 +47,7 @@ export async function POST(request: Request) {
     const { data: partner, error: partnerErr } = await supabase
       .from('partner_profiles')
       .select('id, company_name, contact_email, contact_name, partner_type')
-      .eq('id', body.partner_id)
+      .eq('id', partnerId)
       .eq('is_published', true)
       .maybeSingle();
 
@@ -49,16 +62,19 @@ export async function POST(request: Request) {
     const isLender = partner.partner_type === 'lender';
     const partnerLabel = isLender ? 'Lender' : 'Vendor';
 
-    const subject = `New Inquiry from K2 Certified Borrower – ${body.name}`;
+    const certifiedNote = isCertified ? ' (K2 Certified Borrower)' : '';
+    const subject = isCertified
+      ? `New Inquiry from K2 Certified Borrower – ${senderName}`
+      : `New Inquiry – ${senderName}`;
 
     const partnerEmailBody = [
       `Hi ${partner.contact_name || partner.company_name},`,
       '',
       `You have received a new inquiry through your K2 Commercial Finance ${partnerLabel} profile page.`,
       '',
-      `Borrower Name: ${body.name}`,
-      `Email: ${body.email}`,
-      body.phone ? `Phone: ${body.phone}` : null,
+      `Borrower Name: ${senderName}${certifiedNote}`,
+      `Email: ${senderEmail}`,
+      senderPhone ? `Phone: ${senderPhone}` : null,
       '',
       'Message:',
       body.message,
@@ -69,13 +85,13 @@ export async function POST(request: Request) {
       .filter((line) => line !== null)
       .join('\n');
 
-    const adminSubject = `${partnerLabel} Contact: ${body.name} → ${partner.company_name}`;
+    const adminSubject = `${partnerLabel} Contact: ${senderName}${certifiedNote} → ${partner.company_name}`;
     const adminEmailBody = [
-      `A certified borrower submitted a contact request to ${partner.company_name}.`,
+      `A ${isCertified ? 'certified borrower' : 'borrower'} submitted a contact request to ${partner.company_name}.`,
       '',
-      `Borrower: ${body.name}`,
-      `Email: ${body.email}`,
-      body.phone ? `Phone: ${body.phone}` : null,
+      `Borrower: ${senderName}${certifiedNote}`,
+      `Email: ${senderEmail}`,
+      senderPhone ? `Phone: ${senderPhone}` : null,
       '',
       'Message:',
       body.message,
@@ -111,7 +127,7 @@ export async function POST(request: Request) {
           body: JSON.stringify({
             from: fromAddress,
             to: partner.contact_email,
-            reply_to: body.email,
+            reply_to: senderEmail,
             subject,
             text: partnerEmailBody,
           }),

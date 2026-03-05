@@ -162,15 +162,15 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             {/* Logo */}
             {partner.logo_url ? (
-              <div className="flex-shrink-0 w-32 h-32 rounded-xl bg-white flex items-center justify-center overflow-hidden border-2 border-white/20">
+              <div className="flex-shrink-0 w-40 h-40 flex items-center justify-center overflow-hidden">
                 <img
                   src={partner.logo_url}
                   alt={partner.company_name}
-                  className="w-full h-full object-contain p-3"
+                  className="max-w-full max-h-full object-contain drop-shadow-lg"
                 />
               </div>
             ) : partner.contact_picture_url ? (
-              <div className="flex-shrink-0 w-32 h-32 rounded-full overflow-hidden border-2 border-white/20">
+              <div className="flex-shrink-0 w-40 h-40 rounded-full overflow-hidden border-2 border-white/20">
                 <img
                   src={partner.contact_picture_url}
                   alt={partner.contact_name || partner.company_name}
@@ -178,8 +178,8 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
                 />
               </div>
             ) : (
-              <div className="flex-shrink-0 w-32 h-32 rounded-xl bg-white/10 flex items-center justify-center border-2 border-white/20">
-                <Building2 className="h-16 w-16 text-white/50" />
+              <div className="flex-shrink-0 w-40 h-40 rounded-xl bg-white/10 flex items-center justify-center border-2 border-white/20">
+                <Building2 className="h-20 w-20 text-white/50" />
               </div>
             )}
 

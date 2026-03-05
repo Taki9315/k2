@@ -558,12 +558,12 @@ function DashboardResourcesPageInner() {
                             />
                           </div>
                         ) : (
-                          <div className="flex-shrink-0 w-20 h-20 rounded-xl bg-white/10 flex items-center justify-center">
-                            {partner.partner_type === 'lender' ? (
-                              <Building2 className="h-7 w-7 text-white/50" />
-                            ) : (
-                              <Wrench className="h-7 w-7 text-white/50" />
-                            )}
+                          <div className="flex-shrink-0 w-20 h-20 rounded-xl bg-white flex items-center justify-center overflow-hidden">
+                            <img
+                              src="/assets/Network_Logo.png"
+                              alt={partner.company_name}
+                              className="w-full h-full object-contain p-2"
+                            />
                           </div>
                         )}
 

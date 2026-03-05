@@ -910,9 +910,33 @@ export function AssistantWizard({
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `k2-executive-summary-${new Date().toISOString().slice(0, 10)}.pdf`;
+      const pdfFileName = `k2-executive-summary-${new Date().toISOString().slice(0, 10)}.pdf`;
+      a.download = pdfFileName;
       a.click();
       URL.revokeObjectURL(url);
+
+      // Auto-save to Deal Room
+      try {
+        const token = await getAccessToken();
+        const formData = new FormData();
+        formData.append('file', new File([blob], pdfFileName, { type: 'application/pdf' }));
+        formData.append('category', 'executive-summary');
+        const dealRoomRes = await fetch('/api/deal-room', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        });
+        if (dealRoomRes.ok) {
+          pushMessages({
+            id: createMessageId(),
+            role: 'assistant',
+            message: '✅ Your Executive Summary PDF has been saved to your Deal Room automatically.',
+          });
+        }
+      } catch (dealRoomErr) {
+        console.error('Failed to auto-save PDF to Deal Room:', dealRoomErr);
+        // Non-fatal — user already has the downloaded file
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create PDF');
     }
