@@ -41,26 +41,23 @@ export function Navigation() {
   const navLinks = user
     ? (() => {
         const links: { href: string; label: string }[] = [
-          { href: '/dashboard', label: 'Dashboard' },
+          { href: '/dashboard', label: 'Home' },
+          { href: '/content', label: 'Document Library' },
         ];
 
         if (isCertifiedBorrower) {
-          // Full access: PrepCoach, content, resources, etc.
-          links.push({ href: '/prepcoach', label: 'PrepCoach' });
-          links.push({ href: '/content', label: 'Content' });
-          links.push({ href: '/Resource', label: 'Resources' });
-          links.push({ href: '/contact', label: 'Contact' });
-        } else if (isKitBuyer) {
-          // Kit buyer: show Certified Borrower upsell
-          links.push({ href: '/membership/certified-borrower', label: 'Certified Borrower' });
-          links.push({ href: '/content', label: 'Content' });
-          links.push({ href: '/contact', label: 'Contact' });
-        } else {
-          // Basic borrower: show Certified Borrower + Success Kit upsells
-          links.push({ href: '/membership/certified-borrower', label: 'Certified Borrower' });
+          // Certified: full access
+          links.push({ href: '/dashboard/deal-room', label: 'Deal Room' });
+          links.push({ href: '/prepcoach', label: 'Prep Coach' });
           links.push({ href: '/workbook', label: 'Success Kit' });
-          links.push({ href: '/content', label: 'Content' });
-          links.push({ href: '/contact', label: 'Contact' });
+          links.push({ href: '/dashboard/booking', label: 'Schedule Call' });
+        } else if (isKitBuyer) {
+          // Kit buyer: PrepCoach + Success Kit, no Deal Room / Schedule
+          links.push({ href: '/prepcoach', label: 'Prep Coach' });
+          links.push({ href: '/workbook', label: 'Success Kit' });
+        } else {
+          // Basic borrower: Success Kit upsell
+          links.push({ href: '/workbook', label: 'Success Kit' });
         }
 
         return links;
@@ -180,8 +177,8 @@ export function Navigation() {
           <div className="flex justify-center items-center h-12">
             <div className="hidden md:flex items-center space-x-6">
               {navLinks.map((link) => {
-                // Content link gets a dropdown for sub-categories
-                if (link.href === '/content') {
+                // Content link gets a dropdown for sub-categories (public/logged-out only)
+                if (link.href === '/content' && !user) {
                   return (
                     <div key="content-dropdown" ref={contentDropdownRef} className="relative">
                       <button
@@ -245,8 +242,8 @@ export function Navigation() {
         <div className="md:hidden border-t border-primary bg-primary">
           <div className="px-2 pt-2 pb-3 space-y-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {navLinks.map((link) => {
-              // Content dropdown with sub-links
-              if (link.href === '/content') {
+              // Content dropdown with sub-links (public/logged-out only)
+              if (link.href === '/content' && !user) {
                 return (
                   <div key="mobile-content-group">
                     <button

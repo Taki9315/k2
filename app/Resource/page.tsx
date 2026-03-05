@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Calculator,
   ExternalLink,
@@ -15,8 +16,16 @@ import {
   Maximize2,
   Handshake,
   Loader2,
+  Video,
+  FileText,
+  Image as ImageIcon,
+  Link as LinkIcon,
+  Download,
+  Search,
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
 
 type Resource = {
   title: string;
@@ -26,6 +35,20 @@ type Resource = {
   iframeable?: boolean;
   icon: React.ReactNode;
   badge?: string;
+};
+
+type DBResource = {
+  id: string;
+  title: string;
+  description: string;
+  type: 'video' | 'pdf' | 'link' | 'image';
+  url: string | null;
+  file_url: string | null;
+  thumbnail_url: string | null;
+  access_level: 'public' | 'members_only';
+  category: string;
+  tags: string[];
+  view_count: number;
 };
 
 const resources: Resource[] = [
@@ -68,9 +91,14 @@ const resources: Resource[] = [
 ];
 
 export default function ResourcePage() {
+  const { user, isCertifiedBorrower, isKitBuyer } = useAuth();
+  const hasPaidAccess = isCertifiedBorrower || isKitBuyer;
   const [activeResource, setActiveResource] = useState<Resource | null>(null);
   const [approvedProviders, setApprovedProviders] = useState<any[]>([]);
   const [loadingProviders, setLoadingProviders] = useState(true);
+  const [dbResources, setDbResources] = useState<DBResource[]>([]);
+  const [loadingResources, setLoadingResources] = useState(true);
+  const [resourceSearch, setResourceSearch] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -91,6 +119,33 @@ export default function ResourcePage() {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        let query = supabase
+          .from('resources')
+          .select('*')
+          .eq('is_published', true)
+          .order('sort_order', { ascending: true })
+          .order('created_at', { ascending: false });
+
+        // Only show public resources for non-members
+        if (!hasPaidAccess) {
+          query = query.eq('access_level', 'public');
+        }
+
+        const { data, error } = await query;
+        if (!error && data) {
+          setDbResources(data);
+        }
+      } catch (err) {
+        console.error('Error fetching resources:', err);
+      } finally {
+        setLoadingResources(false);
+      }
+    })();
+  }, [hasPaidAccess]);
 
   const handleResourceClick = (resource: Resource) => {
     if (resource.external && resource.iframeable) {
@@ -252,6 +307,128 @@ export default function ResourcePage() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* ── DB-backed resources from admin uploads ─────────────────── */}
+      <section className="py-12 md:py-16 bg-slate-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900">More Resources</h2>
+            <p className="mt-2 text-gray-600">
+              Videos, guides, PDFs, and more to help you succeed in commercial financing.
+            </p>
+          </div>
+
+          {/* Search */}
+          {dbResources.length > 3 && (
+            <div className="relative mb-6">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Search resources..."
+                value={resourceSearch}
+                onChange={(e) => setResourceSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          )}
+
+          {loadingResources ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <span className="ml-2 text-sm text-muted-foreground">Loading resources…</span>
+            </div>
+          ) : dbResources.length === 0 ? (
+            <p className="text-center text-gray-500 py-8">More resources coming soon.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {dbResources
+                .filter((r) => {
+                  if (!resourceSearch) return true;
+                  const q = resourceSearch.toLowerCase();
+                  return (
+                    r.title.toLowerCase().includes(q) ||
+                    r.description.toLowerCase().includes(q) ||
+                    r.tags.some((t) => t.toLowerCase().includes(q))
+                  );
+                })
+                .map((r) => {
+                  const href = r.file_url || r.url || '#';
+                  const isExternal = href.startsWith('http');
+                  const typeIcon = r.type === 'video' ? (
+                    <Video className="h-5 w-5" />
+                  ) : r.type === 'pdf' ? (
+                    <FileText className="h-5 w-5" />
+                  ) : r.type === 'image' ? (
+                    <ImageIcon className="h-5 w-5" />
+                  ) : (
+                    <LinkIcon className="h-5 w-5" />
+                  );
+
+                  return (
+                    <a
+                      key={r.id}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block group"
+                    >
+                      <Card className="h-full border-2 transition-all hover:shadow-lg hover:border-primary/30">
+                        {r.thumbnail_url && (
+                          <div className="aspect-video rounded-t-lg overflow-hidden bg-slate-200">
+                            <img
+                              src={r.thumbnail_url}
+                              alt={r.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
+                        <CardContent className="p-5">
+                          <div className="flex items-start gap-3">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                              {typeIcon}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap mb-1">
+                                <h3 className="text-base font-semibold text-gray-900 group-hover:text-primary transition-colors">
+                                  {r.title}
+                                </h3>
+                                {r.access_level === 'members_only' && (
+                                  <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">
+                                    Member
+                                  </Badge>
+                                )}
+                                {isExternal && (
+                                  <ExternalLink className="h-3.5 w-3.5 text-gray-400" />
+                                )}
+                              </div>
+                              {r.description && (
+                                <p className="text-sm text-gray-600 line-clamp-2">{r.description}</p>
+                              )}
+                              <div className="mt-2 flex items-center gap-2 flex-wrap">
+                                <Badge variant="outline" className="text-xs capitalize">
+                                  {r.type}
+                                </Badge>
+                                <Badge variant="secondary" className="text-xs">
+                                  {r.category}
+                                </Badge>
+                                {r.type === 'pdf' && r.file_url && (
+                                  <span className="inline-flex items-center gap-1 text-xs text-primary font-medium">
+                                    <Download className="h-3 w-3" />
+                                    Download
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </a>
+                  );
+                })}
+            </div>
+          )}
         </div>
       </section>
 

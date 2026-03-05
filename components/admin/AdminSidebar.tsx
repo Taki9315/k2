@@ -5,34 +5,20 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
-  FileText,
   FolderOpen,
   BookOpen,
-  CreditCard,
-  BarChart3,
   ChevronLeft,
   Leaf,
-  Handshake,
-  DollarSign,
-  Bot,
   ClipboardList,
-  Star,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { title: "Dashboard", path: "/admin", icon: LayoutDashboard },
   { title: "Users", path: "/admin/users", icon: Users },
-  { title: "Certified Borrowers", path: "/admin/certified-borrowers", icon: Star },
   { title: "Content", path: "/admin/documents", icon: FolderOpen },
-  { title: "Application Docs", path: "/admin/application-docs", icon: ClipboardList },
-  { title: "Generated Docs", path: "/admin/generated-documents", icon: Bot },
+  { title: "Document Library", path: "/admin/application-docs", icon: ClipboardList },
   { title: "Resources", path: "/admin/resources", icon: BookOpen },
-  { title: "Submissions", path: "/admin/submissions", icon: FileText },
-  { title: "Partners", path: "/admin/partners", icon: Handshake },
-  { title: "Commissions", path: "/admin/commissions", icon: DollarSign },
-  { title: "Payments", path: "/admin/payments", icon: CreditCard },
-  { title: "Analytics", path: "/admin/analytics", icon: BarChart3 },
 ];
 
 interface AdminSidebarProps {

@@ -912,12 +912,12 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent className="p-3 pt-0 space-y-1">
                   {[
-                    ...(isCertifiedBorrower ? [{ icon: Handshake, label: 'Partner Network', href: '/dashboard/resources' }] : []),
-                    { icon: BookOpen, label: 'Browse Content', href: '/content' },
-                    { icon: Bot, label: 'PrepCoach Prompts', href: '/prepcoach' },
-                    ...(isKitBuyer ? [{ icon: BookOpen, label: 'Success Kit', href: '/workbook' }] : []),
+                    { icon: BookOpen, label: 'Document Library', href: '/content' },
                     ...(isCertifiedBorrower ? [{ icon: Upload, label: 'Deal Room', href: '/dashboard/deal-room' }] : []),
-                    ...(isCertifiedBorrower ? [{ icon: Calendar, label: 'Book Appointment', href: '/dashboard/booking' }] : []),
+                    { icon: Bot, label: 'Prep Coach Prompts', href: '/prepcoach' },
+                    { icon: BookOpen, label: 'Success Kit', href: '/workbook' },
+                    ...(isCertifiedBorrower ? [{ icon: Calendar, label: 'Schedule Call', href: '/dashboard/booking' }] : []),
+                    ...(isCertifiedBorrower ? [{ icon: Handshake, label: 'Partner Network', href: '/dashboard/resources' }] : []),
                     ...(isAdmin ? [{ icon: Shield, label: 'Admin Panel', href: '/admin' }] : []),
                   ].map((link) => (
                     <Link

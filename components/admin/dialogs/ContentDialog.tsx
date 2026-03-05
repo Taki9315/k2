@@ -35,6 +35,8 @@ export type ContentRow = {
   article_content: string | null;
   file_url: string | null;
   thumbnail_url: string | null;
+  tags: string[];
+  keywords: string;
   view_count: number;
   is_published: boolean;
   created_at: string;
@@ -88,6 +90,8 @@ export function ContentDialog({
   const [saving, setSaving] = useState(false);
   const [fileUrl, setFileUrl] = useState("");
   const [fileName, setFileName] = useState("");
+  const [tagsStr, setTagsStr] = useState("");
+  const [keywords, setKeywords] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -104,6 +108,8 @@ export function ContentDialog({
       setIsPublished(content.is_published);
       setFileUrl(content.file_url ?? "");
       setFileName(content.file_url ? content.file_url.split("/").pop() ?? "" : "");
+      setTagsStr((content.tags ?? []).join(", "));
+      setKeywords(content.keywords ?? "");
     } else {
       setTitle("");
       setSlug("");
@@ -117,6 +123,8 @@ export function ContentDialog({
       setIsPublished(true);
       setFileUrl("");
       setFileName("");
+      setTagsStr("");
+      setKeywords("");
     }
   }, [content, open]);
 
@@ -173,6 +181,11 @@ export function ContentDialog({
         file_url: fileUrl.trim() || null,
         thumbnail_url: thumbnailUrl.trim() || null,
         is_published: isPublished,
+        tags: tagsStr
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
+        keywords: keywords.trim(),
       };
 
       if (content) {
@@ -379,6 +392,31 @@ export function ContentDialog({
               placeholder="https://example.com/thumb.jpg"
               className="bg-secondary"
             />
+          </div>
+
+          {/* Tags */}
+          <div className="space-y-2">
+            <Label>Tags (comma-separated)</Label>
+            <Input
+              value={tagsStr}
+              onChange={(e) => setTagsStr(e.target.value)}
+              placeholder="education, sba, financing"
+              className="bg-secondary"
+            />
+          </div>
+
+          {/* Keywords (SEO) */}
+          <div className="space-y-2">
+            <Label>Keywords (SEO)</Label>
+            <Input
+              value={keywords}
+              onChange={(e) => setKeywords(e.target.value)}
+              placeholder="commercial loan, SBA 504, business financing"
+              className="bg-secondary"
+            />
+            <p className="text-xs text-muted-foreground">
+              Comma-separated keywords for search optimization
+            </p>
           </div>
 
           {/* Published toggle */}
