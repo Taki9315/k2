@@ -12,10 +12,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { User, Menu, X, ChevronDown } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { User, Menu, X, ChevronDown, Mail } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
+import { supabase } from '@/lib/supabase';
 
 export function Navigation() {
   const pathname = usePathname();
@@ -24,6 +25,30 @@ export function Navigation() {
   const [contentDropdownOpen, setContentDropdownOpen] = useState(false);
   const [mobileContentOpen, setMobileContentOpen] = useState(false);
   const contentDropdownRef = useRef<HTMLDivElement>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Fetch unread message count for logged-in users
+  const fetchUnread = useCallback(async () => {
+    if (!user) return;
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) return;
+      const res = await fetch('/api/messages?unread=true', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUnreadCount(data.unreadCount ?? 0);
+      }
+    } catch {}
+  }, [user]);
+
+  useEffect(() => {
+    fetchUnread();
+    // Poll every 30 seconds
+    const interval = setInterval(fetchUnread, 30000);
+    return () => clearInterval(interval);
+  }, [fetchUnread]);
 
   // Close desktop dropdown when clicking outside
   useEffect(() => {
@@ -100,9 +125,22 @@ export function Navigation() {
           </div>
 
           {/* User menu right */}
-          <div className="flex items-center justify-end space-x-3">
+          <div className="flex items-center justify-end space-x-1">
             {user ? (
-              <DropdownMenu>
+              <>
+                {/* Messages icon with badge */}
+                <Link href="/dashboard#messages" className="relative">
+                  <Button variant="ghost" size="icon" aria-label="messages">
+                    <Mail className="h-5 w-5 text-gray-900" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center px-1">
+                        {unreadCount > 9 ? '9+' : unreadCount}
+                      </span>
+                    )}
+                  </Button>
+                </Link>
+
+                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" aria-label="user menu">
                     <User className="h-5 w-5 text-gray-900" />
@@ -142,6 +180,7 @@ export function Navigation() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              </>
             ) : (
               <div className="flex items-center space-x-2">
                 <Button variant="ghost" asChild>

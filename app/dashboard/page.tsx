@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { AssistantDialog } from '@/components/assistant/AssistantDialog';
 import { CertifiedBorrowerBadge } from '@/components/CertifiedBorrowerBadge';
+import { DashboardInbox } from '@/components/DashboardInbox';
 import {
   BookOpen,
   Video,
@@ -594,6 +595,9 @@ export default function DashboardPage() {
                   )}
                 </CardContent>
               </Card>
+
+              {/* ── Messages Inbox ──────────────────────────────────── */}
+              <DashboardInbox userId={user.id} />
 
               {/* ── My Generated Documents ────────────────────────── */}
               {(isKitBuyer || isCertifiedBorrower) && (

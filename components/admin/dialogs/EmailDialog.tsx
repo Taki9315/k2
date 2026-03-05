@@ -50,6 +50,7 @@ export function EmailDialog({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           recipients: recipients.map((r) => ({
+            id: r.id,
             email: r.email,
             name: r.name,
           })),

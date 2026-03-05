@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   Leaf,
   ClipboardList,
+  Handshake,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +20,7 @@ const navItems = [
   { title: "Content", path: "/admin/documents", icon: FolderOpen },
   { title: "Document Library", path: "/admin/application-docs", icon: ClipboardList },
   { title: "Resources", path: "/admin/resources", icon: BookOpen },
+  { title: "Partners", path: "/admin/partners", icon: Handshake},
 ];
 
 interface AdminSidebarProps {
