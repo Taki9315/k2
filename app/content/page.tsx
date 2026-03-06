@@ -112,7 +112,7 @@ export default function ContentHubPage() {
       {hasPaidAccess && (
         <section className="py-8 bg-white border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Link href="/content/success-kit" className="group">
+            <Link href="/dashboard/success-kit" className="group">
               <Card className="border-2 border-primary/20 hover:border-primary/40 hover:shadow-lg transition-all bg-gradient-to-r from-primary/5 to-emerald-50/50">
                 <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
                   <div className="h-20 w-20 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">

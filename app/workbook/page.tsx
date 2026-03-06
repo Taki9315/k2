@@ -13,6 +13,7 @@ import {
   Shield,
   X,
 } from 'lucide-react';
+import { GuaranteePopover } from '@/components/GuaranteePopover';
 
 const SUCCESSKIT_HERO_IMAGE =
   'https://images.pexels.com/photos/6801643/pexels-photo-6801643.jpeg?auto=compress&cs=tinysrgb&w=1400';
@@ -343,7 +344,9 @@ export default function WorkbookPage() {
 
       <section className="py-20 bg-slate-50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Shield className="h-14 w-14 text-primary mx-auto mb-6" />
+          <GuaranteePopover>
+            <Shield className="h-14 w-14 text-primary mx-auto mb-6 cursor-help" />
+          </GuaranteePopover>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             The Prepared Borrower Guarantee
           </h2>

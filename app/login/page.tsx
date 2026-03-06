@@ -15,7 +15,7 @@ const AUTH_SIDE_IMAGE =
 
 export default function LoginPage() {
   const router = useRouter();
-  const { user, loading, signIn, isAdmin, isPartner, profile } = useAuth();
+  const { user, loading, signIn, isAdmin, isPartner, isCertifiedBorrower, isKitBuyer, profile } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -32,11 +32,17 @@ export default function LoginPage() {
     if (isAdmin) {
       router.push('/admin');
     } else if (isPartner) {
+      router.push('/dashboard/affiliate');
+    } else if (isCertifiedBorrower) {
+      // Certified: full dashboard with deal room, network, etc.
+      router.push('/dashboard');
+    } else if (isKitBuyer) {
+      // Kit buyer: dashboard with limited access
       router.push('/dashboard');
     } else {
       router.push('/dashboard');
     }
-  }, [user, loading, profile, isAdmin, isPartner, router]);
+  }, [user, loading, profile, isAdmin, isPartner, isCertifiedBorrower, isKitBuyer, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -142,7 +142,7 @@ export default function ContactPage() {
                   className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
                   asChild
                 >
-                  <Link href="/about">Learn More & Meet the Team</Link>
+                  <Link href="https://calendar.app.google/gmYDudPMAY4L9HTw5">Learn More & Meet the Team</Link>
                 </Button>
 
                 <div className="w-full">

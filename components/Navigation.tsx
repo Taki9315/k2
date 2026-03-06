@@ -73,13 +73,13 @@ export function Navigation() {
         if (isCertifiedBorrower) {
           // Certified: full access
           links.push({ href: '/dashboard/deal-room', label: 'Deal Room' });
-          links.push({ href: '/prepcoach', label: 'Prep Coach' });
-          links.push({ href: '/workbook', label: 'Success Kit' });
+          links.push({ href: '/prepcoach/prompts', label: 'Prep Coach' });
+          links.push({ href: '/dashboard/success-kit', label: 'Success Kit' });
           links.push({ href: '/dashboard/booking', label: 'Schedule Call' });
         } else if (isKitBuyer) {
           // Kit buyer: PrepCoach + Success Kit, no Deal Room / Schedule
-          links.push({ href: '/prepcoach', label: 'Prep Coach' });
-          links.push({ href: '/workbook', label: 'Success Kit' });
+          links.push({ href: '/prepcoach/prompts', label: 'Prep Coach' });
+          links.push({ href: '/dashboard/success-kit', label: 'Success Kit' });
         } else {
           // Basic borrower: Success Kit upsell
           links.push({ href: '/workbook', label: 'Success Kit' });
@@ -97,7 +97,7 @@ export function Navigation() {
       ];
 
   const contentSubLinks = [
-    { href: '/content/success-kit', label: 'Success Kit' },
+    { href: '/workbook', label: 'Success Kit' },
     { href: '/content?tab=videos', label: 'Videos' },
     { href: '/content?tab=articles', label: 'Articles' },
   ];
@@ -163,7 +163,7 @@ export function Navigation() {
                   )}
                   {isPartner && (
                     <DropdownMenuItem asChild>
-                      <Link href="/dashboard">Partner Portal</Link>
+                      <Link href="/dashboard/affiliate">Affiliate Portal</Link>
                     </DropdownMenuItem>
                   )}
                   {isAdmin && (
@@ -183,10 +183,10 @@ export function Navigation() {
               </>
             ) : (
               <div className="flex items-center space-x-2">
-                <Button variant="ghost" asChild>
-                  <Link href="/login" className="text-gray-900">Sign In</Link>
+                <Button variant="default" asChild className="bg-primary hover:bg-primary/90 text-white font-semibold shadow-md">
+                  <Link href="/login">Member Login</Link>
                 </Button>
-                <Button asChild>
+                <Button asChild variant="outline">
                   <Link href="/signup">Get Started</Link>
                 </Button>
               </div>

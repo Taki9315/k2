@@ -24,6 +24,10 @@ import {
   Table2,
   Download,
   MessageSquare,
+  Link2,
+  Copy,
+  AlertTriangle,
+  X,
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -70,6 +74,11 @@ export default function DealRoomPage() {
   const [selectedCategory, setSelectedCategory] = useState('general');
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [shareCopied, setShareCopied] = useState(false);
+  const [shareLoading, setShareLoading] = useState(false);
+  const [showShareWarning, setShowShareWarning] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) router.push('/login');
@@ -182,6 +191,87 @@ export default function DealRoomPage() {
     }
   };
 
+  // Drag and drop handlers
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) throw new Error('Not authenticated');
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('category', selectedCategory);
+
+      const res = await fetch('/api/deal-room', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session.access_token}` },
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.error || 'Upload failed');
+        return;
+      }
+
+      await fetchFiles();
+    } catch (err) {
+      console.error('Upload error:', err);
+      alert('Upload failed. Please try again.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Share link generation
+  const handleGenerateShareLink = async () => {
+    setShowShareWarning(true);
+  };
+
+  const confirmGenerateShareLink = async () => {
+    setShowShareWarning(false);
+    setShareLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) throw new Error('Not authenticated');
+
+      const res = await fetch('/api/deal-room/share', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+
+      if (!res.ok) throw new Error('Failed to generate share link');
+      const data = await res.json();
+      setShareUrl(data.shareUrl);
+    } catch (err) {
+      console.error('Share link error:', err);
+      alert('Failed to generate share link.');
+    }
+    setShareLoading(false);
+  };
+
+  const copyShareLink = () => {
+    if (!shareUrl) return;
+    navigator.clipboard.writeText(shareUrl);
+    setShareCopied(true);
+    setTimeout(() => setShareCopied(false), 2000);
+  };
+
   if (loading || !user) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
@@ -246,63 +336,120 @@ export default function DealRoomPage() {
                   : 'Start by uploading your first document.'}
               </p>
             </div>
+            {/* Share Link Button (Certified only) */}
+            {isCertifiedBorrower && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                onClick={handleGenerateShareLink}
+                disabled={shareLoading}
+              >
+                {shareLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Link2 className="h-4 w-4" />
+                )}
+                Generate Share Link
+              </Button>
+            )}
           </div>
+
+          {/* Share URL display */}
+          {shareUrl && (
+            <div className="mt-4 flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
+              <input
+                type="text"
+                readOnly
+                value={shareUrl}
+                className="flex-1 text-xs font-mono bg-transparent border-none focus:outline-none text-gray-700"
+              />
+              <Button
+                size="sm"
+                variant={shareCopied ? 'default' : 'outline'}
+                onClick={copyShareLink}
+                className="gap-1.5 shrink-0"
+              >
+                {shareCopied ? (
+                  <>
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    Copied
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-3.5 w-3.5" />
+                    Copy
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Upload section */}
-        <Card className="mb-8 border-primary/20">
-          <CardContent className="p-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4">
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Category
-                </label>
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                >
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat.value} value={cat.value}>
-                      {cat.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  onChange={handleUpload}
-                  className="hidden"
-                  accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.webp"
-                />
-                <Button
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploading}
-                  className="gap-2"
-                >
-                  {uploading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Uploading…
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="h-4 w-4" />
-                      Upload Document
-                    </>
-                  )}
-                </Button>
-              </div>
+        {/* Drag & Drop Upload Zone */}
+        <div
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={`mb-6 rounded-xl border-2 border-dashed transition-all duration-200 ${
+            isDragging
+              ? 'border-primary bg-primary/5 scale-[1.01]'
+              : 'border-slate-300 bg-slate-50 hover:border-primary/40 hover:bg-primary/5'
+          }`}
+        >
+          <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+            <Upload className={`h-10 w-10 mb-3 ${isDragging ? 'text-primary' : 'text-slate-400'}`} />
+            <p className="text-base font-semibold text-gray-900 mb-1">
+              {isDragging ? 'Drop your file here' : 'Upload Document Here'}
+            </p>
+            <p className="text-sm text-gray-500 mb-4">
+              Drag and drop files, or click to browse
+            </p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              onChange={handleUpload}
+              className="hidden"
+              accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.webp"
+            />
+            <div className="flex items-center gap-3">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              >
+                {CATEGORIES.map((cat) => (
+                  <option key={cat.value} value={cat.value}>
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
+              <Button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                size="lg"
+                className="gap-2"
+              >
+                {uploading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Uploading…
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-4 w-4" />
+                    Upload Document
+                  </>
+                )}
+              </Button>
             </div>
-            <p className="text-xs text-gray-500 mt-3">
+            <p className="text-xs text-gray-400 mt-3">
               PDF, Word, Excel, CSV, or image files. Max 10 MB per file.
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Files */}
         {fetching ? (
@@ -454,6 +601,67 @@ export default function DealRoomPage() {
           </div>
         )}
       </div>
+
+      {/* Share Link Warning Popup */}
+      {showShareWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-6 relative">
+            <button
+              onClick={() => setShowShareWarning(false)}
+              className="absolute top-3 right-3 p-1 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              <X className="h-4 w-4 text-gray-400" />
+            </button>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="h-6 w-6 text-amber-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900">
+                Share Your Deal Room?
+              </h3>
+            </div>
+            <p className="text-sm text-gray-600 leading-relaxed mb-4">
+              <strong className="text-amber-700">Warning:</strong> Anyone with this link
+              can view <strong>all your uploaded files</strong>. Only share with
+              trusted parties such as:
+            </p>
+            <ul className="text-sm text-gray-600 space-y-1.5 mb-6 ml-4">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="h-3.5 w-3.5 text-green-500 flex-shrink-0" />
+                Your lender or loan officer
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="h-3.5 w-3.5 text-green-500 flex-shrink-0" />
+                K2 Commercial Finance team
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="h-3.5 w-3.5 text-green-500 flex-shrink-0" />
+                Your attorney or CPA
+              </li>
+            </ul>
+            <p className="text-xs text-gray-500 mb-5">
+              The link expires in 7 days. You can generate a new one anytime (which
+              revokes the previous link).
+            </p>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setShowShareWarning(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="flex-1 gap-1.5"
+                onClick={confirmGenerateShareLink}
+              >
+                <Link2 className="h-4 w-4" />
+                Generate Link
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

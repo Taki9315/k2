@@ -17,9 +17,12 @@ import {
   Users,
   Quote,
   Bot,
+  Building2,
+  Lock,
 } from 'lucide-react';
 import { ReadinessQuiz } from '@/components/ReadinessQuiz';
 import { PathsAccordion } from '@/components/PathsAccordion';
+import { GuaranteePopover } from '@/components/GuaranteePopover';
 
 const TESTIMONIALS = [
   {
@@ -105,10 +108,12 @@ export default function Home() {
                   <CheckCircle2 className="h-4 w-4 text-green-600" />
                   Lifetime access
                 </span>
-                <span className="flex items-center gap-1">
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  Prepared Borrower Guarantee
-                </span>
+                <GuaranteePopover>
+                  <span className="flex items-center gap-1 cursor-help">
+                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    Prepared Borrower Guarantee
+                  </span>
+                </GuaranteePopover>
               </div>
             </div>
 
@@ -154,6 +159,121 @@ export default function Home() {
           </div>
 
           <PathsAccordion />
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  KIT vs CERTIFIED COMPARISON                                  */}
+      {/* ============================================================ */}
+      <section className="py-24 bg-white relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">Compare Options</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-5">
+              Success Kit vs. K2 Certified
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Kit Card */}
+            <Card className="border-2 border-slate-200 rounded-2xl hover:shadow-xl transition-all duration-300 overflow-hidden">
+              <CardContent className="p-8">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="relative w-20 h-24 rounded-lg overflow-hidden shadow-md bg-gradient-to-br from-primary/10 to-emerald-50 flex items-center justify-center flex-shrink-0 border border-slate-200">
+                    <Building2 className="h-10 w-10 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">Financing Success Kit</h3>
+                    <p className="text-2xl font-bold text-primary mt-1">$15</p>
+                  </div>
+                </div>
+                <p className="text-gray-600 text-sm mb-6 leading-relaxed">
+                  The essential self-study guide for CRE financing. 50+ pages of
+                  step-by-step guidance, worksheets, and templates to get
+                  financing-ready on your own.
+                </p>
+                <div className="space-y-3 mb-6">
+                  {[
+                    { text: 'Full Success Kit (50+ pages)', included: true },
+                    { text: 'Limited Prep Coach Access', included: true },
+                    { text: 'Document Vault Templates', included: true },
+                    { text: 'Online Flipbook Viewer', included: true },
+                    { text: 'Preferred Lender Network', included: false },
+                    { text: 'Deal Room & Document Review', included: false },
+                    { text: 'Expert Coaching Calls', included: false },
+                  ].map((item) => (
+                    <div key={item.text} className="flex items-center gap-2">
+                      {item.included ? (
+                        <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
+                      ) : (
+                        <Lock className="h-4 w-4 text-slate-300 flex-shrink-0" />
+                      )}
+                      <span className={`text-sm ${item.included ? 'text-gray-700' : 'text-gray-400'}`}>
+                        {item.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <Button asChild className="w-full" variant="outline">
+                  <Link href="/workbook">
+                    Get the Kit – $15
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Certified Card */}
+            <Card className="border-2 border-primary/30 rounded-2xl hover:shadow-xl transition-all duration-300 overflow-hidden relative">
+              <div className="absolute top-4 right-4">
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs font-bold text-white">
+                  <Sparkles className="h-3 w-3" />
+                  Full Access
+                </span>
+              </div>
+              <CardContent className="p-8">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="relative w-20 h-24 rounded-lg overflow-hidden shadow-md bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center flex-shrink-0">
+                    <Award className="h-10 w-10 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">K2 Certified Borrower</h3>
+                    <p className="text-2xl font-bold text-primary mt-1">$249</p>
+                  </div>
+                </div>
+                <p className="text-gray-600 text-sm mb-6 leading-relaxed">
+                  The complete CRE financing acceleration program. Everything in
+                  the Kit plus expert placement, deal review, and our full
+                  lender/vendor network.
+                </p>
+                <div className="space-y-3 mb-6">
+                  {[
+                    'Full Success Kit (included)',
+                    'Full Prep Coach Access + Free-Form AI',
+                    'Preferred Lender Network',
+                    'Deal Room & Expert Document Review',
+                    'Monthly Coaching Q&A Calls',
+                    'Borrower Certification Badge',
+                    'Priority Deal Placement',
+                  ].map((text) => (
+                    <div key={text} className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">{text}</span>
+                    </div>
+                  ))}
+                </div>
+                <Button asChild className="w-full">
+                  <Link href="/membership/certified-borrower">
+                    Become Certified – $249
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
