@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -55,7 +55,7 @@ function getFileIcon(mimeType: string) {
   return FileText;
 }
 
-export default function SharedDealRoomPage() {
+function SharedDealRoomContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
   const [data, setData] = useState<ShareData | null>(null);
@@ -225,5 +225,19 @@ export default function SharedDealRoomPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function SharedDealRoomPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <SharedDealRoomContent />
+    </Suspense>
   );
 }
