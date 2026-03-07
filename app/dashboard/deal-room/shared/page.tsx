@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { CertifiedBorrowerBadge } from '@/components/CertifiedBorrowerBadge';
 import {
   Shield,
   FileText,
@@ -16,6 +17,9 @@ import {
   Clock,
   Image as ImageIcon,
   Table2,
+  Lock,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 type SharedFile = {
@@ -29,7 +33,13 @@ type SharedFile = {
 
 type ShareData = {
   files: SharedFile[];
-  owner: { name: string; company: string | null };
+  dealName: string;
+  owner: {
+    name: string;
+    company: string | null;
+    isCertified: boolean;
+    membershipNumber: string | null;
+  };
   expiresAt: string;
 };
 
@@ -62,6 +72,13 @@ function SharedDealRoomContent() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Password state
+  const [requiresPassword, setRequiresPassword] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   useEffect(() => {
     if (!token) {
       setError('No share token provided');
@@ -77,10 +94,44 @@ function SharedDealRoomContent() {
         }
         return res.json();
       })
-      .then((d) => setData(d))
+      .then((d) => {
+        if (d.requiresPassword) {
+          setRequiresPassword(true);
+        } else {
+          setData(d);
+        }
+      })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [token]);
+
+  const handlePasswordSubmit = async () => {
+    if (!passwordInput.trim() || !token) return;
+    setPasswordLoading(true);
+    setPasswordError(null);
+
+    try {
+      const res = await fetch('/api/deal-room/share', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, password: passwordInput }),
+      });
+
+      if (!res.ok) {
+        const body = await res.json();
+        setPasswordError(body.error || 'Incorrect password');
+        setPasswordLoading(false);
+        return;
+      }
+
+      const d = await res.json();
+      setData(d);
+      setRequiresPassword(false);
+    } catch (err: any) {
+      setPasswordError(err.message || 'Failed to verify password');
+    }
+    setPasswordLoading(false);
+  };
 
   if (loading) {
     return (
@@ -90,16 +141,14 @@ function SharedDealRoomContent() {
     );
   }
 
-  if (error || !data) {
+  if (error || (!data && !requiresPassword)) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 px-4">
         <AlertTriangle className="h-12 w-12 text-amber-500" />
-        <h1 className="text-xl font-bold text-gray-900">
-          {error || 'Share link not found'}
-        </h1>
+        <h1 className="text-xl font-bold text-gray-900">{error || 'Share link not found'}</h1>
         <p className="text-sm text-gray-600 text-center max-w-md">
-          This share link may have expired, been revoked, or is invalid. Contact
-          the person who shared it for a new link.
+          This share link may have expired, been revoked, or is invalid. Contact the person who
+          shared it for a new link.
         </p>
         <Button asChild variant="outline">
           <Link href="/">Go Home</Link>
@@ -107,6 +156,64 @@ function SharedDealRoomContent() {
       </div>
     );
   }
+
+  // Password entry screen
+  if (requiresPassword && !data) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Card className="max-w-md w-full mx-4">
+          <CardContent className="p-8 text-center">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <Lock className="h-8 w-8 text-primary" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Password Required</h2>
+            <p className="text-sm text-gray-600 mb-6">
+              This deal room is password-protected. Enter the password to view the documents.
+            </p>
+            <div className="relative mb-4">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Enter password"
+                value={passwordInput}
+                onChange={(e) => {
+                  setPasswordInput(e.target.value);
+                  setPasswordError(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handlePasswordSubmit();
+                }}
+                className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+                autoFocus
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+            {passwordError && (
+              <p className="text-sm text-red-600 mb-4">{passwordError}</p>
+            )}
+            <Button
+              className="w-full"
+              onClick={handlePasswordSubmit}
+              disabled={passwordLoading || !passwordInput.trim()}
+            >
+              {passwordLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                'Unlock Deal Room'
+              )}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!data) return null;
 
   const expiresDate = new Date(data.expiresAt);
   const isExpired = expiresDate < new Date();
@@ -129,14 +236,12 @@ function SharedDealRoomContent() {
           <div className="flex items-center gap-3 mb-1">
             <Shield className="h-5 w-5 text-primary" />
             <h1 className="text-xl font-bold text-gray-900">
-              Shared Deal Room
+              {data.dealName || 'Shared Deal Room'}
             </h1>
           </div>
           <p className="text-sm text-gray-600">
             Shared by <strong>{data.owner.name}</strong>
-            {data.owner.company && (
-              <span> ({data.owner.company})</span>
-            )}
+            {data.owner.company && <span> ({data.owner.company})</span>}
           </p>
           <div className="flex items-center gap-2 mt-2">
             <Badge
@@ -148,9 +253,7 @@ function SharedDealRoomContent() {
               }`}
             >
               <Clock className="h-3 w-3" />
-              {isExpired
-                ? 'Expired'
-                : `Expires ${expiresDate.toLocaleDateString()}`}
+              {isExpired ? 'Expired' : `Expires ${expiresDate.toLocaleDateString()}`}
             </Badge>
             <Badge variant="outline" className="text-xs gap-1">
               {data.files.length} file{data.files.length !== 1 && 's'}
@@ -164,9 +267,8 @@ function SharedDealRoomContent() {
         <div className="flex items-start gap-3 rounded-lg bg-amber-50 border border-amber-200 px-4 py-3">
           <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
           <p className="text-xs text-amber-700 leading-relaxed">
-            This is a private deal room. These documents are confidential and
-            shared for review purposes only. Do not distribute without
-            the owner&apos;s permission.
+            This is a private deal room. These documents are confidential and shared for review
+            purposes only. Do not distribute without the owner&apos;s permission.
           </p>
         </div>
       </div>
@@ -201,7 +303,10 @@ function SharedDealRoomContent() {
                     {files.map((file) => {
                       const Icon = getFileIcon(file.mime_type);
                       return (
-                        <div key={file.id} className="py-2.5 first:pt-0 last:pb-0 flex items-center gap-3">
+                        <div
+                          key={file.id}
+                          className="py-2.5 first:pt-0 last:pb-0 flex items-center gap-3"
+                        >
                           <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
                             <Icon className="h-4 w-4 text-slate-500" />
                           </div>
@@ -210,7 +315,7 @@ function SharedDealRoomContent() {
                               {file.file_name}
                             </p>
                             <p className="text-xs text-gray-500">
-                              {formatFileSize(file.file_size)} •{' '}
+                              {formatFileSize(file.file_size)} &bull;{' '}
                               {new Date(file.created_at).toLocaleDateString()}
                             </p>
                           </div>
@@ -221,6 +326,17 @@ function SharedDealRoomContent() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        )}
+
+        {/* Certified Borrower Badge - shown at bottom center */}
+        {data.owner.isCertified && (
+          <div className="mt-10 mb-6 flex justify-center">
+            <CertifiedBorrowerBadge
+              fullName={data.owner.name}
+              membershipNumber={data.owner.membershipNumber}
+              variant="full"
+            />
           </div>
         )}
       </div>

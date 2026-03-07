@@ -917,7 +917,8 @@ export default function DashboardPage() {
                 <CardContent className="p-3 pt-0 space-y-1">
                   {[
                     { icon: BookOpen, label: 'Document Library', href: '/content' },
-                    ...(isCertifiedBorrower ? [{ icon: Upload, label: 'Deal Room', href: '/dashboard/deal-room' }] : []),
+                    ...(isCertifiedBorrower || isKitBuyer ? [{ icon: Upload, label: 'Deal Room', href: '/dashboard/deal-room' }] : []),
+                    ...(isCertifiedBorrower || isKitBuyer ? [{ icon: Phone, label: 'Lender Outreach', href: '/dashboard/lender-outreach' }] : []),
                     { icon: Bot, label: 'Prep Coach Prompts', href: '/prepcoach' },
                     { icon: BookOpen, label: 'Success Kit', href: '/workbook' },
                     ...(isCertifiedBorrower ? [{ icon: Calendar, label: 'Schedule Call', href: '/dashboard/booking' }] : []),

@@ -92,6 +92,7 @@ async function checkAccess(
 
 /**
  * GET /api/deal-room — list files for authenticated user
+ *   ?dealId=xxx — filter by deal (required for multi-deal)
  * POST /api/deal-room — upload a file
  * DELETE /api/deal-room?fileId=xxx — delete a file
  */
@@ -107,11 +108,19 @@ export async function GET(request: NextRequest) {
 
   await ensureTable(supabase);
 
-  const { data: files, error } = await supabase
+  const dealId = request.nextUrl.searchParams.get('dealId');
+
+  let query = supabase
     .from('deal_room_files')
     .select('*')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
+
+  if (dealId) {
+    query = query.eq('deal_id', dealId);
+  }
+
+  const { data: files, error } = await query;
 
   if (error) {
     console.error('GET deal-room error:', error);
@@ -139,6 +148,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const category = (formData.get('category') as string) || 'general';
+    const dealId = formData.get('dealId') as string | null;
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -181,16 +191,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Save metadata to DB
+    const insertData: Record<string, any> = {
+      user_id: user.id,
+      file_name: file.name,
+      file_path: filePath,
+      file_size: file.size,
+      mime_type: file.type,
+      category,
+    };
+    if (dealId) {
+      insertData.deal_id = dealId;
+    }
+
     const { data: record, error: dbError } = await supabase
       .from('deal_room_files')
-      .insert({
-        user_id: user.id,
-        file_name: file.name,
-        file_path: filePath,
-        file_size: file.size,
-        mime_type: file.type,
-        category,
-      })
+      .insert(insertData)
       .select()
       .single();
 
