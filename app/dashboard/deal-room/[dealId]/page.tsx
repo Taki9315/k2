@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
+import { CertifiedBorrowerBadge } from '@/components/CertifiedBorrowerBadge';
 import { supabase } from '@/lib/supabase';
 import {
   Upload,
@@ -189,7 +190,7 @@ function fileIcon(mimeType: string) {
 }
 
 export default function DealDetailPage() {
-  const { user, loading, isCertifiedBorrower, isKitBuyer, isAdmin } = useAuth();
+  const { user, loading, isCertifiedBorrower, isKitBuyer, isAdmin, fullName, membershipNumber } = useAuth();
   const router = useRouter();
   const params = useParams();
   const dealId = params.dealId as string;
@@ -997,6 +998,13 @@ export default function DealDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Certified Borrower Badge */}
+      {isCertifiedBorrower && (
+        <div className="flex justify-center py-8">
+          <CertifiedBorrowerBadge fullName={fullName} membershipNumber={membershipNumber} variant="compact" />
+        </div>
+      )}
 
       {/* Share Link Warning Modal */}
       {showShareWarning && (

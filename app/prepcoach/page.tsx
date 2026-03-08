@@ -799,6 +799,26 @@ function PromptsSection() {
           </p>
         </div>
 
+        {/* Ask Anything — prominent CTA at top */}
+        {(isCertifiedBorrower || isKitBuyer) && (
+          <div className="mb-8 rounded-xl border-2 border-primary/30 bg-gradient-to-r from-primary/5 to-emerald-50 p-6 flex flex-col sm:flex-row items-center gap-4">
+            <div className="h-14 w-14 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
+              <Bot className="h-7 w-7 text-primary" />
+            </div>
+            <div className="flex-1 text-center sm:text-left">
+              <h3 className="text-lg font-bold text-gray-900 mb-1">Ask Anything</h3>
+              <p className="text-sm text-gray-600">
+                Have a question about your deal, a lender requirement, or CRE financing in general? Open PrepCoach and ask freely.
+              </p>
+            </div>
+            <AssistantDialog
+              triggerLabel="Open PrepCoach"
+              triggerVariant="default"
+              triggerClassName="px-6 py-3 text-base font-semibold shadow-md"
+            />
+          </div>
+        )}
+
         <div className="space-y-4">
           {TASK_TEMPLATES.map((template) => {
             const isOpen = openId === template.id;

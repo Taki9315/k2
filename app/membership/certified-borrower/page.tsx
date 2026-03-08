@@ -165,9 +165,17 @@ export default function CertifiedBorrowerSample() {
             on funded deals through them.
           </p>
 
-          <p className="text-sm font-semibold text-primary mb-10">
+          <p className="text-sm font-semibold text-primary mb-4">
             No monthly fees. No surprises.
           </p>
+
+          {/* First 100 lifetime note */}
+          <div className="mb-10 inline-block rounded-xl bg-amber-50 border border-amber-200 px-6 py-3">
+            <p className="text-base font-bold text-amber-800">
+              First 100 Certified Borrowers receive lifetime membership
+            </p>
+            <p className="text-xs text-amber-600 mt-1">*Terms apply.</p>
+          </div>
 
           {/* Trust badges */}
           <div className="flex flex-wrap justify-center gap-4 mb-10">

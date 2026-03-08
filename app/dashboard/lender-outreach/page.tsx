@@ -127,7 +127,7 @@ export default function LenderOutreachPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Lender Outreach</h1>
-              <p className="text-sm text-gray-500">
+              <p className="text-base font-semibold text-primary mt-1">
                 Track your lender outreach for each deal
               </p>
             </div>

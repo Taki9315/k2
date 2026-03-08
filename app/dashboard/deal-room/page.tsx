@@ -188,10 +188,20 @@ export default function DealRoomPage() {
                   Secure
                 </Badge>
               </div>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-base font-semibold text-primary mt-1">
                 Manage your deals and loan packages. Each deal has its own secure document room.
               </p>
             </div>
+            <Button
+              className="gap-2"
+              onClick={() => {
+                setShowNewDealInput(true);
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+              }}
+            >
+              <Plus className="h-4 w-4" />
+              Add New Deal
+            </Button>
           </div>
         </div>
       </section>
