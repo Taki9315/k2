@@ -49,6 +49,7 @@ async function ensureTable(supabase: ReturnType<typeof createServiceRoleClient>)
           file_size integer NOT NULL,
           mime_type text NOT NULL,
           category text NOT NULL DEFAULT 'general',
+          document_name text,
           review_status text NOT NULL DEFAULT 'pending'
             CHECK (review_status IN ('pending', 'approved', 'declined')),
           admin_note text,
@@ -69,6 +70,7 @@ async function ensureTable(supabase: ReturnType<typeof createServiceRoleClient>)
       }
     });
   }
+
 }
 
 /** Check if current user has deal-room access (kit buyers + certified + admin) */
@@ -149,6 +151,7 @@ export async function POST(request: NextRequest) {
     const file = formData.get('file') as File;
     const category = (formData.get('category') as string) || 'general';
     const dealId = formData.get('dealId') as string | null;
+    const documentName = (formData.get('document_name') as string) || null;
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -202,12 +205,35 @@ export async function POST(request: NextRequest) {
     if (dealId) {
       insertData.deal_id = dealId;
     }
+    if (documentName) {
+      insertData.document_name = documentName;
+    }
 
-    const { data: record, error: dbError } = await supabase
+    let record: any = null;
+    let dbError: any = null;
+
+    // Try insert with document_name; if column doesn't exist yet, retry without it
+    const result1 = await supabase
       .from('deal_room_files')
       .insert(insertData)
       .select()
       .single();
+
+    if (result1.error && result1.error.message?.includes('document_name')) {
+      // Column doesn't exist yet — retry without document_name
+      console.warn('document_name column missing, inserting without it. Run migration: 20260308000000_deal_room_document_name.sql');
+      const { document_name, ...insertWithout } = insertData;
+      const result2 = await supabase
+        .from('deal_room_files')
+        .insert(insertWithout)
+        .select()
+        .single();
+      record = result2.data;
+      dbError = result2.error;
+    } else {
+      record = result1.data;
+      dbError = result1.error;
+    }
 
     if (dbError) {
       console.error('DB insert error:', dbError);
@@ -226,7 +252,9 @@ export async function POST(request: NextRequest) {
     await createAdminNotification({
       type: 'upload',
       title: 'New document uploaded',
-      message: `${file.name} (${category})`,
+      message: documentName
+        ? `${documentName}: ${file.name} (${category})`
+        : `${file.name} (${category})`,
       user_id: user.id,
       user_name: uploaderProfile?.full_name || null,
       user_email: uploaderProfile?.email || user.email || null,

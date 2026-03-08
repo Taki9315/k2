@@ -28,6 +28,7 @@ type SharedFile = {
   file_size: number;
   mime_type: string;
   category: string;
+  document_name?: string | null;
   created_at: string;
 };
 
@@ -47,9 +48,13 @@ const CATEGORIES: Record<string, string> = {
   financials: 'Financial Statements',
   'tax-returns': 'Tax Returns',
   'entity-docs': 'Entity Documents',
-  property: 'Property Info',
+  property: 'Property Related',
   personal: 'Personal Docs',
   general: 'Other',
+  transaction: 'Transaction Documentation',
+  borrower: 'Borrower Documentation',
+  business: 'Business Documentation',
+  entity: 'Entity Documents',
 };
 
 function formatFileSize(bytes: number): string {
@@ -311,13 +316,29 @@ function SharedDealRoomContent() {
                             <Icon className="h-4 w-4 text-slate-500" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">
-                              {file.file_name}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {formatFileSize(file.file_size)} &bull;{' '}
-                              {new Date(file.created_at).toLocaleDateString()}
-                            </p>
+                            {file.document_name ? (
+                              <>
+                                <p className="text-sm font-medium text-gray-900 truncate">
+                                  <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-xs font-semibold">
+                                    {file.document_name}
+                                  </span>
+                                </p>
+                                <p className="text-xs text-gray-500 truncate mt-0.5">
+                                  {file.file_name} &bull; {formatFileSize(file.file_size)} &bull;{' '}
+                                  {new Date(file.created_at).toLocaleDateString()}
+                                </p>
+                              </>
+                            ) : (
+                              <>
+                                <p className="text-sm font-medium text-gray-900 truncate">
+                                  {file.file_name}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {formatFileSize(file.file_size)} &bull;{' '}
+                                  {new Date(file.created_at).toLocaleDateString()}
+                                </p>
+                              </>
+                            )}
                           </div>
                         </div>
                       );

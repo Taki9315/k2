@@ -31,15 +31,134 @@ import {
   KeyRound,
   Eye,
   EyeOff,
+  Users,
+  Building2,
+  Briefcase,
+  Landmark,
+  ChevronDown,
 } from 'lucide-react';
 
-const CATEGORIES = [
-  { value: 'financials', label: 'Financial Statements' },
-  { value: 'tax-returns', label: 'Tax Returns' },
-  { value: 'entity-docs', label: 'Entity Documents' },
-  { value: 'property', label: 'Property Info' },
-  { value: 'personal', label: 'Personal Docs' },
-  { value: 'general', label: 'Other' },
+/* ───── Legacy categories (kept for backward-compat display) ───── */
+const LEGACY_CATEGORIES: Record<string, string> = {
+  financials: 'Financial Statements',
+  'tax-returns': 'Tax Returns',
+  'entity-docs': 'Entity Documents',
+  property: 'Property Info',
+  personal: 'Personal Docs',
+  general: 'Other',
+};
+
+/* ───── New 5-category document upload system ───── */
+const DOCUMENT_CATEGORIES = [
+  {
+    id: 'transaction',
+    label: 'Transaction Documentation',
+    icon: FileText,
+    color: 'text-blue-600',
+    bg: 'bg-blue-50',
+    border: 'border-blue-200',
+    documents: [
+      'Purchase Agreement',
+      'Letter of Intent',
+      'Loan Application',
+      'Pro Forma',
+      'Executive Summary',
+      'Closing Statement',
+      'Title Report',
+      'Appraisal',
+      'Environmental Report',
+      'Other Transaction Document',
+    ],
+  },
+  {
+    id: 'borrower',
+    label: 'Borrower Documentation',
+    icon: Users,
+    color: 'text-emerald-600',
+    bg: 'bg-emerald-50',
+    border: 'border-emerald-200',
+    documents: [
+      'Personal Financial Statement',
+      'Resume / Bio',
+      'Credit Authorization',
+      'Bank Statements (Personal)',
+      'Tax Returns (Personal)',
+      'Pay Stubs',
+      'W-2 Forms',
+      '1099 Forms',
+      'Government ID',
+      'Social Security Card',
+      'Proof of Address',
+      'Immigration Documents',
+      'Credit Report',
+      'Net Worth Statement',
+      'Liquidity Verification',
+      'Other Borrower Document',
+    ],
+  },
+  {
+    id: 'property',
+    label: 'Property Related',
+    icon: Building2,
+    color: 'text-violet-600',
+    bg: 'bg-violet-50',
+    border: 'border-violet-200',
+    documents: [
+      'Property Photos',
+      'Rent Roll',
+      'Lease Agreements',
+      'Property Tax Bill',
+      'Insurance Policy',
+      'Floor Plans / Site Plans',
+      'Survey',
+      'Zoning Letter',
+      'Inspection Report',
+      'Environmental Assessment',
+      'Property Management Agreement',
+      'Other Property Document',
+    ],
+  },
+  {
+    id: 'business',
+    label: 'Business Documentation',
+    icon: Briefcase,
+    color: 'text-amber-600',
+    bg: 'bg-amber-50',
+    border: 'border-amber-200',
+    documents: [
+      'Business Plan',
+      'Business Tax Returns',
+      'Profit & Loss Statement',
+      'Balance Sheet',
+      'Accounts Receivable / Payable',
+      'Business Bank Statements',
+      'Articles of Incorporation',
+      'Business License',
+      'Franchise Agreement',
+      'Revenue Projections',
+      'Other Business Document',
+    ],
+  },
+  {
+    id: 'entity',
+    label: 'Entity Documents',
+    icon: Landmark,
+    color: 'text-rose-600',
+    bg: 'bg-rose-50',
+    border: 'border-rose-200',
+    documents: [
+      'Operating Agreement',
+      'Partnership Agreement',
+      'Certificate of Good Standing',
+      'EIN Letter',
+      'Corporate Resolution',
+      'Bylaws',
+      'Trust Agreement',
+      'Organizational Chart',
+      'Articles of Organization',
+      'Other Entity Document',
+    ],
+  },
 ];
 
 type DealRoomFile = {
@@ -49,6 +168,7 @@ type DealRoomFile = {
   file_size: number;
   mime_type: string;
   category: string;
+  document_name?: string | null;
   review_status: 'pending' | 'approved' | 'declined';
   admin_note: string | null;
   reviewed_at: string | null;
@@ -79,10 +199,15 @@ export default function DealDetailPage() {
   const [files, setFiles] = useState<DealRoomFile[]>([]);
   const [fetching, setFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('general');
+  const [uploadingCategoryId, setUploadingCategoryId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+
+  // Category upload state: which document type is selected per category
+  const [selectedDocTypes, setSelectedDocTypes] = useState<Record<string, string>>({});
+  // Track which category card is actively being used for upload
+  const [activeCategoryForUpload, setActiveCategoryForUpload] = useState<string | null>(null);
 
   // Share state
   const [shareUrl, setShareUrl] = useState<string | null>(null);
@@ -150,12 +275,28 @@ export default function DealDetailPage() {
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    await uploadFile(file);
+    const categoryId = activeCategoryForUpload || 'transaction';
+    const docName = selectedDocTypes[categoryId] || '';
+    await uploadFile(file, categoryId, docName);
     if (fileInputRef.current) fileInputRef.current.value = '';
+    setActiveCategoryForUpload(null);
   };
 
-  const uploadFile = async (file: File) => {
+  /** Trigger file picker for a specific category card */
+  const triggerCategoryUpload = (categoryId: string) => {
+    const docName = selectedDocTypes[categoryId];
+    if (!docName) {
+      alert('Please select a document type first.');
+      return;
+    }
+    setActiveCategoryForUpload(categoryId);
+    // Small delay to let state settle before triggering file input
+    setTimeout(() => fileInputRef.current?.click(), 0);
+  };
+
+  const uploadFile = async (file: File, categoryId: string, documentName: string) => {
     setUploading(true);
+    setUploadingCategoryId(categoryId);
     try {
       const {
         data: { session },
@@ -164,8 +305,11 @@ export default function DealDetailPage() {
 
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('category', selectedCategory);
+      formData.append('category', categoryId);
       formData.append('dealId', dealId);
+      if (documentName) {
+        formData.append('document_name', documentName);
+      }
 
       const res = await fetch('/api/deal-room', {
         method: 'POST',
@@ -179,12 +323,15 @@ export default function DealDetailPage() {
         return;
       }
 
+      // Clear the selected doc type for this category after upload
+      setSelectedDocTypes((prev) => ({ ...prev, [categoryId]: '' }));
       await fetchDealData();
     } catch (err) {
       console.error('Upload error:', err);
       alert('Upload failed. Please try again.');
     } finally {
       setUploading(false);
+      setUploadingCategoryId(null);
     }
   };
 
@@ -254,7 +401,11 @@ export default function DealDetailPage() {
     setIsDragging(false);
     const file = e.dataTransfer.files?.[0];
     if (!file) return;
-    await uploadFile(file);
+    // Use the first category with a selected doc type, or default
+    const catWithSelection = DOCUMENT_CATEGORIES.find((c) => selectedDocTypes[c.id]);
+    const categoryId = catWithSelection?.id || 'transaction';
+    const docName = selectedDocTypes[categoryId] || '';
+    await uploadFile(file, categoryId, docName);
   };
 
   // Share link
@@ -359,11 +510,22 @@ export default function DealDetailPage() {
     );
   }
 
-  // Group files by category
-  const grouped = CATEGORIES.map((cat) => ({
+  // Group files by new categories (also catch legacy categories under closest match)
+  const grouped = DOCUMENT_CATEGORIES.map((cat) => ({
     ...cat,
-    files: files.filter((f) => f.category === cat.value),
+    files: files.filter((f) => f.category === cat.id),
   })).filter((cat) => cat.files.length > 0);
+
+  // Files that don't match any new category (legacy)
+  const newCatIds = DOCUMENT_CATEGORIES.map((c) => c.id);
+  const legacyFiles = files.filter((f) => !newCatIds.includes(f.category));
+
+  /** Helper: get display label for a file's category */
+  const getCategoryLabel = (catId: string) => {
+    const newCat = DOCUMENT_CATEGORIES.find((c) => c.id === catId);
+    if (newCat) return newCat.label;
+    return LEGACY_CATEGORIES[catId] || catId;
+  };
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -466,70 +628,130 @@ export default function DealDetailPage() {
       </section>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Drag & Drop Upload Zone */}
+        {/* Hidden file input (shared across all category cards) */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          onChange={handleUpload}
+          className="hidden"
+          accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.webp"
+        />
+
+        {/* Upload Documents heading */}
+        <div className="text-center mb-6">
+          <h2 className="text-xl font-bold text-gray-900 flex items-center justify-center gap-2">
+            <Upload className="h-5 w-5 text-primary" />
+            Upload Documents
+          </h2>
+          <p className="text-sm text-gray-500 mt-1">
+            Select a category below, choose the document type, then upload your file.
+          </p>
+        </div>
+
+        {/* 5 Category Cards — 3 across grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          {DOCUMENT_CATEGORIES.map((cat) => {
+            const CatIcon = cat.icon;
+            const isUploading = uploading && uploadingCategoryId === cat.id;
+            const catFileCount = files.filter((f) => f.category === cat.id).length;
+            return (
+              <Card
+                key={cat.id}
+                className={`relative overflow-hidden transition-all duration-200 hover:shadow-md ${
+                  activeCategoryForUpload === cat.id
+                    ? 'ring-2 ring-primary shadow-md'
+                    : ''
+                }`}
+              >
+                <CardHeader className="pb-2 pt-4 px-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`h-8 w-8 rounded-lg ${cat.bg} flex items-center justify-center`}
+                      >
+                        <CatIcon className={`h-4 w-4 ${cat.color}`} />
+                      </div>
+                      <CardTitle className="text-sm font-semibold text-gray-900 leading-tight">
+                        {cat.label}
+                      </CardTitle>
+                    </div>
+                    {catFileCount > 0 && (
+                      <Badge variant="outline" className="text-xs">
+                        {catFileCount}
+                      </Badge>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent className="px-4 pb-4 pt-1">
+                  <div className="relative mb-3">
+                    <select
+                      value={selectedDocTypes[cat.id] || ''}
+                      onChange={(e) =>
+                        setSelectedDocTypes((prev) => ({
+                          ...prev,
+                          [cat.id]: e.target.value,
+                        }))
+                      }
+                      className={`w-full rounded-md border ${cat.border} bg-white pl-3 pr-8 py-2 text-xs shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary appearance-none`}
+                    >
+                      <option value="">Select document type…</option>
+                      {cat.documents.map((doc) => (
+                        <option key={doc} value={doc}>
+                          {doc}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400 pointer-events-none" />
+                  </div>
+                  <Button
+                    onClick={() => triggerCategoryUpload(cat.id)}
+                    disabled={isUploading || !selectedDocTypes[cat.id]}
+                    size="sm"
+                    className="w-full gap-1.5 text-xs"
+                    variant={selectedDocTypes[cat.id] ? 'default' : 'outline'}
+                  >
+                    {isUploading ? (
+                      <>
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        Uploading…
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="h-3.5 w-3.5" />
+                        Browse &amp; Upload
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Compact drag & drop zone */}
         <div
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`mb-6 rounded-xl border-2 border-dashed transition-all duration-200 ${
+          className={`mb-8 rounded-lg border-2 border-dashed transition-all duration-200 ${
             isDragging
-              ? 'border-primary bg-primary/5 scale-[1.01]'
-              : 'border-slate-300 bg-slate-50 hover:border-primary/40 hover:bg-primary/5'
+              ? 'border-primary bg-primary/5 scale-[1.005]'
+              : 'border-slate-200 bg-white hover:border-primary/40'
           }`}
         >
-          <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+          <div className="flex items-center justify-center gap-3 py-4 px-4 text-center">
             <Upload
-              className={`h-10 w-10 mb-3 ${isDragging ? 'text-primary' : 'text-slate-400'}`}
+              className={`h-5 w-5 flex-shrink-0 ${isDragging ? 'text-primary' : 'text-slate-400'}`}
             />
-            <p className="text-base font-semibold text-gray-900 mb-1">
-              {isDragging ? 'Drop your file here' : 'Upload Document Here'}
-            </p>
-            <p className="text-sm text-gray-500 mb-4">Drag and drop files, or click to browse</p>
-            <input
-              ref={fileInputRef}
-              type="file"
-              onChange={handleUpload}
-              className="hidden"
-              accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.webp"
-            />
-            <div className="flex items-center gap-3">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-              >
-                {CATEGORIES.map((cat) => (
-                  <option key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </option>
-                ))}
-              </select>
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-                size="lg"
-                className="gap-2"
-              >
-                {uploading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Uploading…
-                  </>
-                ) : (
-                  <>
-                    <Upload className="h-4 w-4" />
-                    Upload Document
-                  </>
-                )}
-              </Button>
-            </div>
-            <p className="text-xs text-gray-400 mt-3">
-              PDF, Word, Excel, CSV, or image files. Max 10 MB per file.
+            <p className="text-sm text-gray-500">
+              {isDragging
+                ? 'Drop your file here'
+                : 'Or drag and drop a file here — PDF, Word, Excel, CSV, or images (max 10 MB)'}
             </p>
           </div>
         </div>
 
-        {/* Files */}
+        {/* Files list */}
         {fetching ? (
           <div className="flex justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -540,27 +762,147 @@ export default function DealDetailPage() {
               <FolderOpen className="h-12 w-12 text-slate-300 mx-auto mb-4" />
               <h3 className="font-semibold text-gray-900 mb-2">No Documents Yet</h3>
               <p className="text-sm text-gray-600 max-w-sm mx-auto">
-                Upload your financial statements, tax returns, entity documents, and property
-                information to build your loan package.
+                Select a category above, choose a document type, and upload to start building your
+                loan package.
               </p>
             </CardContent>
           </Card>
         ) : (
           <div className="space-y-6">
-            {grouped.map((group) => (
-              <Card key={group.value}>
+            {grouped.map((group) => {
+              const CatIcon = group.icon;
+              return (
+                <Card key={group.id}>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <div
+                        className={`h-7 w-7 rounded-lg ${group.bg} flex items-center justify-center`}
+                      >
+                        <CatIcon className={`h-4 w-4 ${group.color}`} />
+                      </div>
+                      {group.label}
+                      <Badge variant="outline" className="ml-2">
+                        {group.files.length}
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="divide-y">
+                      {group.files.map((file) => {
+                        const Icon = fileIcon(file.mime_type);
+                        return (
+                          <div key={file.id} className="py-3 first:pt-0 last:pb-0">
+                            <div className="flex items-center gap-3">
+                              <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+                                <Icon className="h-5 w-5 text-slate-500" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                {file.document_name ? (
+                                  <>
+                                    <p className="text-sm font-medium text-gray-900 truncate">
+                                      <span className="inline-flex items-center gap-1.5">
+                                        <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-xs font-semibold">
+                                          {file.document_name}
+                                        </span>
+                                      </span>
+                                    </p>
+                                    <p className="text-xs text-gray-500 truncate mt-0.5">
+                                      {file.file_name} &bull; {formatFileSize(file.file_size)} &bull;{' '}
+                                      {new Date(file.created_at).toLocaleDateString()}
+                                    </p>
+                                  </>
+                                ) : (
+                                  <>
+                                    <p className="text-sm font-medium text-gray-900 truncate">
+                                      {file.file_name}
+                                    </p>
+                                    <p className="text-xs text-gray-500">
+                                      {formatFileSize(file.file_size)} &bull;{' '}
+                                      {new Date(file.created_at).toLocaleDateString()}
+                                    </p>
+                                  </>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-2 flex-shrink-0">
+                                {file.review_status === 'approved' ? (
+                                  <Badge
+                                    variant="outline"
+                                    className="text-xs bg-green-50 text-green-700 border-green-200 gap-1"
+                                  >
+                                    <CheckCircle2 className="h-3 w-3" />
+                                    Approved
+                                  </Badge>
+                                ) : file.review_status === 'declined' ? (
+                                  <Badge
+                                    variant="outline"
+                                    className="text-xs bg-red-50 text-red-700 border-red-200 gap-1"
+                                  >
+                                    <XCircle className="h-3 w-3" />
+                                    Declined
+                                  </Badge>
+                                ) : (
+                                  <Badge
+                                    variant="outline"
+                                    className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200 gap-1"
+                                  >
+                                    <Clock className="h-3 w-3" />
+                                    Pending
+                                  </Badge>
+                                )}
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-slate-500 hover:text-primary hover:bg-primary/5 h-8 w-8 p-0"
+                                  onClick={() => handleDownload(file)}
+                                  title="Download"
+                                >
+                                  <Download className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-red-500 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0"
+                                  onClick={() => handleDelete(file.id)}
+                                  disabled={deletingId === file.id}
+                                >
+                                  {deletingId === file.id ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  ) : (
+                                    <Trash2 className="h-4 w-4" />
+                                  )}
+                                </Button>
+                              </div>
+                            </div>
+                            {file.admin_note && (
+                              <div className="ml-[52px] mt-2 flex items-start gap-2 rounded-lg bg-blue-50 border border-blue-200 px-3 py-2">
+                                <MessageSquare className="h-3.5 w-3.5 text-blue-500 mt-0.5 shrink-0" />
+                                <p className="text-xs text-blue-700">{file.admin_note}</p>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+
+            {/* Legacy files (from old category system) */}
+            {legacyFiles.length > 0 && (
+              <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg flex items-center gap-2">
-                    <FolderOpen className="h-5 w-5 text-primary" />
-                    {group.label}
+                    <FolderOpen className="h-5 w-5 text-slate-500" />
+                    Other Documents
                     <Badge variant="outline" className="ml-2">
-                      {group.files.length}
+                      {legacyFiles.length}
                     </Badge>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="divide-y">
-                    {group.files.map((file) => {
+                    {legacyFiles.map((file) => {
                       const Icon = fileIcon(file.mime_type);
                       return (
                         <div key={file.id} className="py-3 first:pt-0 last:pb-0">
@@ -573,18 +915,12 @@ export default function DealDetailPage() {
                                 {file.file_name}
                               </p>
                               <p className="text-xs text-gray-500">
+                                {getCategoryLabel(file.category)} &bull;{' '}
                                 {formatFileSize(file.file_size)} &bull;{' '}
                                 {new Date(file.created_at).toLocaleDateString()}
                               </p>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <Badge
-                                variant="outline"
-                                className="text-xs bg-slate-50 text-slate-600 border-slate-200"
-                              >
-                                {CATEGORIES.find((c) => c.value === file.category)?.label ||
-                                  file.category}
-                              </Badge>
+                            <div className="flex items-center gap-2 flex-shrink-0">
                               {file.review_status === 'approved' ? (
                                 <Badge
                                   variant="outline"
@@ -607,7 +943,7 @@ export default function DealDetailPage() {
                                   className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200 gap-1"
                                 >
                                   <Clock className="h-3 w-3" />
-                                  Pending Review
+                                  Pending
                                 </Badge>
                               )}
                               <Button
@@ -646,7 +982,7 @@ export default function DealDetailPage() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            )}
           </div>
         )}
       </div>

@@ -167,7 +167,7 @@ export async function GET(request: NextRequest) {
   // Get the user's files for this deal
   let filesQuery = supabase
     .from('deal_room_files')
-    .select('id, file_name, file_size, mime_type, category, created_at')
+    .select('*')
     .eq('user_id', shareRecord.user_id)
     .order('created_at', { ascending: false });
 
@@ -260,7 +260,7 @@ export async function PUT(request: NextRequest) {
 
   let filesQuery = supabase
     .from('deal_room_files')
-    .select('id, file_name, file_size, mime_type, category, created_at')
+    .select('*')
     .eq('user_id', shareRecord.user_id)
     .order('created_at', { ascending: false });
 

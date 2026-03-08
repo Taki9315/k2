@@ -45,6 +45,7 @@ type DealRoomFileWithUser = {
   file_size: number;
   mime_type: string;
   category: string;
+  document_name?: string | null;
   review_status: "pending" | "approved" | "declined";
   admin_note: string | null;
   reviewed_at: string | null;
@@ -66,7 +67,7 @@ const CATEGORY_CONFIG: Record<string, { label: string; className: string }> = {
     className: "bg-indigo-50 text-indigo-700 border-indigo-200",
   },
   property: {
-    label: "Property Info",
+    label: "Property Related",
     className: "bg-emerald-50 text-emerald-700 border-emerald-200",
   },
   personal: {
@@ -76,6 +77,22 @@ const CATEGORY_CONFIG: Record<string, { label: string; className: string }> = {
   general: {
     label: "Other",
     className: "bg-gray-50 text-gray-600 border-gray-200",
+  },
+  transaction: {
+    label: "Transaction Documentation",
+    className: "bg-blue-50 text-blue-700 border-blue-200",
+  },
+  borrower: {
+    label: "Borrower Documentation",
+    className: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  },
+  business: {
+    label: "Business Documentation",
+    className: "bg-amber-50 text-amber-700 border-amber-200",
+  },
+  entity: {
+    label: "Entity Documents",
+    className: "bg-rose-50 text-rose-700 border-rose-200",
   },
 };
 
@@ -302,6 +319,11 @@ export default function ApplicationDocsPage() {
           <div className="flex items-center gap-2">
             <Icon className="h-4 w-4 text-muted-foreground shrink-0" />
             <div>
+              {f.document_name && (
+                <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-xs font-semibold mr-1.5">
+                  {f.document_name}
+                </span>
+              )}
               <span className="font-medium text-foreground text-sm">
                 {f.file_name}
               </span>
@@ -528,7 +550,14 @@ export default function ApplicationDocsPage() {
           {reviewFile && (
             <div className="space-y-4 py-2">
               <div className="rounded-lg bg-muted p-3">
-                <p className="text-sm font-medium">{reviewFile.file_name}</p>
+                <p className="text-sm font-medium">
+                  {reviewFile.document_name ? (
+                    <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-xs font-semibold mr-2">
+                      {reviewFile.document_name}
+                    </span>
+                  ) : null}
+                  {reviewFile.file_name}
+                </p>
                 <p className="text-xs text-muted-foreground mt-1">
                   Uploaded by{" "}
                   {reviewFile.profiles?.full_name || reviewFile.profiles?.email}{" "}
