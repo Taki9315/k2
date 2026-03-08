@@ -18,6 +18,8 @@ import {
   Trash2,
   Save,
   ChevronDown,
+  Printer,
+  Check,
 } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
@@ -25,27 +27,28 @@ import {
 /* ------------------------------------------------------------------ */
 
 const DEAL_STATUSES = [
-  { value: 'preparing_materials', label: 'Preparing Materials' },
+  { value: 'success_kit', label: 'Success Kit' },
+  { value: 'certified_borrower', label: 'Certified Borrower' },
+  { value: 'deal_room_ready', label: 'Deal Room Ready' },
   { value: 'lenders_identified', label: 'Lenders Identified' },
   { value: 'submitted_to_lenders', label: 'Submitted to Lenders' },
+  { value: 'in_underwriting', label: 'In Underwriting' },
   { value: 'closed', label: 'Closed' },
 ];
 
 const LENDER_STATUSES = [
-  { value: 'submitted', label: 'Submitted' },
-  { value: 'in_review', label: 'In Review' },
-  { value: 'declined', label: 'Declined' },
-  { value: 'closing', label: 'Closing' },
-  { value: 'closed', label: 'Closed' },
+  { value: 'contact', label: 'Contact', color: 'bg-gray-100 text-gray-800' },
+  { value: 'submitted', label: 'Submitted', color: 'bg-blue-100 text-blue-800' },
+  { value: 'in_review', label: 'In Review', color: 'bg-yellow-100 text-yellow-800' },
+  { value: 'declined', label: 'Declined', color: 'bg-red-100 text-red-800' },
+  { value: 'in_process', label: 'In Process / Closing', color: 'bg-purple-100 text-purple-800' },
+  { value: 'closed', label: 'Closed', color: 'bg-green-100 text-green-800' },
+  { value: 'closed_declined', label: 'Declined (Final)', color: 'bg-red-200 text-red-900' },
 ];
 
-const STATUS_BADGE_COLORS: Record<string, string> = {
-  submitted: 'bg-blue-100 text-blue-800',
-  in_review: 'bg-yellow-100 text-yellow-800',
-  declined: 'bg-red-100 text-red-800',
-  closing: 'bg-purple-100 text-purple-800',
-  closed: 'bg-green-100 text-green-800',
-};
+const STATUS_BADGE_COLORS: Record<string, string> = Object.fromEntries(
+  LENDER_STATUSES.map((s) => [s.value, s.color])
+);
 
 type LenderRow = {
   id: string;
@@ -246,43 +249,95 @@ export default function DealOutreachPage() {
                 </p>
               </div>
             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 no-print"
+              onClick={() => window.print()}
+            >
+              <Printer className="h-4 w-4" />
+              Print This Page
+            </Button>
           </div>
         </div>
       </section>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        {/* Overall status */}
+        {/* Overall Status — Progress Steps */}
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold text-gray-900">
-              Overall Status
+              Deal Progress
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-4 flex-wrap">
-              {DEAL_STATUSES.map((s) => {
-                const isActive = deal.outreach_status === s.value;
+            {/* Step indicators */}
+            <div className="flex items-center gap-0 w-full">
+              {DEAL_STATUSES.map((s, i) => {
+                const currentIdx = DEAL_STATUSES.findIndex(
+                  (x) => x.value === deal.outreach_status
+                );
+                const isCompleted = i < currentIdx;
+                const isActive = i === currentIdx;
+                const isFuture = i > currentIdx;
+                const isClickable = i <= currentIdx; // can click current + previous (green)
                 return (
-                  <button
-                    key={s.value}
-                    onClick={() => handleStatusChange(s.value)}
-                    disabled={saving === 'deal-status'}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium border-2 transition-all ${
-                      isActive
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-slate-200 bg-white text-gray-600 hover:border-primary/30 hover:bg-slate-50'
-                    }`}
-                  >
-                    {s.label}
-                  </button>
+                  <div key={s.value} className="flex items-center flex-1 last:flex-none">
+                    <button
+                      onClick={() => isClickable ? handleStatusChange(s.value) : undefined}
+                      disabled={saving === 'deal-status' || isFuture}
+                      className={`flex flex-col items-center gap-1.5 transition-all group ${
+                        isClickable ? 'cursor-pointer' : 'cursor-default'
+                      }`}
+                      title={isClickable ? `Go back to: ${s.label}` : s.label}
+                    >
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${
+                          isCompleted
+                            ? 'bg-green-600 border-green-600 text-white group-hover:bg-green-700'
+                            : isActive
+                            ? 'bg-gray-900 border-gray-900 text-white'
+                            : 'bg-white border-slate-300 text-slate-400'
+                        }`}
+                      >
+                        {isCompleted ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          i + 1
+                        )}
+                      </div>
+                      <span
+                        className={`text-[10px] leading-tight text-center max-w-[80px] font-medium ${
+                          isCompleted
+                            ? 'text-green-700'
+                            : isActive
+                            ? 'text-gray-900'
+                            : 'text-slate-400'
+                        }`}
+                      >
+                        {s.label}
+                      </span>
+                    </button>
+                    {/* Connector line */}
+                    {i < DEAL_STATUSES.length - 1 && (
+                      <div
+                        className={`flex-1 h-0.5 mx-1 mt-[-18px] rounded-full transition-colors ${
+                          i < currentIdx ? 'bg-green-600' : 'bg-slate-200'
+                        }`}
+                      />
+                    )}
+                  </div>
                 );
               })}
-              {saving === 'deal-status' && (
-                <Loader2 className="h-4 w-4 animate-spin text-primary" />
-              )}
             </div>
+            {saving === 'deal-status' && (
+              <div className="mt-3 flex items-center gap-2 justify-center">
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+                <span className="text-xs text-gray-500">Saving...</span>
+              </div>
+            )}
             {/* Progress bar */}
-            <div className="mt-4 flex gap-1">
+            <div className="mt-5 flex gap-0.5">
               {DEAL_STATUSES.map((s, i) => {
                 const currentIdx = DEAL_STATUSES.findIndex(
                   (x) => x.value === deal.outreach_status
@@ -291,7 +346,7 @@ export default function DealOutreachPage() {
                   <div
                     key={s.value}
                     className={`h-2 flex-1 rounded-full transition-colors ${
-                      i <= currentIdx ? 'bg-primary' : 'bg-slate-200'
+                      i <= currentIdx ? 'bg-green-600' : 'bg-slate-200'
                     }`}
                   />
                 );

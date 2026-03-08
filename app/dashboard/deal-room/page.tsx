@@ -20,6 +20,8 @@ import {
   ChevronRight,
   Home,
   KeyRound,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 type Deal = {
@@ -39,6 +41,8 @@ export default function DealRoomPage() {
   const [creating, setCreating] = useState(false);
   const [showNewDealInput, setShowNewDealInput] = useState(false);
   const [newDealName, setNewDealName] = useState('');
+  const [newDealPassword, setNewDealPassword] = useState('');
+  const [showNewDealPassword, setShowNewDealPassword] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -75,7 +79,12 @@ export default function DealRoomPage() {
 
   const handleCreateDeal = async () => {
     const name = newDealName.trim();
+    const password = newDealPassword.trim();
     if (!name) return;
+    if (!password) {
+      alert('A password is required to protect your deal room.');
+      return;
+    }
 
     setCreating(true);
     try {
@@ -90,7 +99,7 @@ export default function DealRoomPage() {
           Authorization: `Bearer ${session.access_token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, password }),
       });
 
       if (res.ok) {
@@ -200,36 +209,70 @@ export default function DealRoomPage() {
           </Button>
         ) : (
           <Card className="mb-6">
-            <CardContent className="p-4">
+            <CardContent className="p-4 space-y-3">
               <div className="flex items-center gap-3">
                 <Home className="h-5 w-5 text-primary flex-shrink-0" />
                 <input
                   type="text"
-                  placeholder="123 Elm Street"
+                  placeholder="Deal name (e.g. 123 Elm Street)"
                   value={newDealName}
                   onChange={(e) => setNewDealName(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleCreateDeal();
                     if (e.key === 'Escape') {
                       setShowNewDealInput(false);
                       setNewDealName('');
+                      setNewDealPassword('');
                     }
                   }}
                   className="flex-1 text-sm border border-gray-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                   autoFocus
                 />
-                <Button onClick={handleCreateDeal} disabled={creating || !newDealName.trim()}>
-                  {creating ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Create Deal'}
-                </Button>
+              </div>
+              <div className="flex items-center gap-3">
+                <KeyRound className="h-5 w-5 text-amber-500 flex-shrink-0" />
+                <div className="relative flex-1">
+                  <input
+                    type={showNewDealPassword ? 'text' : 'password'}
+                    placeholder="Set a password (required)"
+                    value={newDealPassword}
+                    onChange={(e) => setNewDealPassword(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleCreateDeal();
+                      if (e.key === 'Escape') {
+                        setShowNewDealInput(false);
+                        setNewDealName('');
+                        setNewDealPassword('');
+                      }
+                    }}
+                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewDealPassword(!showNewDealPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showNewDealPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 justify-end">
+                <p className="text-xs text-amber-600 flex-1 flex items-center gap-1">
+                  <Lock className="h-3 w-3" />
+                  Password is required — viewers must enter it to access shared links.
+                </p>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => {
                     setShowNewDealInput(false);
                     setNewDealName('');
+                    setNewDealPassword('');
                   }}
                 >
                   Cancel
+                </Button>
+                <Button onClick={handleCreateDeal} disabled={creating || !newDealName.trim() || !newDealPassword.trim()}>
+                  {creating ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Create Deal'}
                 </Button>
               </div>
             </CardContent>

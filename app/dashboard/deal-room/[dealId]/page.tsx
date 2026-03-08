@@ -408,8 +408,13 @@ export default function DealDetailPage() {
     await uploadFile(file, categoryId, docName);
   };
 
-  // Share link
+  // Share link — force password if deal doesn't have one yet
   const handleGenerateShareLink = () => {
+    if (!dealHasPassword) {
+      // Force password setup before sharing
+      setShowPasswordModal(true);
+      return;
+    }
     setShowShareWarning(true);
   };
 
@@ -450,6 +455,10 @@ export default function DealDetailPage() {
 
   // Password protection
   const handleSetPassword = async () => {
+    if (!passwordInput.trim()) {
+      alert('Password is required.');
+      return;
+    }
     setPasswordLoading(true);
     try {
       const {
@@ -465,7 +474,7 @@ export default function DealDetailPage() {
         },
         body: JSON.stringify({
           dealId,
-          password: passwordInput || null,
+          password: passwordInput,
         }),
       });
 
@@ -474,6 +483,10 @@ export default function DealDetailPage() {
         setDealHasPassword(data.hasPassword);
         setShowPasswordModal(false);
         setPasswordInput('');
+        // If user was trying to share and set password first, proceed to share warning
+        if (!dealHasPassword) {
+          setShowShareWarning(true);
+        }
       } else {
         const data = await res.json();
         alert(data.error || 'Failed to set password');
@@ -550,12 +563,10 @@ export default function DealDetailPage() {
                   <Shield className="h-3 w-3" />
                   Secure
                 </Badge>
-                {dealHasPassword && (
-                  <Badge variant="outline" className="gap-1 text-amber-600 border-amber-200 bg-amber-50">
-                    <KeyRound className="h-3 w-3" />
-                    Password Protected
-                  </Badge>
-                )}
+                <Badge variant="outline" className="gap-1 text-amber-600 border-amber-200 bg-amber-50">
+                  <KeyRound className="h-3 w-3" />
+                  Password Protected
+                </Badge>
               </div>
               <p className="text-sm text-gray-600 mt-1">
                 Upload and organize your loan package documents.{' '}
@@ -565,7 +576,7 @@ export default function DealDetailPage() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              {/* Password toggle */}
+              {/* Change Password */}
               <Button
                 variant="outline"
                 size="sm"
@@ -573,7 +584,7 @@ export default function DealDetailPage() {
                 onClick={() => setShowPasswordModal(true)}
               >
                 <KeyRound className="h-4 w-4" />
-                {dealHasPassword ? 'Change Password' : 'Set Password'}
+                Change Password
               </Button>
               {/* Share Link Button */}
               {(isCertifiedBorrower || isAdmin) && (
@@ -1027,7 +1038,7 @@ export default function DealDetailPage() {
               previous link).
               {dealHasPassword && (
                 <span className="block mt-1 text-amber-600 font-medium">
-                  This deal is password-protected. Viewers will need the password.
+                  This deal is password-protected. Viewers will need the password to access files.
                 </span>
               )}
             </p>
@@ -1066,12 +1077,18 @@ export default function DealDetailPage() {
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <KeyRound className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900">Password Protection</h3>
+              <h3 className="text-lg font-bold text-gray-900">
+                {dealHasPassword ? 'Change Password' : 'Set Password'}
+              </h3>
             </div>
-            <p className="text-sm text-gray-600 leading-relaxed mb-4">
+            <p className="text-sm text-gray-600 leading-relaxed mb-1">
               {dealHasPassword
-                ? 'This deal is currently password-protected. Enter a new password or remove it.'
-                : 'Add a password to protect your shared deal room link. Viewers will need to enter this password to access files.'}
+                ? 'Enter a new password for this deal room.'
+                : 'A password is required to protect your deal room. Viewers must enter this password to access shared files.'}
+            </p>
+            <p className="text-xs text-amber-600 font-medium mb-4 flex items-center gap-1">
+              <Lock className="h-3 w-3" />
+              Password protection is always required.
             </p>
             <div className="relative mb-4">
               <input
@@ -1080,7 +1097,7 @@ export default function DealDetailPage() {
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleSetPassword();
+                  if (e.key === 'Enter' && passwordInput.trim()) handleSetPassword();
                 }}
                 className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                 autoFocus
@@ -1094,19 +1111,17 @@ export default function DealDetailPage() {
               </button>
             </div>
             <div className="flex gap-3">
-              {dealHasPassword && (
-                <Button
-                  variant="outline"
-                  className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50"
-                  onClick={() => {
-                    setPasswordInput('');
-                    handleSetPassword();
-                  }}
-                  disabled={passwordLoading}
-                >
-                  Remove Password
-                </Button>
-              )}
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  setShowPasswordModal(false);
+                  setPasswordInput('');
+                  setShowPassword(false);
+                }}
+              >
+                Cancel
+              </Button>
               <Button
                 className="flex-1"
                 onClick={handleSetPassword}

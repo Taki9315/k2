@@ -201,3 +201,15 @@
     background-size: 100% 40px;
   }
 }
+
+/* Print styles for Lender Outreach */
+@media print {
+  nav, footer, .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

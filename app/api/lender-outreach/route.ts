@@ -56,7 +56,7 @@ async function ensureOutreachColumn(supabase: ReturnType<typeof createServiceRol
   const { error } = await supabase.from('deals').select('outreach_status').limit(0);
   if (error && error.message.includes('outreach_status')) {
     await supabase.rpc('exec_sql', {
-      query: `ALTER TABLE deals ADD COLUMN IF NOT EXISTS outreach_status text NOT NULL DEFAULT 'preparing_materials';`,
+      query: `ALTER TABLE deals ADD COLUMN IF NOT EXISTS outreach_status text NOT NULL DEFAULT 'success_kit';`,
     }).then(({ error: rpcErr }) => {
       if (rpcErr) console.error('Could not add outreach_status column:', rpcErr.message);
     });
@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
       deal: {
         id: deal.id,
         name: deal.name,
-        outreach_status: deal.outreach_status ?? 'preparing_materials',
+        outreach_status: deal.outreach_status ?? 'success_kit',
         created_at: deal.created_at,
       },
       lenders: lenders ?? [],
@@ -129,7 +129,7 @@ export async function GET(request: NextRequest) {
   const dealsList = (deals || []).map((d) => ({
     id: d.id,
     name: d.name,
-    outreach_status: d.outreach_status ?? 'preparing_materials',
+    outreach_status: d.outreach_status ?? 'success_kit',
     created_at: d.created_at,
   }));
 
@@ -175,7 +175,7 @@ export async function POST(request: NextRequest) {
       contact_name: contactName?.trim() || '',
       phone: phone?.trim() || '',
       email: email?.trim() || '',
-      status: 'submitted',
+      status: 'contact',
     })
     .select('*')
     .single();
@@ -198,7 +198,7 @@ export async function PUT(request: NextRequest) {
 
   // Update deal outreach status
   if (body.dealId && body.outreachStatus) {
-    const validStatuses = ['preparing_materials', 'lenders_identified', 'submitted_to_lenders', 'closed'];
+    const validStatuses = ['success_kit', 'certified_borrower', 'deal_room_ready', 'lenders_identified', 'submitted_to_lenders', 'in_underwriting', 'closed'];
     if (!validStatuses.includes(body.outreachStatus)) {
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
     }
@@ -229,7 +229,7 @@ export async function PUT(request: NextRequest) {
     if (body.phone !== undefined) updates.phone = body.phone.trim();
     if (body.email !== undefined) updates.email = body.email.trim();
     if (body.status !== undefined) {
-      const validLenderStatuses = ['submitted', 'in_review', 'declined', 'closing', 'closed'];
+      const validLenderStatuses = ['contact', 'submitted', 'in_review', 'declined', 'in_process', 'closed', 'closed_declined'];
       if (!validLenderStatuses.includes(body.status)) {
         return NextResponse.json({ error: 'Invalid lender status' }, { status: 400 });
       }

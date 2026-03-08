@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest, createServiceRoleClient } from '@/lib/supabase-server';
 
+// Simple hash function for password (using Web Crypto)
+async function hashPassword(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password + 'k2-deal-room-salt');
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
 /** Check if current user has deal-room access (kit buyers + certified + admin) */
 async function checkAccess(
   supabase: ReturnType<typeof createServiceRoleClient>,
@@ -108,13 +117,19 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
   const name = body.name?.trim();
+  const password = body.password?.trim();
   if (!name) {
     return NextResponse.json({ error: 'Deal name is required' }, { status: 400 });
   }
+  if (!password) {
+    return NextResponse.json({ error: 'Password is required for all deals' }, { status: 400 });
+  }
+
+  const passwordHash = await hashPassword(password);
 
   const { data: deal, error } = await supabase
     .from('deals')
-    .insert({ user_id: user.id, name })
+    .insert({ user_id: user.id, name, password_hash: passwordHash })
     .select()
     .single();
 

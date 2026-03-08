@@ -26,6 +26,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Missing dealId' }, { status: 400 });
   }
 
+  if (!password || !password.trim()) {
+    return NextResponse.json({ error: 'Password is required. All deals must be password-protected.' }, { status: 400 });
+  }
+
   // Verify ownership
   const { data: deal } = await supabase
     .from('deals')
@@ -38,7 +42,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Deal not found' }, { status: 404 });
   }
 
-  const passwordHash = password ? await hashPassword(password) : null;
+  const passwordHash = await hashPassword(password);
 
   const { error, data: updateData } = await supabase
     .from('deals')
@@ -57,5 +61,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to save password' }, { status: 500 });
   }
 
-  return NextResponse.json({ success: true, hasPassword: !!password });
+  return NextResponse.json({ success: true, hasPassword: true });
 }

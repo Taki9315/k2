@@ -18,16 +18,22 @@ import {
 } from 'lucide-react';
 
 const STATUS_LABELS: Record<string, string> = {
-  preparing_materials: 'Preparing Materials',
+  success_kit: 'Success Kit',
+  certified_borrower: 'Certified Borrower',
+  deal_room_ready: 'Deal Room Ready',
   lenders_identified: 'Lenders Identified',
   submitted_to_lenders: 'Submitted to Lenders',
+  in_underwriting: 'In Underwriting',
   closed: 'Closed',
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  preparing_materials: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  lenders_identified: 'bg-blue-100 text-blue-800 border-blue-200',
+  success_kit: 'bg-gray-100 text-gray-800 border-gray-200',
+  certified_borrower: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+  deal_room_ready: 'bg-blue-100 text-blue-800 border-blue-200',
+  lenders_identified: 'bg-indigo-100 text-indigo-800 border-indigo-200',
   submitted_to_lenders: 'bg-purple-100 text-purple-800 border-purple-200',
+  in_underwriting: 'bg-orange-100 text-orange-800 border-orange-200',
   closed: 'bg-green-100 text-green-800 border-green-200',
 };
 
@@ -169,9 +175,9 @@ export default function LenderOutreachPage() {
                       <div className="flex items-center gap-3">
                         <Badge
                           variant="outline"
-                          className={`text-xs ${STATUS_COLORS[deal.outreach_status] || STATUS_COLORS.preparing_materials}`}
+                          className={`text-xs ${STATUS_COLORS[deal.outreach_status] || STATUS_COLORS.success_kit}`}
                         >
-                          {STATUS_LABELS[deal.outreach_status] || 'Preparing Materials'}
+                          {STATUS_LABELS[deal.outreach_status] || 'Success Kit'}
                         </Badge>
                         <ChevronRight className="h-5 w-5 text-slate-400" />
                       </div>
