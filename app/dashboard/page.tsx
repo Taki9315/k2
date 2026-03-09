@@ -277,7 +277,7 @@ export default function DashboardPage() {
                 <Badge className={cn(
                   'gap-1',
                   (isKitBuyer || isCertifiedBorrower)
-                    ? 'bg-white/10 text-white/90 border-white/20'
+                    ? 'bg-primary/20 text-primary border-primary/30'
                     : 'bg-white/5 text-white/30 border-white/10'
                 )}>
                   <BookOpen className="h-3 w-3" />
@@ -331,14 +331,14 @@ export default function DashboardPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {journeySteps.map((step, idx) => (
                 <div key={idx} className="flex items-center gap-2">
-                  <div className={`h-6 w-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold ${
+                  <div className={`h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold ${
                     step.done
-                      ? 'bg-primary text-white'
+                      ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
                       : 'bg-white/10 text-white/40 border border-white/20'
                   }`}>
-                    {step.done ? <CheckCircle2 className="h-3.5 w-3.5" /> : idx + 1}
+                    {step.done ? <CheckCircle2 className="h-4 w-4" /> : idx + 1}
                   </div>
-                  <span className={`text-xs ${step.done ? 'text-white/90' : 'text-white/40'}`}>
+                  <span className={`text-xs font-medium ${step.done ? 'text-white' : 'text-white/40'}`}>
                     {step.label}
                   </span>
                 </div>
@@ -547,7 +547,7 @@ export default function DashboardPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="p-5">
-                  <p className="text-sm text-gray-500 mb-4">
+                  <p className="text-base font-semibold text-primary mb-4">
                     {isCertifiedBorrower
                       ? 'Select a task to get step-by-step AI coaching for your loan package.'
                       : 'Get started with core templates. Upgrade to unlock all tasks.'}

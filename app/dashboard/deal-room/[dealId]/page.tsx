@@ -334,6 +334,11 @@ export default function DealDetailPage() {
   };
 
   const uploadFile = async (file: File, categoryId: string, documentName: string) => {
+    const MAX_CLIENT_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
+    if (file.size > MAX_CLIENT_FILE_SIZE) {
+      alert('File too large? Compress or upload via alternative link (email K2 support).');
+      return;
+    }
     setUploading(true);
     setUploadingCategoryId(categoryId);
     try {
@@ -796,7 +801,7 @@ export default function DealDetailPage() {
             <p className="text-sm text-gray-500">
               {isDragging
                 ? 'Drop your file here'
-                : 'Or drag and drop a file here — PDF, Word, Excel, CSV, or images (max 10 MB)'}
+                : 'Or drag and drop a file here — PDF, Word, Excel, CSV, or images (max 50 MB)'}
             </p>
           </div>
         </div>
@@ -1080,7 +1085,7 @@ export default function DealDetailPage() {
               </li>
             </ul>
             <p className="text-xs text-gray-500 mb-5">
-              The link expires in 7 days. You can generate a new one anytime (which revokes the
+              The link expires in 45 days. You can generate a new one anytime (which revokes the
               previous link).
               {dealHasPassword && (
                 <span className="block mt-1 text-amber-600 font-medium">

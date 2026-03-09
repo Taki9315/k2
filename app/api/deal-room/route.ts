@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest, createServiceRoleClient } from '@/lib/supabase-server';
 import { createAdminNotification } from '@/lib/admin-notifications';
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
 const ALLOWED_TYPES = [
   'application/pdf',
   'image/jpeg',
@@ -158,7 +158,10 @@ export async function POST(request: NextRequest) {
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ error: 'File too large (max 10 MB)' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'File too large? Compress or upload via alternative link (email K2 support).' },
+        { status: 400 }
+      );
     }
 
     if (!ALLOWED_TYPES.includes(file.type)) {

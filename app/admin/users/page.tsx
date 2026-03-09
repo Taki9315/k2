@@ -8,7 +8,6 @@ import {
   Trash2,
   UserPlus,
   Star,
-  MessageCircle,
   Calendar,
   Briefcase,
   Loader2,
@@ -342,19 +341,6 @@ export default function UsersPage() {
             </Button>
             {isCertified(u) && (
               <>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-primary"
-                  onClick={() =>
-                    router.push(
-                      `/admin/chat?userId=${u.id}&userName=${encodeURIComponent(u.full_name ?? u.email)}`
-                    )
-                  }
-                  title="Chat"
-                >
-                  <MessageCircle className="h-3.5 w-3.5" />
-                </Button>
                 <Button
                   variant="ghost"
                   size="icon"

@@ -26,7 +26,7 @@ const supabase = createClient(supabaseUrl, serviceRoleKey, {
 });
 
 const sql = `
-  ALTER TABLE deal_room_share_tokens ADD COLUMN IF NOT EXISTS expires_at timestamptz DEFAULT (now() + interval '7 days');
+  ALTER TABLE deal_room_share_tokens ADD COLUMN IF NOT EXISTS expires_at timestamptz DEFAULT (now() + interval '45 days');
   ALTER TABLE deal_room_share_tokens ADD COLUMN IF NOT EXISTS revoked boolean DEFAULT false;
   ALTER TABLE deal_room_share_tokens ADD COLUMN IF NOT EXISTS deal_id uuid REFERENCES deals(id) ON DELETE CASCADE;
   ALTER TABLE deal_room_share_tokens ADD COLUMN IF NOT EXISTS password_hash text;

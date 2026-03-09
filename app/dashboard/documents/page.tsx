@@ -132,7 +132,7 @@ export default function DocumentLibraryPage() {
               Application Documentation
             </h1>
           </div>
-          <p className="text-lg text-gray-600 max-w-2xl">
+          <p className="text-lg font-semibold text-primary max-w-2xl">
             Select the documents you need to prepare a professional loan package.
           </p>
 

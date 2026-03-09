@@ -7,8 +7,8 @@ import { getUserFromRequest, createServiceRoleClient } from '@/lib/supabase-serv
  * PUT  /api/deal-room/share — Verify password for password-protected deal
  */
 
-/** Share tokens expire 7 days after creation. Computed from created_at. */
-const SHARE_TOKEN_LIFETIME_MS = 7 * 24 * 60 * 60 * 1000;
+/** Share tokens expire 45 days after creation. Computed from created_at. */
+const SHARE_TOKEN_LIFETIME_MS = 45 * 24 * 60 * 60 * 1000;
 
 function getTokenExpiresAt(createdAt: string): Date {
   return new Date(new Date(createdAt).getTime() + SHARE_TOKEN_LIFETIME_MS);

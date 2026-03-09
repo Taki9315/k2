@@ -42,7 +42,7 @@ CREATE INDEX IF NOT EXISTS idx_deal_room_files_deal ON deal_room_files(deal_id);
 -- 3. Add missing columns to deal_room_share_tokens (nullable for backward compat)
 ALTER TABLE deal_room_share_tokens ADD COLUMN IF NOT EXISTS deal_id uuid REFERENCES deals(id) ON DELETE CASCADE;
 ALTER TABLE deal_room_share_tokens ADD COLUMN IF NOT EXISTS password_hash text;
-ALTER TABLE deal_room_share_tokens ADD COLUMN IF NOT EXISTS expires_at timestamptz DEFAULT (now() + interval '7 days');
+ALTER TABLE deal_room_share_tokens ADD COLUMN IF NOT EXISTS expires_at timestamptz DEFAULT (now() + interval '45 days');
 ALTER TABLE deal_room_share_tokens ADD COLUMN IF NOT EXISTS revoked boolean DEFAULT false;
 CREATE INDEX IF NOT EXISTS idx_share_tokens_deal ON deal_room_share_tokens(deal_id);
 

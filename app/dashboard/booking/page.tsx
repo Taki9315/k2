@@ -89,7 +89,7 @@ export default function BookingPage() {
               Book a Transaction Review
             </h1>
           </div>
-          <p className="text-gray-600 mt-2 max-w-2xl">
+          <p className="text-lg font-semibold text-primary mt-2 max-w-2xl">
             Schedule a session with a K2 expert to review your deal package
             before submitting it to lenders. We&apos;ll help you identify gaps,
             strengthen your narrative, and maximize your chances of approval.

@@ -327,7 +327,7 @@ function DashboardResourcesPageInner() {
           <h1 className="text-3xl md:text-4xl font-bold mb-2">
             K2 Partner Resources
           </h1>
-          <p className="text-slate-300 max-w-2xl">
+          <p className="text-lg font-semibold text-white/90 max-w-2xl">
             Browse our vetted network of K2 Preferred Lenders and trusted vendors.
             Click any partner to view their full profile, documents, and contact form.
           </p>
