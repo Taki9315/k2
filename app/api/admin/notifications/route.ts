@@ -78,3 +78,27 @@ export async function PUT(request: NextRequest) {
 
   return NextResponse.json({ error: 'Provide ids or markAllRead' }, { status: 400 });
 }
+
+/**
+ * DELETE /api/admin/notifications?id=xxx
+ * Delete a single notification by id.
+ */
+export async function DELETE(request: NextRequest) {
+  const supabase = createServiceRoleClient();
+  const id = request.nextUrl.searchParams.get('id');
+
+  if (!id) {
+    return NextResponse.json({ error: 'Missing notification id' }, { status: 400 });
+  }
+
+  const { error } = await supabase
+    .from('admin_notifications')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true });
+}

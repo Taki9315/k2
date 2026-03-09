@@ -13,6 +13,9 @@ import {
   CreditCard,
   Info,
   X,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -69,6 +72,8 @@ export function NotificationBell() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const PAGE_SIZE = 10;
   const { toast } = useToast();
   const panelRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -174,6 +179,32 @@ export function NotificationBell() {
     }
   };
 
+  const deleteNotification = async (id: string) => {
+    try {
+      const wasUnread = notifications.find((n) => n.id === id && !n.read);
+      const res = await fetch(`/api/admin/notifications?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        setNotifications((prev) => prev.filter((n) => n.id !== id));
+        if (wasUnread) setUnreadCount((c) => Math.max(0, c - 1));
+        // If deleting the last item on the current page, go back one page
+        const remaining = notifications.length - 1;
+        const maxPage = Math.max(0, Math.ceil(remaining / PAGE_SIZE) - 1);
+        if (page > maxPage) setPage(maxPage);
+      }
+    } catch (err) {
+      console.error('Delete notification error:', err);
+    }
+  };
+
+  // Pagination helpers
+  const totalPages = Math.max(1, Math.ceil(notifications.length / PAGE_SIZE));
+  const paginatedNotifications = notifications.slice(
+    page * PAGE_SIZE,
+    (page + 1) * PAGE_SIZE
+  );
+
   return (
     <div className="relative">
       {/* Bell button */}
@@ -184,7 +215,10 @@ export function NotificationBell() {
         className="relative rounded-xl"
         onClick={() => {
           setOpen(!open);
-          if (!open) fetchNotifications();
+          if (!open) {
+            fetchNotifications();
+            setPage(0);
+          }
         }}
       >
         <Bell className="h-4 w-4 text-muted-foreground" />
@@ -242,14 +276,14 @@ export function NotificationBell() {
                 <p className="text-sm">No notifications yet</p>
               </div>
             ) : (
-              notifications.map((n) => {
+              paginatedNotifications.map((n) => {
                 const Icon = TYPE_ICON[n.type] || Bell;
                 const colorClass = TYPE_COLOR[n.type] || TYPE_COLOR.general;
                 return (
                   <div
                     key={n.id}
                     className={cn(
-                      'flex items-start gap-3 px-4 py-3 border-b border-border/50 transition-colors hover:bg-muted/50 cursor-pointer',
+                      'flex items-start gap-3 px-4 py-3 border-b border-border/50 transition-colors hover:bg-muted/50 cursor-pointer group',
                       !n.read && 'bg-primary/5'
                     )}
                     onClick={() => {
@@ -274,9 +308,21 @@ export function NotificationBell() {
                         >
                           {n.title}
                         </p>
-                        {!n.read && (
-                          <span className="shrink-0 mt-1 h-2 w-2 rounded-full bg-primary" />
-                        )}
+                        <div className="flex items-center gap-1 shrink-0">
+                          {!n.read && (
+                            <span className="mt-1 h-2 w-2 rounded-full bg-primary" />
+                          )}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteNotification(n.id);
+                            }}
+                            className="p-1 rounded hover:bg-red-50 text-muted-foreground/40 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                            title="Delete notification"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
                       </div>
                       {n.message && (
                         <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
@@ -299,6 +345,35 @@ export function NotificationBell() {
               })
             )}
           </div>
+
+          {/* Pagination */}
+          {notifications.length > PAGE_SIZE && (
+            <div className="flex items-center justify-between px-4 py-2 border-t border-border bg-muted/30">
+              <span className="text-[11px] text-muted-foreground">
+                Page {page + 1} of {totalPages}
+              </span>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7"
+                  disabled={page === 0}
+                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                >
+                  <ChevronLeft className="h-3.5 w-3.5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7"
+                  disabled={page >= totalPages - 1}
+                  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                >
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
