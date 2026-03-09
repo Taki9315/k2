@@ -31,6 +31,7 @@ export type ContentRow = {
   type: "video" | "article";
   access_level: "public" | "members_only";
   category: string;
+  doc_type: string;
   video_url: string | null;
   article_content: string | null;
   file_url: string | null;
@@ -52,6 +53,12 @@ const CATEGORIES = [
   "Financial Literacy",
   "Market Analysis",
   "Legal & Compliance",
+];
+
+const CONTENT_DOC_TYPES = [
+  { value: "resource", label: "Resource / Free Content" },
+  { value: "application_document", label: "Application Document" },
+  { value: "partner_document", label: "Partner Document" },
 ];
 
 interface ContentDialogProps {
@@ -82,6 +89,7 @@ export function ContentDialog({
     "public"
   );
   const [category, setCategory] = useState("General");
+  const [docType, setDocType] = useState("resource");
   const [videoUrl, setVideoUrl] = useState("");
   const [articleContent, setArticleContent] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
@@ -102,6 +110,7 @@ export function ContentDialog({
       setType(content.type);
       setAccessLevel(content.access_level);
       setCategory(content.category);
+      setDocType(content.doc_type || "resource");
       setVideoUrl(content.video_url ?? "");
       setArticleContent(content.article_content ?? "");
       setThumbnailUrl(content.thumbnail_url ?? "");
@@ -117,6 +126,7 @@ export function ContentDialog({
       setType("video");
       setAccessLevel("public");
       setCategory("General");
+      setDocType("resource");
       setVideoUrl("");
       setArticleContent("");
       setThumbnailUrl("");
@@ -176,6 +186,7 @@ export function ContentDialog({
         type,
         access_level: accessLevel,
         category,
+        doc_type: docType,
         video_url: videoUrl.trim() || null,
         article_content: articleContent.trim() || null,
         file_url: fileUrl.trim() || null,
@@ -290,21 +301,39 @@ export function ContentDialog({
             </div>
           </div>
 
-          {/* Category */}
-          <div className="space-y-2">
-            <Label>Category <span className="text-red-500">*</span></Label>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="bg-secondary">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-card">
-                {CATEGORIES.map((cat) => (
-                  <SelectItem key={cat} value={cat}>
-                    {cat}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          {/* Category + Document Classification */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Category <span className="text-red-500">*</span></Label>
+              <Select value={category} onValueChange={setCategory}>
+                <SelectTrigger className="bg-secondary">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-card">
+                  {CATEGORIES.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Document Classification</Label>
+              <Select value={docType} onValueChange={setDocType}>
+                <SelectTrigger className="bg-secondary">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-card">
+                  {CONTENT_DOC_TYPES.map((dt) => (
+                    <SelectItem key={dt.value} value={dt.value}>
+                      {dt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
           </div>
 
           {/* Video URL (shown when type is video) */}

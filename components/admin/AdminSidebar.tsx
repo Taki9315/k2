@@ -11,6 +11,7 @@ import {
   Leaf,
   ClipboardList,
   Handshake,
+  FileCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +19,8 @@ const navItems = [
   { title: "Dashboard", path: "/admin", icon: LayoutDashboard },
   { title: "Users", path: "/admin/users", icon: Users },
   { title: "Content", path: "/admin/documents", icon: FolderOpen },
-  { title: "Document Library", path: "/admin/application-docs", icon: ClipboardList },
+  { title: "Document Library", path: "/admin/document-library", icon: ClipboardList },
+  { title: "Doc Review", path: "/admin/application-docs", icon: FileCheck },
   { title: "Resources", path: "/admin/resources", icon: BookOpen },
   { title: "Partners", path: "/admin/partners", icon: Handshake},
 ];

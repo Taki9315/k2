@@ -208,9 +208,9 @@ export default function DashboardPage() {
   const quickActions = [
     {
       icon: FileText,
-      title: 'Download Documents',
-      description: 'Access forms, templates & application docs',
-      href: '/dashboard/resources?tab=documents',
+      title: 'Application Documents',
+      description: 'Download forms, templates & application documents',
+      href: '/dashboard/documents',
       btnLabel: 'View Documents',
       gradient: 'from-emerald-500/10 to-emerald-600/5',
       iconBg: 'bg-emerald-100 text-emerald-700',

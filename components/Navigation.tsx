@@ -121,6 +121,11 @@ export function Navigation() {
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard">Dashboard</Link>
                   </DropdownMenuItem>
+                  {(isCertifiedBorrower || isKitBuyer) && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/dashboard/documents">Application Docs</Link>
+                    </DropdownMenuItem>
+                  )}
                   {isCertifiedBorrower && (
                     <DropdownMenuItem asChild>
                       <Link href="/dashboard/resources">Partner Network</Link>
@@ -311,6 +316,15 @@ export function Navigation() {
                 >
                   Dashboard
                 </Link>
+                {(isCertifiedBorrower || isKitBuyer) && (
+                  <Link
+                    href="/dashboard/documents"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Application Docs
+                  </Link>
+                )}
                 {isCertifiedBorrower && (
                   <Link
                     href="/dashboard/resources"

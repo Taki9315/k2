@@ -30,6 +30,7 @@ export interface ApplicationDoc {
   file_size: number;
   mime_type: string;
   category: string;
+  doc_type: string;
   is_active: boolean;
   sort_order: number;
   created_at: string;
@@ -51,6 +52,12 @@ const CATEGORIES = [
   { value: "other", label: "Other" },
 ];
 
+const DOC_TYPES = [
+  { value: "application_document", label: "Application Document" },
+  { value: "resource", label: "Resource / Free Content" },
+  { value: "partner_document", label: "Partner Document" },
+];
+
 export function ApplicationDocDialog({
   open,
   onOpenChange,
@@ -62,6 +69,7 @@ export function ApplicationDocDialog({
   const [fileUrl, setFileUrl] = useState("");
   const [fileName, setFileName] = useState("");
   const [category, setCategory] = useState("template");
+  const [docType, setDocType] = useState("application_document");
   const [sortOrder, setSortOrder] = useState(0);
   const [saving, setSaving] = useState(false);
 
@@ -72,6 +80,7 @@ export function ApplicationDocDialog({
       setFileUrl(doc.file_url);
       setFileName(doc.file_name);
       setCategory(doc.category);
+      setDocType(doc.doc_type || "application_document");
       setSortOrder(doc.sort_order);
     } else {
       setTitle("");
@@ -79,6 +88,7 @@ export function ApplicationDocDialog({
       setFileUrl("");
       setFileName("");
       setCategory("template");
+      setDocType("application_document");
       setSortOrder(0);
     }
   }, [doc, open]);
@@ -97,10 +107,11 @@ export function ApplicationDocDialog({
         file_size: 0,
         mime_type: "application/pdf",
         category,
+        doc_type: docType,
         sort_order: sortOrder,
       };
 
-      const res = await fetch("/api/admin/application-docs", {
+      const res = await fetch("/api/admin/document-library", {
         method: doc ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -151,23 +162,43 @@ export function ApplicationDocDialog({
               className="bg-secondary"
             />
           </div>
-          <div className="space-y-2">
-            <Label>Category</Label>
-            <Select
-              value={category}
-              onValueChange={setCategory}
-            >
-              <SelectTrigger className="bg-secondary">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-card">
-                {CATEGORIES.map((c) => (
-                  <SelectItem key={c.value} value={c.value}>
-                    {c.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Category</Label>
+              <Select
+                value={category}
+                onValueChange={setCategory}
+              >
+                <SelectTrigger className="bg-secondary">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-card">
+                  {CATEGORIES.map((c) => (
+                    <SelectItem key={c.value} value={c.value}>
+                      {c.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Document Type</Label>
+              <Select
+                value={docType}
+                onValueChange={setDocType}
+              >
+                <SelectTrigger className="bg-secondary">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-card">
+                  {DOC_TYPES.map((dt) => (
+                    <SelectItem key={dt.value} value={dt.value}>
+                      {dt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
           <div className="space-y-2">
             <Label>
