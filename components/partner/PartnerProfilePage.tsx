@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
+import { toYouTubeEmbedUrl } from '@/lib/utils';
 import {
   Building2,
   Globe,
@@ -325,11 +326,12 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
             {isCertifiedBorrower ? (
               <div className="aspect-video rounded-xl overflow-hidden bg-black shadow-lg">
                 <iframe
-                  src={partner.video_url}
+                  src={toYouTubeEmbedUrl(partner.video_url)}
                   title={`${partner.company_name} video`}
                   className="w-full h-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
+                  sandbox="allow-scripts allow-same-origin"
                 />
               </div>
             ) : (

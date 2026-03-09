@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, PlayCircle, Eye, Lock } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { toYouTubeEmbedUrl } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 
 type ContentItem = {
@@ -156,10 +157,12 @@ export default function ContentDetailPage() {
           {content.type === 'video' && content.video_url ? (
             <div className="aspect-video bg-slate-900 rounded-xl overflow-hidden mb-8">
               <iframe
-                src={content.video_url}
+                src={toYouTubeEmbedUrl(content.video_url)}
                 className="w-full h-full"
                 allowFullScreen
                 title={content.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                sandbox="allow-scripts allow-same-origin"
               />
             </div>
           ) : content.type === 'article' && content.article_content ? (

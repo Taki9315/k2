@@ -15,6 +15,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { supabase } from '@/lib/supabase';
+import { toYouTubeEmbedUrl } from '@/lib/utils';
 import { Building2, BarChart3, Users } from 'lucide-react';
 
 // Placeholder – replace with your video URL when ready
@@ -125,10 +126,12 @@ export default function ContactPage() {
                 </div>
                 <div className="aspect-video bg-black relative">
                   <iframe
-                    src={CONTACT_VIDEO_URL}
+                    src={toYouTubeEmbedUrl(CONTACT_VIDEO_URL)}
                     title="Partner with K2 Commercial Finance Video"
                     className="w-full h-full"
                     allowFullScreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    sandbox="allow-scripts allow-same-origin"
                   />
                 </div>
                 <p className="px-4 py-2 text-sm text-white/70 bg-black border-t border-white/10">
