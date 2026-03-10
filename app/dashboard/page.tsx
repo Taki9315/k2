@@ -32,7 +32,6 @@ import {
   CheckCircle2,
   Clock,
   ChevronRight,
-  Play,
   Calendar,
   User,
   ExternalLink,
@@ -72,7 +71,7 @@ export default function DashboardPage() {
   const { user, loading, isCertifiedBorrower, isKitBuyer, isBasicBorrower, isAdmin, fullName, membershipNumber } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
-  const [recentContent, setRecentContent] = useState<any[]>([]);
+
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [generatedDocs, setGeneratedDocs] = useState<GeneratedDocument[]>([]);
 
@@ -86,7 +85,6 @@ export default function DashboardPage() {
     (async () => {
       if (user) {
         await fetchOrders();
-        await fetchRecentContent();
         await fetchSubmissions();
         await fetchGeneratedDocs();
       }
@@ -109,24 +107,7 @@ export default function DashboardPage() {
     }
   };
 
-  const fetchRecentContent = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('content')
-        .select('*')
-        .eq('is_published', true)
-        .order('created_at', { ascending: false })
-        .limit(3);
-      if (error) {
-        console.warn('Content table not available yet:', error.message);
-        setRecentContent([]);
-        return;
-      }
-      setRecentContent(data || []);
-    } catch (error) {
-      setRecentContent([]);
-    }
-  };
+
 
   const fetchSubmissions = async () => {
     try {
@@ -540,7 +521,7 @@ export default function DashboardPage() {
                       <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                         <Bot className="h-4.5 w-4.5 text-primary" />
                       </div>
-                      PrepCoach Tasks
+                      Work with Prep Coach
                     </CardTitle>
                     <Button variant="ghost" size="sm" asChild className="text-primary">
                       <Link href="/prepcoach">
@@ -570,7 +551,7 @@ export default function DashboardPage() {
                       </span>
                       <ChevronRight className="h-4 w-4 text-primary/50 ml-auto group-hover:translate-x-0.5 transition-all" />
                     </Link>
-                    {prepTasks.map((task) => (
+                    {prepTasks.slice(0, 3).map((task) => (
                       <Link
                         key={task.label}
                         href={task.href}
@@ -676,69 +657,28 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {/* ── Recent Content ────────────────────────────────── */}
+              {/* ── My Deals ─────────────────────────────────── */}
               <Card className="border-0 shadow-sm overflow-hidden">
                 <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b pb-4">
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2.5 text-lg">
                       <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
-                        <Play className="h-4 w-4 text-emerald-600" />
+                        <Upload className="h-4 w-4 text-emerald-600" />
                       </div>
-                      Recent Content
+                      My Deals
                     </CardTitle>
-                    <Button variant="ghost" size="sm" asChild className="text-primary">
-                      <Link href="/content">
-                        View All
-                        <ChevronRight className="ml-1 h-3.5 w-3.5" />
-                      </Link>
-                    </Button>
+                    {(isCertifiedBorrower || isKitBuyer) && (
+                      <Button variant="ghost" size="sm" asChild className="text-primary">
+                        <Link href="/dashboard/deal-room">
+                          View All
+                          <ChevronRight className="ml-1 h-3.5 w-3.5" />
+                        </Link>
+                      </Button>
+                    )}
                   </div>
                 </CardHeader>
                 <CardContent className="p-5">
-                  {recentContent.length === 0 ? (
-                    <div className="text-center py-6">
-                      <Video className="h-10 w-10 text-slate-200 mx-auto mb-3" />
-                      <p className="text-sm text-gray-400">No content available yet.</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {recentContent.map((item) => (
-                        <Link
-                          key={item.id}
-                          href={`/content/${item.slug}`}
-                          className="group flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors"
-                        >
-                          <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:from-primary/10 group-hover:to-primary/5 transition-colors">
-                            <Video className="h-6 w-6 text-slate-400 group-hover:text-primary transition-colors" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-gray-900 text-sm mb-0.5 truncate group-hover:text-primary transition-colors">
-                              {item.title}
-                            </h4>
-                            <p className="text-xs text-gray-500 line-clamp-1">
-                              {item.description}
-                            </p>
-                          </div>
-                          <ChevronRight className="h-4 w-4 text-slate-300 flex-shrink-0 group-hover:text-primary" />
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* ── Loan Submissions / Deal Room ─────────────────── */}
-              <Card className="border-0 shadow-sm overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b pb-4">
-                  <CardTitle className="flex items-center gap-2.5 text-lg">
-                    <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
-                      <Upload className="h-4 w-4 text-emerald-600" />
-                    </div>
-                    Loan Package Submissions
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-5">
-                  {isCertifiedBorrower ? (
+                  {(isCertifiedBorrower || isKitBuyer) ? (
                     <>
                       {submissions.length === 0 ? (
                         <div className="text-center py-6">
@@ -746,19 +686,22 @@ export default function DashboardPage() {
                             <FileText className="h-8 w-8 text-emerald-300" />
                           </div>
                           <p className="text-sm text-gray-500 mb-4">
-                            No submissions yet. Start your first guided loan package intake.
+                            No deals yet. Start your first deal in the Deal Room.
                           </p>
-                          <AssistantDialog
-                            triggerLabel="Open PrepCoach"
-                            triggerVariant="default"
-                          />
+                          <Button size="sm" asChild>
+                            <Link href="/dashboard/deal-room">
+                              Open Deal Room
+                              <ArrowRight className="ml-1.5 h-4 w-4" />
+                            </Link>
+                          </Button>
                         </div>
                       ) : (
                         <div className="space-y-3">
                           {submissions.slice(0, 5).map((submission) => (
-                            <div
+                            <Link
                               key={submission.id}
-                              className="rounded-xl border border-slate-100 p-4 hover:border-slate-200 transition-colors"
+                              href="/dashboard/deal-room"
+                              className="block rounded-xl border border-slate-100 p-4 hover:border-primary/30 hover:bg-slate-50/80 transition-colors"
                             >
                               <div className="flex items-center justify-between gap-3 mb-1">
                                 <div className="flex items-center gap-2">
@@ -773,15 +716,16 @@ export default function DashboardPage() {
                                 </span>
                               </div>
                               <p className="text-xs text-gray-500 line-clamp-2 ml-4">
-                                {submission.summary_text ?? 'Summary not generated yet. Open assistant to continue.'}
+                                {submission.summary_text ?? 'Summary not generated yet.'}
                               </p>
-                            </div>
+                            </Link>
                           ))}
-                          <AssistantDialog
-                            triggerLabel="Start New Package"
-                            triggerVariant="outline"
-                            triggerClassName="w-full"
-                          />
+                          <Button size="sm" variant="outline" className="w-full" asChild>
+                            <Link href="/dashboard/deal-room">
+                              Go to Deal Room
+                              <ArrowRight className="ml-1.5 h-4 w-4" />
+                            </Link>
+                          </Button>
                         </div>
                       )}
                     </>
@@ -857,12 +801,13 @@ export default function DashboardPage() {
                     ...(isCertifiedBorrower || isKitBuyer ? [{ icon: Phone, label: 'Lender Outreach', href: '/dashboard/lender-outreach' }] : []),
                     { icon: Bot, label: 'Prep Coach Prompts', href: '/prepcoach' },
                     { icon: BookOpen, label: 'Success Kit', href: '/workbook' },
+                    { icon: Video, label: 'Free Content', href: '/content' },
                     ...(isCertifiedBorrower ? [{ icon: Calendar, label: 'Schedule Call', href: '/dashboard/booking' }] : []),
                     ...(isCertifiedBorrower ? [{ icon: Handshake, label: 'Partner Network', href: '/dashboard/resources' }] : []),
                     ...(isAdmin ? [{ icon: Shield, label: 'Admin Panel', href: '/admin' }] : []),
                   ].map((link) => (
                     <Link
-                      key={link.href}
+                      key={link.label}
                       href={link.href}
                       className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-600 hover:bg-slate-50 hover:text-gray-900 transition-colors"
                     >

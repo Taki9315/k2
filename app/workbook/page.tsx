@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { CheckoutButton } from '@/components/CheckoutButton';
 import {
   ArrowRight,
+  Bot,
   CheckCircle2,
   Download,
   Star,
@@ -55,9 +56,9 @@ const SUCCESSKIT_FEATURES = [
       'https://images.pexels.com/photos/6801643/pexels-photo-6801643.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
-    title: 'Lender Comparison Worksheets',
+    title: 'Reseller Rights',
     description:
-      'Tools to evaluate different lenders, compare terms, and make informed decisions about where to apply.',
+      'K2 Success Kit owners receive reseller rights — earn $5 on every sale you refer.',
     image:
       'https://images.pexels.com/photos/7947656/pexels-photo-7947656.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
@@ -180,10 +181,13 @@ export default function WorkbookPage() {
                 Stop guessing. Start preparing. A complete, step-by-step system
                 to get financing-ready before you apply.
               </p>
-              <div className="flex items-baseline gap-3 mb-6">
+              <div className="flex items-baseline gap-3 mb-2">
                 <span className="text-5xl font-bold text-gray-900">$15</span>
                 <span className="text-gray-500">Instant PDF Download</span>
               </div>
+              <p className="text-sm font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 inline-block mb-6">
+                Launch pricing — lock in $15 before it goes up.
+              </p>
               <CheckoutButton
                 product="kit"
                 size="lg"
@@ -253,7 +257,7 @@ export default function WorkbookPage() {
                   'Finding the right lender - hint... it may not be your local bank',
                   'Navigating Underwriting and Closing your deal',
                   'Document Vault - All the forms a lender may request, ready for download',
-                  'Lender Comparison Worksheets',
+                  'Reseller Rights — earn $5 on every sale you refer',
                 ].map((feature) => (
                   <li key={feature} className="flex items-start group">
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 mr-3 flex-shrink-0 mt-0.5 group-hover:bg-green-200 transition-colors">
@@ -338,6 +342,107 @@ export default function WorkbookPage() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Prep Coach Section ─────────────────────────────────── */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-sm font-medium text-primary mb-6">
+                <Bot className="h-4 w-4" />
+                AI-Powered Prep Coach
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Meet Your Prep Coach
+              </h2>
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                Our AI-powered Prep Coach walks you through every step of your loan preparation — from building
+                executive summaries to crafting lender scripts. Think of it as a financing consultant in your pocket.
+              </p>
+              <ul className="space-y-3 mb-8">
+                {[
+                  'Step-by-step guided loan package preparation',
+                  'AI-generated executive summaries & lender scripts',
+                  'DSCR calculations & financial statement builders',
+                  'Available 24/7 — work at your own pace',
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-2 text-gray-700">
+                    <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Button size="lg" asChild className="shadow-lg shadow-primary/20">
+                <a href="/prepcoach">
+                  Explore Prep Coach
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </a>
+              </Button>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-emerald-50/50 rounded-3xl -rotate-2 scale-105" />
+              <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl shadow-2xl p-8 text-white">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                    <Bot className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">K2 Prep Coach</h4>
+                    <p className="text-xs text-slate-400">AI-Guided Preparation</p>
+                  </div>
+                </div>
+                <div className="space-y-3 text-sm">
+                  <div className="bg-white/10 rounded-xl p-3">
+                    <p className="text-slate-300">"Generate an executive summary for my SBA loan…"</p>
+                  </div>
+                  <div className="bg-primary/20 rounded-xl p-3 ml-4">
+                    <p className="text-slate-200">Here&apos;s your executive summary draft based on your financials…</p>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-3">
+                    <p className="text-slate-300">"What documents do I need for underwriting?"</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Certified Borrower Badge / Rating Bubble ───────────── */}
+      <section className="py-16 bg-gradient-to-br from-emerald-50/50 to-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-3 bg-white border-2 border-primary/20 rounded-2xl px-6 py-4 shadow-lg shadow-primary/5 mb-8">
+            <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Shield className="h-7 w-7 text-primary" />
+            </div>
+            <div className="text-left">
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-bold text-gray-900">K2 Certified Borrower</span>
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+              </div>
+              <p className="text-sm text-gray-500">Rated 5.0 — Trusted by hundreds of borrowers</p>
+            </div>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Ready for the Next Level?
+          </h2>
+          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+            Upgrade to Certified Borrower for full access to the partner network, private deal room, and priority support.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button size="lg" asChild className="shadow-lg shadow-primary/20">
+              <a href="/membership/certified-borrower">
+                Become Certified — $250
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </a>
+            </Button>
           </div>
         </div>
       </section>

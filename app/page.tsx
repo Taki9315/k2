@@ -78,7 +78,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-3 mb-6">
                 <Button size="lg" asChild className="text-lg px-8 py-6 shadow-lg shadow-primary/20">
                   <Link href="/workbook">
-                    Get Your Success Kit - $14.95
+                    Get Your Success Kit - $15
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
