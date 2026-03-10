@@ -180,12 +180,16 @@ export default function DashboardPage() {
     : (user.email?.[0] ?? 'U').toUpperCase();
 
   /* ── Journey steps / progress ──────────────────────────────────── */
-  const journeySteps = [
+  const allJourneySteps = [
     { label: 'Account Created', done: true },
     { label: 'Success Kit', done: isKitBuyer || isCertifiedBorrower },
     { label: 'Certified Borrower', done: isCertifiedBorrower },
     { label: 'Deal Room Ready', done: isCertifiedBorrower && submissions.length > 0 },
   ];
+  // Hide "Account Created" for kit buyers and certified borrowers
+  const journeySteps = (isKitBuyer || isCertifiedBorrower)
+    ? allJourneySteps.filter((s) => s.label !== 'Account Created')
+    : allJourneySteps;
   const completedSteps = journeySteps.filter((s) => s.done).length;
   const progressPercent = Math.round((completedSteps / journeySteps.length) * 100);
 

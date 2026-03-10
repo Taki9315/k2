@@ -879,31 +879,6 @@ export default function DealDetailPage() {
                                 )}
                               </div>
                               <div className="flex items-center gap-2 flex-shrink-0">
-                                {file.review_status === 'approved' ? (
-                                  <Badge
-                                    variant="outline"
-                                    className="text-xs bg-green-50 text-green-700 border-green-200 gap-1"
-                                  >
-                                    <CheckCircle2 className="h-3 w-3" />
-                                    Approved
-                                  </Badge>
-                                ) : file.review_status === 'declined' ? (
-                                  <Badge
-                                    variant="outline"
-                                    className="text-xs bg-red-50 text-red-700 border-red-200 gap-1"
-                                  >
-                                    <XCircle className="h-3 w-3" />
-                                    Declined
-                                  </Badge>
-                                ) : (
-                                  <Badge
-                                    variant="outline"
-                                    className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200 gap-1"
-                                  >
-                                    <Clock className="h-3 w-3" />
-                                    Pending
-                                  </Badge>
-                                )}
                                 <Button
                                   variant="ghost"
                                   size="sm"
@@ -976,31 +951,6 @@ export default function DealDetailPage() {
                               </p>
                             </div>
                             <div className="flex items-center gap-2 flex-shrink-0">
-                              {file.review_status === 'approved' ? (
-                                <Badge
-                                  variant="outline"
-                                  className="text-xs bg-green-50 text-green-700 border-green-200 gap-1"
-                                >
-                                  <CheckCircle2 className="h-3 w-3" />
-                                  Approved
-                                </Badge>
-                              ) : file.review_status === 'declined' ? (
-                                <Badge
-                                  variant="outline"
-                                  className="text-xs bg-red-50 text-red-700 border-red-200 gap-1"
-                                >
-                                  <XCircle className="h-3 w-3" />
-                                  Declined
-                                </Badge>
-                              ) : (
-                                <Badge
-                                  variant="outline"
-                                  className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200 gap-1"
-                                >
-                                  <Clock className="h-3 w-3" />
-                                  Pending
-                                </Badge>
-                              )}
                               <Button
                                 variant="ghost"
                                 size="sm"

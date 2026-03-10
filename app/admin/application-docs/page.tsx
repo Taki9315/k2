@@ -2,9 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import {
-  CheckCircle2,
-  XCircle,
-  Clock,
   Download,
   FileText,
   Eye,
@@ -27,13 +24,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { DocumentPreviewDialog } from "@/components/admin/dialogs/DocumentPreviewDialog";
 import { supabase } from "@/lib/supabase";
 
@@ -96,24 +87,6 @@ const CATEGORY_CONFIG: Record<string, { label: string; className: string }> = {
   },
 };
 
-const STATUS_CONFIG = {
-  pending: {
-    label: "Pending",
-    icon: Clock,
-    badgeClass: "bg-yellow-50 text-yellow-700 border-yellow-300",
-  },
-  approved: {
-    label: "Approved",
-    icon: CheckCircle2,
-    badgeClass: "bg-green-50 text-green-700 border-green-300",
-  },
-  declined: {
-    label: "Declined",
-    icon: XCircle,
-    badgeClass: "bg-red-50 text-red-700 border-red-300",
-  },
-};
-
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return bytes + " B";
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
@@ -135,7 +108,7 @@ export default function ApplicationDocsPage() {
   const [allFiles, setAllFiles] = useState<DealRoomFileWithUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [migrationRequired, setMigrationRequired] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+
   const { toast } = useToast();
   const prevFileCountRef = useRef<number>(0);
 
@@ -144,11 +117,10 @@ export default function ApplicationDocsPage() {
     null
   );
 
-  // Review dialog
+  // Note dialog
   const [reviewFile, setReviewFile] = useState<DealRoomFileWithUser | null>(
     null
   );
-  const [reviewStatus, setReviewStatus] = useState<string>("approved");
   const [reviewNote, setReviewNote] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -205,21 +177,14 @@ export default function ApplicationDocsPage() {
     };
   }, [fetchFiles]);
 
-  // Client-side filtered list for display
-  const files =
-    statusFilter === "all"
-      ? allFiles
-      : allFiles.filter((f) => f.review_status === statusFilter);
+  const files = allFiles;
 
   const openReview = (file: DealRoomFileWithUser) => {
     setReviewFile(file);
-    setReviewStatus(
-      file.review_status === "pending" ? "approved" : file.review_status
-    );
     setReviewNote(file.admin_note || "");
   };
 
-  const handleReview = async () => {
+  const handleSaveNote = async () => {
     if (!reviewFile) return;
     setSaving(true);
     try {
@@ -228,7 +193,6 @@ export default function ApplicationDocsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: reviewFile.id,
-          review_status: reviewStatus,
           admin_note: reviewNote || null,
         }),
       });
@@ -238,76 +202,16 @@ export default function ApplicationDocsPage() {
           prev.map((f) => (f.id === reviewFile.id ? data.file : f))
         );
         toast({
-          title:
-            reviewStatus === "approved"
-              ? "Document Approved"
-              : reviewStatus === "declined"
-              ? "Document Declined"
-              : "Status Updated",
+          title: "Note Saved",
           description: reviewFile.file_name,
         });
         setReviewFile(null);
       }
     } catch (err) {
-      console.error("Review error:", err);
+      console.error("Save note error:", err);
     }
     setSaving(false);
   };
-
-  const quickApprove = async (file: DealRoomFileWithUser) => {
-    try {
-      const res = await fetch("/api/admin/application-docs", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: file.id,
-          review_status: "approved",
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setAllFiles((prev) =>
-          prev.map((f) => (f.id === file.id ? data.file : f))
-        );
-        toast({ title: "Approved", description: file.file_name });
-      }
-    } catch (err) {
-      console.error("Quick approve error:", err);
-    }
-  };
-
-  const quickDecline = async (file: DealRoomFileWithUser) => {
-    try {
-      const res = await fetch("/api/admin/application-docs", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: file.id,
-          review_status: "declined",
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setAllFiles((prev) =>
-          prev.map((f) => (f.id === file.id ? data.file : f))
-        );
-        toast({ title: "Declined", description: file.file_name });
-      }
-    } catch (err) {
-      console.error("Quick decline error:", err);
-    }
-  };
-
-  // Stats — always computed from allFiles so counts stay accurate regardless of filter
-  const pendingCount = allFiles.filter(
-    (f) => f.review_status === "pending"
-  ).length;
-  const approvedCount = allFiles.filter(
-    (f) => f.review_status === "approved"
-  ).length;
-  const declinedCount = allFiles.filter(
-    (f) => f.review_status === "declined"
-  ).length;
 
   const columns = [
     {
@@ -364,20 +268,7 @@ export default function ApplicationDocsPage() {
         );
       },
     },
-    {
-      key: "review_status",
-      header: "Status",
-      render: (f: DealRoomFileWithUser) => {
-        const cfg = STATUS_CONFIG[f.review_status] || STATUS_CONFIG.pending;
-        const Icon = cfg.icon;
-        return (
-          <Badge variant="outline" className={`text-xs gap-1 ${cfg.badgeClass}`}>
-            <Icon className="h-3 w-3" />
-            {cfg.label}
-          </Badge>
-        );
-      },
-    },
+
     {
       key: "created_at",
       header: "Uploaded",
@@ -398,28 +289,6 @@ export default function ApplicationDocsPage() {
       header: "",
       render: (f: DealRoomFileWithUser) => (
         <div className="flex items-center gap-1">
-          {f.review_status === "pending" && (
-            <>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
-                onClick={() => quickApprove(f)}
-                title="Approve"
-              >
-                <CheckCircle2 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                onClick={() => quickDecline(f)}
-                title="Decline"
-              >
-                <XCircle className="h-4 w-4" />
-              </Button>
-            </>
-          )}
           <Button
             variant="ghost"
             size="icon"
@@ -460,51 +329,11 @@ export default function ApplicationDocsPage() {
         description="Review documents uploaded by users in their Deal Rooms"
       />
 
-      {/* Stats row */}
-      <div className="flex gap-3 mb-6 flex-wrap">
-        <button
-          onClick={() => setStatusFilter("all")}
-          className={`rounded-xl border px-4 py-2 text-sm font-medium transition-colors ${
-            statusFilter === "all"
-              ? "border-primary bg-primary/10 text-primary"
-              : "border-border bg-card text-muted-foreground hover:bg-muted"
-          }`}
-        >
-          All ({allFiles.length})
-        </button>
-        <button
-          onClick={() => setStatusFilter("pending")}
-          className={`rounded-xl border px-4 py-2 text-sm font-medium transition-colors ${
-            statusFilter === "pending"
-              ? "border-yellow-400 bg-yellow-50 text-yellow-700"
-              : "border-border bg-card text-muted-foreground hover:bg-muted"
-          }`}
-        >
-          <Clock className="inline h-3.5 w-3.5 mr-1" />
-          Pending ({pendingCount})
-        </button>
-        <button
-          onClick={() => setStatusFilter("approved")}
-          className={`rounded-xl border px-4 py-2 text-sm font-medium transition-colors ${
-            statusFilter === "approved"
-              ? "border-green-400 bg-green-50 text-green-700"
-              : "border-border bg-card text-muted-foreground hover:bg-muted"
-          }`}
-        >
-          <CheckCircle2 className="inline h-3.5 w-3.5 mr-1" />
-          Approved ({approvedCount})
-        </button>
-        <button
-          onClick={() => setStatusFilter("declined")}
-          className={`rounded-xl border px-4 py-2 text-sm font-medium transition-colors ${
-            statusFilter === "declined"
-              ? "border-red-400 bg-red-50 text-red-700"
-              : "border-border bg-card text-muted-foreground hover:bg-muted"
-          }`}
-        >
-          <XCircle className="inline h-3.5 w-3.5 mr-1" />
-          Declined ({declinedCount})
-        </button>
+      {/* Document count */}
+      <div className="flex gap-3 mb-6">
+        <div className="rounded-xl border border-primary bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
+          Total Documents ({allFiles.length})
+        </div>
       </div>
 
       {migrationRequired && (
@@ -535,7 +364,7 @@ export default function ApplicationDocsPage() {
         />
       )}
 
-      {/* Review Dialog */}
+      {/* Note Dialog */}
       <Dialog
         open={!!reviewFile}
         onOpenChange={(open) => !open && setReviewFile(null)}
@@ -544,7 +373,7 @@ export default function ApplicationDocsPage() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <MessageSquare className="h-5 w-5" />
-              Review Document
+              Add Note
             </DialogTitle>
           </DialogHeader>
           {reviewFile && (
@@ -571,36 +400,7 @@ export default function ApplicationDocsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Decision</Label>
-                <Select value={reviewStatus} onValueChange={setReviewStatus}>
-                  <SelectTrigger className="bg-secondary">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card">
-                    <SelectItem value="approved">
-                      <span className="flex items-center gap-2">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
-                        Approve
-                      </span>
-                    </SelectItem>
-                    <SelectItem value="declined">
-                      <span className="flex items-center gap-2">
-                        <XCircle className="h-3.5 w-3.5 text-red-500" />
-                        Decline
-                      </span>
-                    </SelectItem>
-                    <SelectItem value="pending">
-                      <span className="flex items-center gap-2">
-                        <Clock className="h-3.5 w-3.5 text-yellow-600" />
-                        Reset to Pending
-                      </span>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Note to user (optional)</Label>
+                <Label>Note (optional)</Label>
                 <Input
                   value={reviewNote}
                   onChange={(e) => setReviewNote(e.target.value)}
@@ -615,23 +415,11 @@ export default function ApplicationDocsPage() {
               Cancel
             </Button>
             <Button
-              onClick={handleReview}
+              onClick={handleSaveNote}
               disabled={saving}
-              className={
-                reviewStatus === "approved"
-                  ? "bg-green-600 hover:bg-green-700 text-white"
-                  : reviewStatus === "declined"
-                  ? "bg-red-600 hover:bg-red-700 text-white"
-                  : "gradient-green text-primary-foreground"
-              }
+              className="gradient-green text-primary-foreground"
             >
-              {saving
-                ? "Saving…"
-                : reviewStatus === "approved"
-                ? "Approve"
-                : reviewStatus === "declined"
-                ? "Decline"
-                : "Update"}
+              {saving ? "Saving…" : "Save Note"}
             </Button>
           </DialogFooter>
         </DialogContent>

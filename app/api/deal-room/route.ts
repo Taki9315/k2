@@ -196,7 +196,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Save metadata to DB
+    // Save metadata to DB — auto-approve (no admin review needed)
     const insertData: Record<string, any> = {
       user_id: user.id,
       file_name: file.name,
@@ -204,6 +204,7 @@ export async function POST(request: NextRequest) {
       file_size: file.size,
       mime_type: file.type,
       category,
+      review_status: 'approved',
     };
     if (dealId) {
       insertData.deal_id = dealId;
