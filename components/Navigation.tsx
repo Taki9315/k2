@@ -48,15 +48,13 @@ export function Navigation() {
         ];
 
         if (isCertifiedBorrower) {
-          // Certified: Home → Document Library → Prep Coach → Deal Room → Lender Outreach
+          // Certified: Home → Document Library → Prep Coach → Deal Room
           links.push({ href: '/prepcoach/prompts', label: 'Prep Coach' });
           links.push({ href: '/dashboard/deal-room', label: 'Deal Room' });
-          links.push({ href: '/dashboard/lender-outreach', label: 'Lender Outreach' });
         } else if (isKitBuyer) {
-          // Kit: Home → Document Library → Prep Coach → Deal Room → Lender Outreach (simpler)
+          // Kit: Home → Document Library → Prep Coach → Deal Room
           links.push({ href: '/prepcoach/prompts', label: 'Prep Coach' });
           links.push({ href: '/dashboard/deal-room', label: 'Deal Room' });
-          links.push({ href: '/dashboard/lender-outreach', label: 'Lender Outreach' });
         } else {
           // Basic borrower: Success Kit upsell
           links.push({ href: '/workbook', label: 'Success Kit' });

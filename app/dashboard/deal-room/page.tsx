@@ -22,6 +22,8 @@ import {
   KeyRound,
   Eye,
   EyeOff,
+  Search,
+  Bot,
 } from 'lucide-react';
 
 type Deal = {
@@ -34,7 +36,7 @@ type Deal = {
 };
 
 export default function DealRoomPage() {
-  const { user, loading, isCertifiedBorrower, isKitBuyer, isAdmin } = useAuth();
+  const { user, loading, isCertifiedBorrower, isKitBuyer, isAdmin, fullName, membershipNumber } = useAuth();
   const router = useRouter();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [fetching, setFetching] = useState(true);
@@ -191,6 +193,18 @@ export default function DealRoomPage() {
               <p className="text-base font-semibold text-primary mt-1">
                 Manage your deals and loan packages. Each deal has its own secure document room.
               </p>
+              {/* Certified Borrower / Kit Buyer badge + name */}
+              {fullName && (
+                <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary border border-primary/20">
+                  <Shield className="h-4 w-4" />
+                  {isCertifiedBorrower ? 'K2 Certified Borrower' : 'Kit Buyer'}
+                  <span className="mx-1 text-primary/30">|</span>
+                  <span className="font-medium text-primary/80">{fullName}</span>
+                  {isCertifiedBorrower && membershipNumber && (
+                    <span className="text-xs font-mono text-primary/60 ml-1">({membershipNumber})</span>
+                  )}
+                </div>
+              )}
             </div>
             <Button
               className="gap-2"
@@ -206,7 +220,11 @@ export default function DealRoomPage() {
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+        {/* Left column: deals (3/4 width) */}
+        <div className="lg:col-span-3">
         {/* Add New Deal Section */}
         {!showNewDealInput ? (
           <Button
@@ -370,6 +388,54 @@ export default function DealRoomPage() {
             ))}
           </div>
         )}
+        </div>
+
+        {/* Right column: Find Targeted Lenders (1/4 width, double-height) */}
+        <div className="lg:col-span-1">
+          <Link
+            href={`/prepcoach${deals.length > 0 ? `?dealId=${deals[0].id}` : ''}`}
+            className="block sticky top-24"
+          >
+            <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-emerald-50/50 to-white hover:border-primary/40 hover:shadow-xl transition-all duration-300 group overflow-hidden">
+              <CardContent className="p-6 lg:py-10 flex flex-col items-center text-center">
+                <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                  <Search className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
+                  Find Targeted Lenders
+                </h3>
+                <p className="text-sm text-gray-500 mb-4 leading-relaxed">
+                  Best results require proper documentation
+                </p>
+                <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+                  <Bot className="h-4 w-4" />
+                  Open Prep Coach
+                  <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          {/* Per-deal lender buttons */}
+          {deals.length > 1 && (
+            <div className="mt-4 space-y-2">
+              <p className="text-xs font-medium text-gray-500 px-1">Find lenders for specific deal:</p>
+              {deals.map((deal) => (
+                <Link
+                  key={deal.id}
+                  href={`/prepcoach?dealId=${deal.id}`}
+                  className="group/deal flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2.5 text-sm hover:border-primary/30 hover:bg-primary/5 transition-all"
+                >
+                  <Home className="h-4 w-4 text-slate-400 group-hover/deal:text-primary flex-shrink-0" />
+                  <span className="flex-1 truncate text-gray-700 group-hover/deal:text-gray-900">{deal.name}</span>
+                  <Search className="h-3.5 w-3.5 text-slate-300 group-hover/deal:text-primary" />
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+
+        </div>
       </div>
     </div>
   );

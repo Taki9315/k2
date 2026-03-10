@@ -15,6 +15,7 @@ import {
   Home,
   Building2,
   ArrowLeft,
+  Shield,
 } from 'lucide-react';
 
 const STATUS_LABELS: Record<string, string> = {
@@ -45,7 +46,7 @@ type Deal = {
 };
 
 export default function LenderOutreachPage() {
-  const { user, loading, isCertifiedBorrower, isKitBuyer, isAdmin } = useAuth();
+  const { user, loading, isCertifiedBorrower, isKitBuyer, isAdmin, fullName, membershipNumber } = useAuth();
   const router = useRouter();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [fetching, setFetching] = useState(true);
@@ -130,6 +131,18 @@ export default function LenderOutreachPage() {
               <p className="text-base font-semibold text-primary mt-1">
                 Track your lender outreach for each deal
               </p>
+              {/* Certified Borrower / Kit Buyer badge + name */}
+              {fullName && (
+                <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary border border-primary/20">
+                  <Shield className="h-4 w-4" />
+                  {isCertifiedBorrower ? 'K2 Certified Borrower' : 'Kit Buyer'}
+                  <span className="mx-1 text-primary/30">|</span>
+                  <span className="font-medium text-primary/80">{fullName}</span>
+                  {isCertifiedBorrower && membershipNumber && (
+                    <span className="text-xs font-mono text-primary/60 ml-1">({membershipNumber})</span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

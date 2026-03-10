@@ -74,6 +74,7 @@ export default function DashboardPage() {
 
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [generatedDocs, setGeneratedDocs] = useState<GeneratedDocument[]>([]);
+  const [dealCount, setDealCount] = useState(0);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -87,6 +88,7 @@ export default function DashboardPage() {
         await fetchOrders();
         await fetchSubmissions();
         await fetchGeneratedDocs();
+        await fetchDealCount();
       }
     })();
   }, [user]);
@@ -139,6 +141,22 @@ export default function DashboardPage() {
     }
   };
 
+  const fetchDealCount = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) return;
+      const res = await fetch('/api/deal-room/deals', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setDealCount(data.deals?.length ?? 0);
+      }
+    } catch (error) {
+      console.error('Error fetching deal count:', error);
+    }
+  };
+
   /* ── Time-based greeting ───────────────────────────────────────── */
   const greeting = useMemo(() => {
     const h = new Date().getHours();
@@ -162,15 +180,15 @@ export default function DashboardPage() {
 
   /* ── Journey steps / progress ──────────────────────────────────── */
   const allJourneySteps = [
-    { label: 'Account Created', done: true },
     { label: 'Success Kit', done: isKitBuyer || isCertifiedBorrower },
     { label: 'Certified Borrower', done: isCertifiedBorrower },
-    { label: 'Deal Room Ready', done: isCertifiedBorrower && submissions.length > 0 },
+    { label: 'Deal Created', done: dealCount > 0 },
+    { label: 'Lenders Identified', done: false },
+    { label: 'Submitted to Lenders', done: false },
+    { label: 'In Underwriting', done: false },
+    { label: 'Closed', done: false },
   ];
-  // Hide "Account Created" for kit buyers and certified borrowers
-  const journeySteps = (isKitBuyer || isCertifiedBorrower)
-    ? allJourneySteps.filter((s) => s.label !== 'Account Created')
-    : allJourneySteps;
+  const journeySteps = allJourneySteps;
   const completedSteps = journeySteps.filter((s) => s.done).length;
   const progressPercent = Math.round((completedSteps / journeySteps.length) * 100);
 
@@ -313,9 +331,9 @@ export default function DashboardPage() {
               />
             </div>
             {/* Steps */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
               {journeySteps.map((step, idx) => (
-                <div key={idx} className="flex items-center gap-2">
+                <div key={idx} className="flex flex-col items-center gap-1.5 text-center">
                   <div className={`h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold ${
                     step.done
                       ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
@@ -323,7 +341,7 @@ export default function DashboardPage() {
                   }`}>
                     {step.done ? <CheckCircle2 className="h-4 w-4" /> : idx + 1}
                   </div>
-                  <span className={`text-xs font-medium ${step.done ? 'text-white' : 'text-white/40'}`}>
+                  <span className={`text-[10px] leading-tight font-medium ${step.done ? 'text-white' : 'text-white/40'}`}>
                     {step.label}
                   </span>
                 </div>
@@ -798,7 +816,6 @@ export default function DashboardPage() {
                   {[
                     { icon: BookOpen, label: 'Document Library', href: '/content' },
                     ...(isCertifiedBorrower || isKitBuyer ? [{ icon: Upload, label: 'Deal Room', href: '/dashboard/deal-room' }] : []),
-                    ...(isCertifiedBorrower || isKitBuyer ? [{ icon: Phone, label: 'Lender Outreach', href: '/dashboard/lender-outreach' }] : []),
                     { icon: Bot, label: 'Prep Coach Prompts', href: '/prepcoach' },
                     { icon: BookOpen, label: 'Success Kit', href: '/workbook' },
                     { icon: Video, label: 'Free Content', href: '/content' },

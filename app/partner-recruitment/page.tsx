@@ -21,10 +21,38 @@ import {
   Handshake,
   Play,
   ArrowRight,
+  Globe,
+  Bot,
+  Upload,
+  Video,
 } from 'lucide-react';
 
 /* ── Benefits ────────────────────────────────────────────────────────── */
 const BENEFITS = [
+  {
+    icon: Globe,
+    title: 'Custom Website Page',
+    description:
+      'Get your own dedicated page within the K2 preferred lender/vendor ecosystem — showcasing your firm, services, and contact info to every borrower.',
+  },
+  {
+    icon: Bot,
+    title: 'Prep Coach Priority Placement',
+    description:
+      'Our AI Prep Coach will always suggest your firm first before other options when guiding borrowers through their financing journey.',
+  },
+  {
+    icon: Upload,
+    title: 'Upload Documents & Video Intro',
+    description:
+      'Upload documents and a 2-minute video introduction to your firm — so borrowers can get to know you before they even reach out.',
+  },
+  {
+    icon: DollarSign,
+    title: 'Reseller Rights & Referral Revenue',
+    description:
+      'Customize and sell K2 Success Kits / Certified memberships. Earn $5 per Kit referral and $48 per Certified Borrower referral.',
+  },
   {
     icon: Users,
     title: 'Direct Access to Qualified Borrowers',
@@ -32,34 +60,10 @@ const BENEFITS = [
       'Our Certified Borrowers come pre-screened, prepared, and lender-ready. No more wading through unqualified inquiries.',
   },
   {
-    icon: Shield,
-    title: 'K2 Preferred Badge & Premium Listing',
-    description:
-      'Stand out with a K2 Preferred Lender or Vendor badge displayed on your dedicated profile page in our partner network.',
-  },
-  {
     icon: BarChart3,
     title: 'Organized, Complete Packages',
     description:
       'Our PrepCoach AI guides borrowers through document preparation — so deal packages arrive clean, complete, and ready for review.',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Increased Deal Flow',
-    description:
-      'Get featured in our AI-powered lender matching system. PrepCoach recommends K2 Preferred Partners first to every borrower.',
-  },
-  {
-    icon: Star,
-    title: 'Co-Branded Marketing',
-    description:
-      'Resell our Success Kit with your branding. Every kit sold through your unique link earns you a $5 referral commission.',
-  },
-  {
-    icon: DollarSign,
-    title: 'Referral Revenue',
-    description:
-      'Earn $50 for every Certified Borrower that signs up through your referral link. Build a passive income stream.',
   },
 ];
 
@@ -90,6 +94,7 @@ const STEPS = [
 /* ══════════════════════════════════════════════════════════════════════ */
 
 export default function PartnerRecruitmentPage() {
+  const [billingCycle, setBillingCycle] = useState<'yearly' | 'monthly'>('yearly');
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -262,6 +267,104 @@ export default function PartnerRecruitmentPage() {
         </div>
       </section>
 
+      {/* ── Pricing ──────────────────────────────────────────────── */}
+      <section className="py-16 md:py-20 bg-slate-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-4">
+              <DollarSign className="h-4 w-4" />
+              Simple, Transparent Pricing
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Invest in Your Deal Flow
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              One plan. Full access. No hidden fees.
+            </p>
+          </div>
+
+          {/* Billing toggle */}
+          <div className="flex items-center justify-center gap-3 mb-10">
+            <button
+              onClick={() => setBillingCycle('monthly')}
+              className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                billingCycle === 'monthly'
+                  ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                  : 'bg-white text-gray-600 border border-slate-200 hover:border-slate-300'
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingCycle('yearly')}
+              className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                billingCycle === 'yearly'
+                  ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                  : 'bg-white text-gray-600 border border-slate-200 hover:border-slate-300'
+              }`}
+            >
+              Yearly
+              <span className="ml-1.5 text-xs opacity-80">Save $60</span>
+            </button>
+          </div>
+
+          {/* Pricing card */}
+          <div className="max-w-lg mx-auto">
+            <Card className="border-2 border-primary/20 shadow-xl overflow-hidden">
+              <div className="bg-gradient-to-r from-primary/5 to-emerald-50 px-8 py-6 border-b">
+                <h3 className="text-xl font-bold text-gray-900">K2 Preferred Partner</h3>
+                <p className="text-sm text-gray-600 mt-1">Everything you need to grow your lending or vendor business</p>
+              </div>
+              <CardContent className="p-8">
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-5xl font-bold text-gray-900">
+                    {billingCycle === 'yearly' ? '$240' : '$25'}
+                  </span>
+                  <span className="text-gray-500">
+                    /{billingCycle === 'yearly' ? 'year' : 'month'}
+                  </span>
+                </div>
+                {billingCycle === 'yearly' && (
+                  <p className="text-sm text-primary font-medium mb-6">That&apos;s just $20/month — save $60 vs. monthly</p>
+                )}
+                {billingCycle === 'monthly' && (
+                  <p className="text-sm text-gray-500 mb-6">$300/year if paid monthly. Switch to yearly to save $60.</p>
+                )}
+
+                <ul className="space-y-3 mb-8">
+                  {[
+                    'Custom website page in K2 partner ecosystem',
+                    'Prep Coach always suggests your firm first',
+                    'Upload documents & 2-min video intro',
+                    'Reseller rights: $5 per Kit, $48 per Certified referral',
+                    'K2 Preferred Badge on your profile',
+                    'Direct access to pre-qualified borrowers',
+                    'Priority support & partner dashboard',
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-700 text-sm">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Button
+                  size="lg"
+                  className="w-full text-base shadow-lg shadow-primary/20"
+                  onClick={() => document.getElementById('apply-section')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  Apply Now
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+                <p className="text-xs text-center text-gray-400 mt-3">
+                  Payment starts after your application is approved
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* ── How It Works ────────────────────────────────────────── */}
       <section className="py-16 md:py-20 bg-slate-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -294,7 +397,7 @@ export default function PartnerRecruitmentPage() {
         </div>
       </section>
 
-      {/* ── Limited Offer ────────────────────────────────────────── */}
+      {/* ── Founding Partner Offer ────────────────────────────── */}
       <section className="py-12 bg-primary/5 border-y border-primary/10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 border border-emerald-200 px-4 py-1.5 text-sm font-semibold text-emerald-700 mb-4">
