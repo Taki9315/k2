@@ -334,7 +334,6 @@ export function ContentDialog({
               </Select>
             </div>
           </div>
-          </div>
 
           {/* Video URL (shown when type is video) */}
           {type === "video" && (
