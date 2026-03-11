@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -134,7 +135,7 @@ export default function LenderOutreachPage() {
               {/* Certified Borrower / Kit Buyer badge + name */}
               {fullName && (
                 <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary border border-primary/20">
-                  <Shield className="h-4 w-4" />
+                  <Image src="/assets/Borrower_Logo.png" alt="Badge" width={20} height={20} className="h-5 w-5 object-contain" />
                   {isCertifiedBorrower ? 'K2 Certified Borrower' : 'Kit Buyer'}
                   <span className="mx-1 text-primary/30">|</span>
                   <span className="font-medium text-primary/80">{fullName}</span>

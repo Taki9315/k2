@@ -40,6 +40,7 @@ import {
   Search,
   Bot,
   ChevronRight,
+  Phone,
 } from 'lucide-react';
 
 /* ───── Legacy categories (kept for backward-compat display) ───── */
@@ -788,23 +789,48 @@ export default function DealDetailPage() {
           {/* Find Targeted Lenders — 3rd column, spans 2 rows */}
           <Link
             href={`/prepcoach/prompts?dealId=${dealId}`}
-            className="lg:col-start-3 lg:row-start-1 lg:row-end-3"
+            className="lg:col-start-3 lg:row-start-1"
           >
             <Card className="h-full border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-emerald-50/50 to-white hover:border-primary/40 hover:shadow-xl transition-all duration-300 group overflow-hidden flex flex-col justify-center">
-              <CardContent className="p-6 flex flex-col items-center text-center justify-center h-full">
-                <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Search className="h-8 w-8 text-primary" />
+              <CardContent className="p-5 flex flex-col items-center text-center justify-center h-full">
+                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <Search className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
+                <h3 className="text-sm font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors">
                   Find Targeted Lenders
                 </h3>
-                <p className="text-xs text-gray-500 mb-4 leading-relaxed">
-                  PrepCoach will match your deal to the best lenders based on your documents
+                <p className="text-xs text-gray-500 mb-3 leading-relaxed">
+                  Match your deal to the best lenders
                 </p>
-                <div className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-lg shadow-primary/20 group-hover:shadow-primary/30 transition-all">
-                  <Bot className="h-3.5 w-3.5" />
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-lg shadow-primary/20 group-hover:shadow-primary/30 transition-all">
+                  <Bot className="h-3 w-3" />
                   Open Prep Coach
-                  <ChevronRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          {/* Track Lender Submissions — next to Find Targeted Lenders */}
+          <Link
+            href={`/dashboard/lender-outreach/${dealId}`}
+            className="lg:col-start-3 lg:row-start-2"
+          >
+            <Card className="h-full border-2 border-blue-200 bg-gradient-to-br from-blue-50/50 via-white to-blue-50/30 hover:border-blue-400 hover:shadow-xl transition-all duration-300 group overflow-hidden flex flex-col justify-center">
+              <CardContent className="p-5 flex flex-col items-center text-center justify-center h-full">
+                <div className="h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <Phone className="h-6 w-6 text-blue-600" />
+                </div>
+                <h3 className="text-sm font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+                  Track Lender Submissions
+                </h3>
+                <p className="text-xs text-gray-500 mb-3 leading-relaxed">
+                  Name, contact, status &amp; follow-ups
+                </p>
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-lg shadow-blue-600/20 group-hover:shadow-blue-600/30 transition-all">
+                  <Phone className="h-3 w-3" />
+                  Track Outreach
+                  <ChevronRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
                 </div>
               </CardContent>
             </Card>

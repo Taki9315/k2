@@ -283,7 +283,7 @@ export default function DashboardPage() {
                     ? 'bg-primary/20 text-primary border-primary/30'
                     : 'bg-white/5 text-white/30 border-white/10'
                 )}>
-                  <BookOpen className="h-3 w-3" />
+                  <Image src="/assets/Borrower_Logo.png" alt="" width={14} height={14} className="h-3.5 w-3.5 object-contain" />
                   Kit Buyer
                 </Badge>
                 <Badge className={cn(
@@ -292,7 +292,7 @@ export default function DashboardPage() {
                     ? 'bg-primary/20 text-primary border-primary/30'
                     : 'bg-white/5 text-white/30 border-white/10'
                 )}>
-                  <Shield className="h-3 w-3" />
+                  <Image src="/assets/Borrower_Logo.png" alt="" width={14} height={14} className="h-3.5 w-3.5 object-contain" />
                   Certified Borrower
                 </Badge>
                 {isCertifiedBorrower && membershipNumber && (
@@ -775,22 +775,50 @@ export default function DashboardPage() {
 
               {/* Profile card */}
               <Card className="border-0 shadow-sm overflow-hidden">
-                <div className="h-16 bg-gradient-to-r from-primary/80 to-emerald-400/80" />
-                <CardContent className="p-5 -mt-8">
-                  <div className="h-14 w-14 rounded-xl bg-white shadow-md flex items-center justify-center text-lg font-bold text-primary mb-3 border-2 border-white">
+                {/* Header: avatar left + badge right */}
+                <div className="relative flex items-center justify-between px-5 py-4 bg-gradient-to-r from-primary/80 to-emerald-400/80">
+                  <div className="h-14 w-14 rounded-xl bg-white shadow-md flex items-center justify-center text-lg font-bold text-primary border-2 border-white/80 flex-shrink-0">
                     {initials}
                   </div>
+                  {(isCertifiedBorrower || isKitBuyer) && (
+                    <div className="flex items-center gap-2">
+                      <div className="flex flex-col items-end">
+                        <span className="text-[10px] font-semibold text-white/80 uppercase tracking-wide">
+                          {isCertifiedBorrower ? 'K2 Certified Borrower' : 'Kit Buyer'}
+                        </span>
+                        <span className="text-xs font-bold text-white leading-tight">{displayName}</span>
+                        {isCertifiedBorrower && membershipNumber && (
+                          <span className="text-[10px] font-mono text-white/70">{membershipNumber}</span>
+                        )}
+                      </div>
+                      <Image
+                        src="/assets/Borrower_Logo.png"
+                        alt="K2 Badge"
+                        width={48}
+                        height={48}
+                        className="h-12 w-12 object-contain drop-shadow-md"
+                      />
+                    </div>
+                  )}
+                </div>
+                <CardContent className="p-5">
                   <h3 className="font-semibold text-gray-900 text-sm">{displayName}</h3>
                   <p className="text-xs text-gray-400 mb-3 truncate">{user.email}</p>
                   <div className="flex items-center gap-2 flex-wrap">
                     {isCertifiedBorrower && (
-                      <Badge className="bg-primary/10 text-primary text-[10px] px-2 py-0.5">Certified</Badge>
+                      <Badge className="bg-primary/10 text-primary text-[10px] px-2 py-0.5 gap-1">
+                        <Image src="/assets/Borrower_Logo.png" alt="" width={12} height={12} className="h-3 w-3 object-contain" />
+                        Certified
+                      </Badge>
                     )}
                     {isCertifiedBorrower && membershipNumber && (
                       <Badge variant="outline" className="text-[10px] px-2 py-0.5 font-mono">{membershipNumber}</Badge>
                     )}
                     {isKitBuyer && (
-                      <Badge variant="outline" className="text-[10px] px-2 py-0.5">Kit Owner</Badge>
+                      <Badge variant="outline" className="text-[10px] px-2 py-0.5 gap-1">
+                        <Image src="/assets/Borrower_Logo.png" alt="" width={12} height={12} className="h-3 w-3 object-contain" />
+                        Kit Owner
+                      </Badge>
                     )}
                     {isBasicBorrower && (
                       <Badge variant="outline" className="text-[10px] px-2 py-0.5">Borrower</Badge>
