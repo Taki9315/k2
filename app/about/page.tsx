@@ -11,6 +11,8 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
+  Target,
+  Heart,
 } from 'lucide-react';
 
 const ABOUT_MISSION_IMAGE =
@@ -230,7 +232,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="border-2">
               <CardContent className="p-8">
                 <div
@@ -276,17 +278,39 @@ export default function AboutPage() {
                 <div
                   className="mb-5 aspect-video rounded-lg bg-cover bg-center"
                   style={{ backgroundImage: `url('${ABOUT_SPEED_IMAGE}')` }}
-                  aria-label="Efficient execution in business"
+                  aria-label="Lender targeting strategy"
                 />
                 <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
-                  <Users className="h-6 w-6 text-slate-700" />
+                  <Target className="h-6 w-6 text-slate-700" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Speed
+                  Lender Targeting
                 </h3>
                 <p className="text-gray-600">
-                  Efficient execution at every step of the process. Plan your
-                  work and work your plan!
+                  Smart borrowers always shop their loan. Our system helps you
+                  target multiple lenders who are the best fit for your loan
+                  scenario.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2">
+              <CardContent className="p-8">
+                <div
+                  className="mb-5 aspect-video rounded-lg bg-cover bg-center"
+                  style={{ backgroundImage: `url('${ABOUT_MISSION_IMAGE}')` }}
+                  aria-label="Community collaboration"
+                />
+                <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
+                  <Heart className="h-6 w-6 text-slate-700" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  The Power of Community
+                </h3>
+                <p className="text-gray-600">
+                  Our network of CRE investors, lenders, and service providers
+                  are committed to building each other&apos;s business. The personal
+                  touch is something AI can never replace.
                 </p>
               </CardContent>
             </Card>

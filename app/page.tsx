@@ -41,7 +41,7 @@ const TESTIMONIALS = [
   },
   {
     quote:
-      'The monthly Q&A calls alone are worth the membership. Having an expert review my loan package saved me from costly mistakes.',
+      'Having an expert review my loan package saved me from costly mistakes. The Prep Coach alone made the membership worth every penny.',
     author: 'David K.',
     role: 'Multi-Property Investor',
     stars: 5,
@@ -255,7 +255,6 @@ export default function Home() {
                     'Full Prep Coach Access + Free-Form AI',
                     'Preferred Lender Network',
                     'Deal Room & Expert Document Review',
-                    'Monthly Coaching Q&A Calls',
                     'Borrower Certification Badge',
                     'Priority Deal Placement',
                   ].map((text) => (

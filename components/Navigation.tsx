@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { supabase } from '@/lib/supabase';
 
-export function Navigation() {
+export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}) {
   const pathname = usePathname();
   const { user, signOut, isCertifiedBorrower, isKitBuyer, isPartner, isAdmin, fullName } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -65,12 +65,12 @@ export function Navigation() {
       })()
     : [
         { href: '/', label: 'Home' },
-        { href: '/about', label: 'About' },
+        { href: '/about', label: 'About K2 Commercial Finance' },
         { href: '/workbook', label: 'Success Kit' },
-        { href: '/membership', label: 'Membership' },
-        { href: '/content', label: 'Content' },
+        { href: '/content', label: 'Free Educational Content' },
         { href: '/Resource', label: 'Resources' },
-        { href: '/contact', label: 'Contact' },
+        { href: '/partnership', label: 'Partnership Inquiry' },
+        { href: '/contact', label: 'Express Interest' },
       ];
 
   const contentSubLinks = [
@@ -86,6 +86,7 @@ export function Navigation() {
 
   return (
     <header className="sticky top-0 z-50 bg-white">
+      {!hideHeader && (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
           {/* Brand left */}
@@ -179,6 +180,7 @@ export function Navigation() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Navigation bar below header - centered (green) */}
       <nav className="border-t border-primary bg-primary">

@@ -48,6 +48,9 @@ type AuthContextType = {
   isAdmin: boolean;
   userRole: UserRole;
   membershipNumber: string | null;
+  // View-as impersonation (admin-only, per-tab)
+  viewAs: string | null;
+  clearViewAs: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -223,18 +226,59 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Derived role helpers
   const userRole: UserRole = profile?.role || 'borrower';
-  const isCertifiedBorrower = userRole === 'certified' || (userRole === 'borrower' && profile?.preferred === true);
-  const isKitBuyer = !isCertifiedBorrower && userRole === 'borrower' && profile?.workbook_purchased === true;
-  const isBasicBorrower = !isCertifiedBorrower && userRole === 'borrower' && !profile?.workbook_purchased;
-  const isPartner = userRole === 'lender' || userRole === 'vendor';
-  const isAdmin = userRole === 'admin';
+
+  // ── "View As" impersonation (admin-only, per-tab via sessionStorage) ──
+  const [viewAs, setViewAs] = useState<string | null>(null);
+
+  useEffect(() => {
+    // On mount, check URL for ?viewAs= param and persist in sessionStorage
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const viewAsParam = params.get('viewAs');
+    if (viewAsParam) {
+      sessionStorage.setItem('k2_view_as', viewAsParam);
+      // Remove the query param from the URL without reload
+      const url = new URL(window.location.href);
+      url.searchParams.delete('viewAs');
+      window.history.replaceState({}, '', url.toString());
+      setViewAs(viewAsParam);
+    } else {
+      const stored = sessionStorage.getItem('k2_view_as');
+      if (stored) setViewAs(stored);
+    }
+  }, []);
+
+  const clearViewAs = useCallback(() => {
+    sessionStorage.removeItem('k2_view_as');
+    setViewAs(null);
+  }, []);
+
+  // When viewAs is active, override role flags
+  const isViewAsActive = !!viewAs && userRole === 'admin';
+
+  const isCertifiedBorrower = isViewAsActive
+    ? viewAs === 'certified_borrower'
+    : userRole === 'certified' || (userRole === 'borrower' && profile?.preferred === true);
+  const isKitBuyer = isViewAsActive
+    ? viewAs === 'kit_buyer'
+    : !isCertifiedBorrower && userRole === 'borrower' && profile?.workbook_purchased === true;
+  const isBasicBorrower = isViewAsActive
+    ? viewAs === 'public'
+    : !isCertifiedBorrower && userRole === 'borrower' && !profile?.workbook_purchased;
+  const isPartner = isViewAsActive
+    ? viewAs === 'partner'
+    : userRole === 'lender' || userRole === 'vendor';
+  const effectiveIsAdmin = isViewAsActive ? false : userRole === 'admin';
   const fullName = profile?.full_name || user?.user_metadata?.full_name || '';
   const membershipNumber = profile?.membership_number || null;
+
+  // When viewAs=public, pretend there is no user for nav purposes
+  const effectiveUser = isViewAsActive && viewAs === 'public' ? null : user;
 
   return (
     <AuthContext.Provider
       value={{
-        user,
+        user: effectiveUser,
         profile,
         loading,
         signIn,
@@ -248,9 +292,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isKitBuyer,
         isBasicBorrower,
         isPartner,
-        isAdmin,
+        isAdmin: effectiveIsAdmin,
         userRole,
         membershipNumber,
+        viewAs,
+        clearViewAs,
       }}
     >
       {children}

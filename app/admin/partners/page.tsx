@@ -210,7 +210,7 @@ export default function AdminPartnersPage() {
     if (data?.role === 'admin') {
       setIsAdmin(true);
     } else {
-      router.push('/');
+      // router.push('/');
     }
   }, [user, router]);
 

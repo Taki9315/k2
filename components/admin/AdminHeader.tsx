@@ -1,10 +1,17 @@
 "use client";
 
-import { LogOut, Menu, Search } from "lucide-react";
+import { LogOut, Menu, Search, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 import { NotificationBell } from "./NotificationBell";
@@ -62,6 +69,40 @@ export function AdminHeader({ onMenuToggle }: AdminHeaderProps) {
       </div>
 
       <div className="flex items-center gap-3">
+        {/* View As dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="hidden sm:inline-flex items-center gap-2 rounded-xl"
+            >
+              <Eye className="h-4 w-4" />
+              View As
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+              Open site as…
+            </div>
+            <DropdownMenuSeparator />
+            {[
+              { label: "Public (Logged Out)", value: "public" },
+              { label: "Kit Buyer", value: "kit_buyer" },
+              { label: "Certified Borrower", value: "certified_borrower" },
+              { label: "Partner", value: "partner" },
+            ].map((option) => (
+              <DropdownMenuItem
+                key={option.value}
+                onClick={() => {
+                  window.open(`/?viewAs=${option.value}`, "_blank");
+                }}
+              >
+                {option.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <Button
           variant="ghost"
           className="hidden sm:inline-flex items-center gap-2 rounded-xl"

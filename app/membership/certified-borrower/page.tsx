@@ -95,7 +95,7 @@ const FEATURES = [
   {
     icon: Headphones,
     title: 'K2 Expert Support',
-    desc: 'Monthly Q&A • Advanced videos • Doc review • Private community.',
+    desc: 'Advanced videos • Doc review • Private community • Expert access.',
   },
   {
     icon: DollarSign,

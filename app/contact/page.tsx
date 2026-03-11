@@ -389,11 +389,11 @@ export default function ContactPage() {
                   },
                   {
                     q: 'How does the membership work?',
-                    a: 'Members get access to monthly Q&A sessions, exclusive content, and direct support to help you prepare documents and applications effectively.',
+                    a: 'Members get access to exclusive content, direct expert support, and tools like PrepCoach to help you prepare documents and applications effectively.',
                   },
                   {
                     q: 'Do you provide loans or funding?',
-                    a: 'We provide education and preparation resources. We help you get ready to approach lenders and improve your chances of approval and better terms.',
+                    a: 'We provide education and preparation resources. We help you get ready to approach lenders and improve your chances of approval and better terms...then we help you target the exact lenders most likely to fund your deal. We are not a lender ourselves.',
                   },
                   {
                     q: 'How do I get started?',
