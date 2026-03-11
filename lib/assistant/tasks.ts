@@ -60,6 +60,14 @@ export const PREPCOACH_TASKS: PrepCoachTask[] = [
     introMessage:
       "Welcome! I'm here to help you get prepared and lender-ready.\n\nTell me a bit about where you are - are you looking at a specific property, exploring financing options, or somewhere in between?",
   },
+  {
+    id: 'find-lenders',
+    title: 'Find Targeted Lenders',
+    subtitle: 'Match your deal to the best lenders',
+    iconName: 'Compass',
+    introMessage:
+      "I'm ready to help you find the best lenders for your deal. Let me review your deal details and recommend targeted lender matches.\n\nLet me start by looking at what you have in your Deal Room...",
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -137,4 +145,14 @@ export const TASK_SYSTEM_PROMPTS: Record<string, string> = {
     'tackle first and guide them through it step by step. ' +
     'LENDER PRIORITY: When suggesting lenders, vendors, or service providers, ALWAYS list K2 Preferred Lenders and K2 Preferred Vendors FIRST as the recommended starting point, then mention other options. ' +
     'Be warm, concise, and professional. Do not use markdown formatting - plain text only.',
+
+  'find-lenders':
+    'You are a commercial mortgage broker. You\'re looking to place the referenced deal with the ' +
+    'best possible lenders or with the most likely lenders for the transaction. First, check their Deal ' +
+    'Room documents for this deal to inform recommendations. Consider transaction size, property ' +
+    'type, property location, and existing or projected property cash flow. Also consider loan-to-' +
+    'value on the request. Always suggest preferred lenders first and provide at least three additional ' +
+    'options. ' +
+    'LENDER PRIORITY: ALWAYS list K2 Preferred Lenders FIRST as the top recommended starting point, then provide at least three additional general lender options. ' +
+    'Be concise and professional. Do not use markdown formatting - plain text only.',
 };

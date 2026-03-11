@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
@@ -328,7 +329,17 @@ const uid = () => `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 /* ------------------------------------------------------------------ */
 
 export default function PrepCoachPromptsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center"><p className="text-gray-500">Loading PrepCoach...</p></div>}>
+      <PrepCoachPromptsContent />
+    </Suspense>
+  );
+}
+
+function PrepCoachPromptsContent() {
   const { user, isCertifiedBorrower, isKitBuyer, isAdmin } = useAuth();
+  const searchParams = useSearchParams();
+  const dealId = searchParams.get('dealId');
 
   const hasFullAccess = isCertifiedBorrower || isAdmin;
   const userTier = isKitBuyer ? 'kit' : 'certified';
@@ -341,9 +352,11 @@ export default function PrepCoachPromptsPage() {
   const [activeTitle, setActiveTitle] = useState<string | null>(null);
   const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [dealContext, setDealContext] = useState<string | null>(null);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const hasAutoLaunched = useRef(false);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -352,6 +365,67 @@ export default function PrepCoachPromptsPage() {
   useEffect(() => {
     if (activeTaskId) inputRef.current?.focus();
   }, [activeTaskId]);
+
+  /* ---- Auto-launch "Find Targeted Lenders" when dealId is in URL ---- */
+  useEffect(() => {
+    if (hasAutoLaunched.current || !dealId || !user) return;
+    hasAutoLaunched.current = true;
+
+    (async () => {
+      setLoading(true);
+      setActiveTaskId('find-lenders');
+      setActiveTitle('Find Targeted Lenders');
+      setMessages([{ id: uid(), role: 'user', message: 'Find Targeted Lenders' }]);
+
+      try {
+        const token = await getToken();
+
+        // Fetch deal info
+        const dealsRes = await fetch('/api/deal-room/deals', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const dealsData = await dealsRes.json();
+        const deal = dealsData.deals?.find((d: any) => d.id === dealId);
+        const dealName = deal?.name || 'Unknown Deal';
+
+        // Fetch documents for this deal
+        const docsRes = await fetch(`/api/deal-room?dealId=${dealId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const docsData = await docsRes.json();
+        const files = docsData.files || [];
+        const docList = files.length > 0
+          ? files.map((f: any) => `- ${f.document_name || f.file_name} (${f.category || 'general'}, ${f.review_status})`).join('\n')
+          : 'No documents uploaded yet.';
+
+        // Build deal context string
+        const context =
+          `Deal Name: ${dealName}\n` +
+          `Deal ID: ${dealId}\n` +
+          `Number of documents: ${files.length}\n` +
+          `Documents in Deal Room:\n${docList}`;
+
+        setDealContext(context);
+
+        const prompt =
+          `I need help finding the best lenders for my deal "${dealName}". ` +
+          `Please review my Deal Room documents and recommend targeted lender matches. ` +
+          `Consider transaction size, property type, property location, cash flow, and LTV.`;
+
+        const initHistory = [{ role: 'user' as const, content: prompt }];
+        setHistory(initHistory);
+
+        const answer = await askAI(prompt, 'find-lenders', [], context);
+        setMessages((m) => [...m, { id: uid(), role: 'assistant', message: answer }]);
+        setHistory((h) => [...h, { role: 'assistant', content: answer }]);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load deal context');
+      } finally {
+        setLoading(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dealId, user]);
 
   /* ---- helpers ---- */
   const getToken = async () => {
@@ -364,12 +438,19 @@ export default function PrepCoachPromptsPage() {
     question: string,
     taskId: string,
     prevHistory: { role: string; content: string }[],
+    extraDealContext?: string | null,
   ): Promise<string> => {
     const token = await getToken();
     const res = await fetch('/api/ask-question', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ question, taskId, history: prevHistory.slice(-20), userTier }),
+      body: JSON.stringify({
+        question,
+        taskId,
+        history: prevHistory.slice(-20),
+        userTier,
+        ...(extraDealContext ? { dealContext: extraDealContext } : {}),
+      }),
     });
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
@@ -417,7 +498,7 @@ export default function PrepCoachPromptsPage() {
     setError(null);
 
     try {
-      const answer = await askAI(q, activeTaskId, updated);
+      const answer = await askAI(q, activeTaskId, updated, dealContext);
       setMessages((m) => [...m, { id: uid(), role: 'assistant', message: answer }]);
       setHistory((h) => [...h, { role: 'assistant', content: answer }]);
     } catch (err) {
@@ -435,6 +516,7 @@ export default function PrepCoachPromptsPage() {
     setHistory([]);
     setError(null);
     setInput('');
+    setDealContext(null);
   };
 
   const kitCount = PROMPT_CARDS.filter((c) => c.availableForKit).length;

@@ -393,7 +393,7 @@ export default function DealRoomPage() {
         {/* Right column: Find Targeted Lenders (1/4 width, double-height) */}
         <div className="lg:col-span-1">
           <Link
-            href={`/prepcoach${deals.length > 0 ? `?dealId=${deals[0].id}` : ''}`}
+            href={`/prepcoach/prompts${deals.length > 0 ? `?dealId=${deals[0].id}` : ''}`}
             className="block sticky top-24"
           >
             <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-emerald-50/50 to-white hover:border-primary/40 hover:shadow-xl transition-all duration-300 group overflow-hidden">
@@ -423,7 +423,7 @@ export default function DealRoomPage() {
               {deals.map((deal) => (
                 <Link
                   key={deal.id}
-                  href={`/prepcoach?dealId=${deal.id}`}
+                  href={`/prepcoach/prompts?dealId=${deal.id}`}
                   className="group/deal flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2.5 text-sm hover:border-primary/30 hover:bg-primary/5 transition-all"
                 >
                   <Home className="h-4 w-4 text-slate-400 group-hover/deal:text-primary flex-shrink-0" />

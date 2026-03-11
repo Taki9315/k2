@@ -9,6 +9,8 @@ type AskQuestionPayload = {
   history?: { role: 'user' | 'assistant'; content: string }[];
   /** 'kit' for kit buyers, 'certified' for certified borrowers */
   userTier?: 'kit' | 'certified';
+  /** Optional deal context injected when launching "Find Targeted Lenders" from a deal */
+  dealContext?: string;
 };
 
 const DEFAULT_SYSTEM_PROMPT =
@@ -39,6 +41,7 @@ export async function POST(request: Request) {
     const taskId = body.taskId;
     const history = body.history;
     const userTier = body.userTier;
+    const dealContext = body.dealContext;
 
     if (!question) {
       return NextResponse.json(
@@ -56,6 +59,11 @@ export async function POST(request: Request) {
       systemContent = TASK_SYSTEM_PROMPTS[taskId];
     } else {
       systemContent = DEFAULT_SYSTEM_PROMPT;
+    }
+
+    // Append deal context when available (e.g., from "Find Targeted Lenders")
+    if (dealContext && taskId === 'find-lenders') {
+      systemContent += '\n\nDEAL CONTEXT:\n' + dealContext;
     }
 
     /* ---- Build messages array ---- */
