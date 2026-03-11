@@ -45,6 +45,7 @@ export function Navigation() {
         const links: { href: string; label: string }[] = [
           { href: '/dashboard', label: 'Home' },
           { href: '/content', label: 'Document Library' },
+          { href: '/dashboard/resources', label: 'Resources' },
         ];
 
         if (isCertifiedBorrower) {
@@ -68,6 +69,7 @@ export function Navigation() {
         { href: '/workbook', label: 'Success Kit' },
         { href: '/membership', label: 'Membership' },
         { href: '/content', label: 'Content' },
+        { href: '/Resource', label: 'Resources' },
         { href: '/contact', label: 'Contact' },
       ];
 

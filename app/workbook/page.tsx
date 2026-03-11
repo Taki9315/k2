@@ -185,9 +185,9 @@ export default function WorkbookPage() {
                 <span className="text-5xl font-bold text-gray-900">$15</span>
                 <span className="text-gray-500">Instant PDF Download</span>
               </div>
-              <p className="text-sm font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 inline-block mb-6">
+              {/* <p className="text-sm font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 inline-block mb-6">
                 Launch pricing — lock in $15 before it goes up.
-              </p>
+              </p> */}
               <CheckoutButton
                 product="kit"
                 size="lg"
@@ -238,7 +238,7 @@ export default function WorkbookPage() {
             <div>
               <div className="inline-flex items-center gap-2 rounded-full bg-yellow-50 border border-yellow-200 px-4 py-1.5 text-sm font-medium text-yellow-800 mb-6">
                 <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
-                Rated 5.0 by 200+ borrowers
+                Launch pricing — lock in $15 before it goes up.
               </div>
               <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
                 Financing Success Kit
