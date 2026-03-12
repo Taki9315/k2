@@ -145,7 +145,7 @@ export default function ReferralPage() {
           </h2>
           <p className="text-gray-600 mb-6">
             Upgrade to K2 Certified Borrower for full access — Deal Room,
-            Preferred Lender network, all PrepCoach prompts, and a $1,500
+            Preferred Lender network, all PrepCoach prompts, and a $1,000
             closing credit.
           </p>
           <CheckoutButton

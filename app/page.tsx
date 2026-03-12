@@ -241,7 +241,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900">K2 Certified Borrower</h3>
-                    <p className="text-2xl font-bold text-primary mt-1">$249</p>
+                    <p className="text-2xl font-bold text-primary mt-1">$250</p>
                   </div>
                 </div>
                 <p className="text-gray-600 text-sm mb-6 leading-relaxed">
@@ -266,7 +266,7 @@ export default function Home() {
                 </div>
                 <Button asChild className="w-full">
                   <Link href="/membership/certified-borrower">
-                    Become Certified – $249
+                    Become Certified – $250
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
@@ -598,7 +598,7 @@ export default function Home() {
               className="text-lg px-8 py-6 bg-white/10 text-white border border-white/20 hover:bg-white hover:text-slate-900 backdrop-blur-sm transition-all duration-300"
             >
               <Link href="/membership/certified-borrower">
-                Become K2 Certified – $249
+                Become K2 Certified – $250
                 <Users className="ml-2 h-5 w-5" />
               </Link>
             </Button>

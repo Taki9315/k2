@@ -65,22 +65,22 @@ const PATHS: PathItem[] = [
     title: 'K2 Certified Borrower \u2013 Expert Placement & AI Support',
     idealFor: `you want expert guidance, lender placement, and AI-powered prep support to maximize your close probability and terms.`,
     bullets: [
-      'K2 Certified Borrower status + lifetime unlimited access ($249 one-time)',
+      'K2 Certified Borrower status + lifetime unlimited access ($250 one-time)',
       'PrepCoach \u2013 your dedicated AI agent built specifically for small commercial borrowers: guides every step of prep, spots gaps, and helps you show up lender-ready. CRE expertise available 24/7/365',
       '30-minute free expert consultation to personally review your loan submission package, strategy, and positioning',
       'Done-for-you Transaction Overview \u2013 professional, lender-attractive Executive Summary we customize for your deal',
       'Direct access to our Preferred Lender network \u2013 we handle the placement work, introductions, and follow-through to get your deal in front of the right capital sources - or contact lenders on your own',
       'Advanced video library, document review support, ongoing chat / email support',
-      '$1,500 closing credit from any Preferred Lender you close with (6x ROI on your membership fee) *Terms Apply*',
+      '$1,000 closing credit from any Preferred Lender you close with (4x ROI on your membership fee) *Terms Apply*',
     ],
     feeTransparency: {
       title: 'How We Get Paid',
       text: 'Flat, success-only fee paid by the lender on closed loans (typically 1\u20132% depending on size) \u2013 zero cost to you if it doesn\u2019t close, full transparency, no hidden upfront fees.',
     },
     commitment:
-      '$249 one-time \u2013 with 6X payback via closing $1,500 credit + dramatically higher close probability and better terms.',
+      '$250 one-time – with 4X payback via closing $1,000 credit + dramatically higher close probability and better terms.',
     cta: {
-      label: 'Become K2 Certified \u2013 $249',
+      label: 'Become K2 Certified – $250',
       href: '/membership/certified-borrower',
     },
   },

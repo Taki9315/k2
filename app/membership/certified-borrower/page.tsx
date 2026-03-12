@@ -155,7 +155,7 @@ export default function CertifiedBorrowerSample() {
           </p>
 
           <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-4 leading-relaxed">
-            Pay $249 once. Get lifetime access to K2&apos;s proprietary
+            Pay $250 once. Get lifetime access to K2&apos;s proprietary
             platform.
           </p>
 

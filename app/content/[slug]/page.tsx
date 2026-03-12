@@ -107,7 +107,7 @@ export default function ContentDetailPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/membership/certified-borrower">Become Certified – $249</Link>
+                <Link href="/membership/certified-borrower">Become Certified – $250</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <Link href="/content">Browse Free Content</Link>

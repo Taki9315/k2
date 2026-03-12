@@ -512,9 +512,8 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
             </Button>
             <Button
               size="lg"
-              variant="outline"
               asChild
-              className="border-white text-white hover:bg-white hover:text-slate-900"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white"
             >
               <Link href="/membership/certified-borrower">
                 Become a Certified Borrower

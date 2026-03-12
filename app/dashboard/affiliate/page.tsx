@@ -263,7 +263,7 @@ export default function AffiliateDashboardPage() {
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between py-2 border-b border-slate-100">
-                  <span className="text-sm text-gray-600">Certified Borrower ($249)</span>
+                  <span className="text-sm text-gray-600">Certified Borrower ($250)</span>
                   <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
                     20% = $49.80
                   </Badge>

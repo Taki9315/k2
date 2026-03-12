@@ -87,7 +87,7 @@ export default function AboutPage() {
                     deals that actually close.
                   </p>
                   <p className="text-lg text-gray-700 font-medium leading-relaxed">
-                    A one-time $249 investment gives you lifetime access to all
+                    A one-time $250 investment gives you lifetime access to all
                     we offer to K2 Certified Borrowers. Welcome to a community
                     built around real expertise and mutual respect.
                   </p>

@@ -117,9 +117,9 @@ export default function MembershipSample() {
               </p>
               <ul className="text-gray-600 mb-6 list-disc pl-5 space-y-2">
                 <li>
-                  One-time $249: Automated tools, Q&amp;A, document review
+                  One-time $250: Automated tools, Q&amp;A, document review
                 </li>
-                <li>$1,500 closing credit from Preferred Lenders</li>
+                <li>$1,000 closing credit from Preferred Lenders</li>
                 <li>Private community for peer insights</li>
               </ul>
               <a

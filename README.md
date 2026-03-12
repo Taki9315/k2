@@ -94,7 +94,7 @@ lib/
 - **Role-gated access** — Kit buyers get basic prompts; Certified Borrowers get all
 
 ### Membership Tiers
-- **Certified Borrower** ($250 one-time) — full platform access, $1,500 closing credit
+- **Certified Borrower** ($250 one-time) — full platform access, $1,000 closing credit
 - **"First 100 Certified Borrowers receive lifetime membership"** prominently displayed
 - **Success Kit** — entry-level workbook + basic PrepCoach access
 

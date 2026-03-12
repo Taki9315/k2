@@ -64,7 +64,7 @@ export default function MembershipPage() {
               <ul className="text-gray-600 list-disc pl-5 space-y-2">
                 <li>Direct submission to vetted lenders</li>
                 <li>K2 shops wider network when needed</li>
-                <li>$1,500 closing credit at funding</li>
+                <li>$1,000 closing credit at funding</li>
                 <li>Faster responses &amp; better terms</li>
               </ul>
             </div>
@@ -104,7 +104,7 @@ export default function MembershipPage() {
                         'Direct access to Preferred Lender network',
                         'Monthly live Q&A, document review & feedback',
                         'Private community & advanced content',
-                        '$1,500 closing credit at funding',
+                        '$1,000 closing credit at funding',
                       ].map((benefit) => (
                         <li key={benefit} className="flex items-center group">
                           <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 mr-3 flex-shrink-0 group-hover:bg-green-200 transition-colors">
@@ -136,7 +136,7 @@ export default function MembershipPage() {
                 transaction management system, our Preferred Lender network,
                 monthly live Q&amp;A sessions, document review and feedback, and
                 more. And when you close with a K2 Preferred Lender, you
-                receive a $1,500 closing credit applied directly at funding.
+                receive a $1,000 closing credit applied directly at funding.
               </p>
               <div className="rounded-2xl bg-slate-50 border border-slate-200/80 p-6 mb-10">
                 <p className="font-semibold text-gray-900 mb-2">

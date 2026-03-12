@@ -67,10 +67,11 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
         { href: '/', label: 'Home' },
         { href: '/about', label: 'About K2 Commercial Finance' },
         { href: '/workbook', label: 'Success Kit' },
+        { href: '/membership/certified-borrower', label: 'K2 Certification' },
         { href: '/content', label: 'Free Educational Content' },
         { href: '/Resource', label: 'Resources' },
         { href: '/partnership', label: 'Partnership Inquiry' },
-        { href: '/contact', label: 'Express Interest' },
+        { href: '/contact', label: 'Contact' },
       ];
 
   const contentSubLinks = [
