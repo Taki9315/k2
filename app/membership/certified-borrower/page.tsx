@@ -33,7 +33,7 @@ const TRUST_BADGES = [
   { icon: Brain, label: 'K2 PrepCoach' },
   { icon: Lock, label: 'Secure Data Room' },
   { icon: Send, label: 'Direct Submission' },
-  { icon: DollarSign, label: '$1,500 Credit' },
+  { icon: DollarSign, label: '$1,000 Credit*' },
   { icon: Headphones, label: 'K2 Expert Support' },
 ];
 
@@ -99,8 +99,8 @@ const FEATURES = [
   },
   {
     icon: DollarSign,
-    title: '$1,500 Closing Credit',
-    desc: 'Credited at funding from any Preferred Lender.',
+    title: '$1,000 Closing Credit*',
+    desc: 'Credited at funding from any Preferred Lender. *Terms may apply.',
   },
 ];
 
@@ -108,7 +108,7 @@ const STEPS = [
   { num: '1', text: 'Pay $250 once → instant access' },
   { num: '2', text: 'Build & polish deal with PrepCoach & checklists' },
   { num: '3', text: 'Submit to Preferred Lenders (or K2 shops broader)' },
-  { num: '4', text: 'Close → collect $1,500 credit' },
+  { num: '4', text: 'Close → collect $1,000 credit*' },
 ];
 
 const TESTIMONIALS = [
@@ -161,7 +161,7 @@ export default function CertifiedBorrowerSample() {
 
           <p className="text-base text-gray-600 max-w-2xl mx-auto mb-8 leading-relaxed">
             Set up deals like a pro • Organize documents securely • Submit
-            directly to vetted Preferred Lenders • Earn $1,500 closing credit
+            directly to vetted Preferred Lenders • Earn $1,000 closing credit*
             on funded deals through them.
           </p>
 
@@ -521,8 +521,8 @@ export default function CertifiedBorrowerSample() {
       <section className="py-6 bg-slate-100 border-t border-slate-200">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <p className="text-xs text-gray-500">
-            Lifetime access. $1,500 credit from Preferred Lender at close.
-            Lender-paid fees only on funded Preferred deals. $250 one-time. Terms apply.
+            Lifetime access. $1,000 closing credit* from Preferred Lender at close.
+            Lender-paid fees only on funded Preferred deals. $250 one-time. *Terms may apply.
           </p>
         </div>
       </section>

@@ -181,7 +181,7 @@ export default function MembershipPage() {
               { num: '1', text: 'Pay $250 once - get instant lifetime access' },
               { num: '2', text: 'Build & polish your deal with PrepCoach & checklists' },
               { num: '3', text: 'Submit to Preferred Lenders (or K2 shops broader)' },
-              { num: '4', text: 'Close your deal - collect $1,500 credit' },
+              { num: '4', text: 'Close your deal - collect $1,000 credit*' },
             ].map((step) => (
               <div key={step.num} className="text-center">
                 <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white text-lg font-bold mb-4">

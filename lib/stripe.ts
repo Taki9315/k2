@@ -25,7 +25,7 @@ export const PRODUCTS = {
   certified: {
     name: 'K2 Certified Borrower',
     description:
-      'Lifetime access to the full K2 platform - PrepCoach, Deal Room, Preferred Lender network, and $1,500 closing credit.',
+      'Lifetime access to the full K2 platform - PrepCoach, Deal Room, Preferred Lender network, and $1,000 closing credit.*',
     priceAmount: 25000, // $250.00 in cents
     role: 'certified' as const,
     envPriceKey: 'STRIPE_PRICE_CERTIFIED',

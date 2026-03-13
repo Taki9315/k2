@@ -13,6 +13,7 @@ import {
   ChevronUp,
   Target,
   Heart,
+  Bot,
 } from 'lucide-react';
 
 const ABOUT_MISSION_IMAGE =
@@ -23,6 +24,8 @@ const ABOUT_COMMUNICATION_IMAGE =
   'https://images.pexels.com/photos/8729952/pexels-photo-8729952.jpeg?auto=compress&cs=tinysrgb&w=1200';
 const ABOUT_SPEED_IMAGE =
   'https://images.pexels.com/photos/7947656/pexels-photo-7947656.jpeg?auto=compress&cs=tinysrgb&w=1200';
+const ABOUT_AI_IMAGE =
+  'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?auto=format&fit=crop&w=800&q=80';
 
 export default function AboutPage() {
   const [missionExpanded, setMissionExpanded] = useState(false);
@@ -232,7 +235,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <Card className="border-2">
               <CardContent className="p-8">
                 <div
@@ -293,7 +296,9 @@ export default function AboutPage() {
                 </p>
               </CardContent>
             </Card>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:w-2/3 mx-auto">
             <Card className="border-2">
               <CardContent className="p-8">
                 <div
@@ -311,6 +316,27 @@ export default function AboutPage() {
                   Our network of CRE investors, lenders, and service providers
                   are committed to building each other&apos;s business. The personal
                   touch is something AI can never replace.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2">
+              <CardContent className="p-8">
+                <div
+                  className="mb-5 aspect-video rounded-lg bg-cover bg-center"
+                  style={{ backgroundImage: `url('${ABOUT_AI_IMAGE}')` }}
+                  aria-label="AI for small commercial borrowers"
+                />
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <Bot className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  AI for Small Commercial Borrowers
+                </h3>
+                <p className="text-gray-600">
+                  PrepCoach is the first-ever turnkey AI agent built
+                  exclusively for small commercial real estate borrowers.
+                  Institutional-quality preparation, made simple.
                 </p>
               </CardContent>
             </Card>
