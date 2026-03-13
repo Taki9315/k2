@@ -163,6 +163,48 @@ export default function Home() {
       </section>
 
       {/* ============================================================ */}
+      {/*  MEET PREPCOACH                                               */}
+      {/* ============================================================ */}
+      <section className="py-24 bg-gradient-to-b from-white to-slate-50 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+          <div className="absolute -top-40 right-0 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
+        </div>
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-sm font-medium text-primary mb-6">
+            <Sparkles className="h-4 w-4" />
+            Built-In AI Agent
+          </div>
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
+            Meet <span className="text-primary">PrepCoach</span>
+          </h2>
+          <p className="text-lg text-gray-600 mb-4 leading-relaxed max-w-2xl mx-auto">
+            Your personal AI coach that walks you through every preparation
+            step - so you show up organized, confident, and lender-ready.
+          </p>
+          <p className="text-gray-500 mb-10 leading-relaxed max-w-2xl mx-auto">
+            It doesn&apos;t replace experts - it prepares you to work smarter
+            with them. The result? Faster responses, better terms, and deals
+            that close.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button size="lg" asChild className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300">
+              <Link href="/prepcoach">
+                Explore PrepCoach
+                <Bot className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild className="hover:bg-primary hover:text-primary-foreground transition-all duration-300">
+              <Link href="/workbook">
+                Financing Success Kit
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
       {/*  KIT vs CERTIFIED COMPARISON                                  */}
       {/* ============================================================ */}
       <section className="py-24 bg-white relative overflow-hidden">
@@ -283,48 +325,6 @@ export default function Home() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10">
             <ReadinessQuiz />
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  MEET PREPCOACH                                               */}
-      {/* ============================================================ */}
-      <section className="py-24 bg-gradient-to-b from-white to-slate-50 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
-          <div className="absolute -top-40 right-0 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
-        </div>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-sm font-medium text-primary mb-6">
-            <Sparkles className="h-4 w-4" />
-            Built-In AI Agent
-          </div>
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
-            Meet <span className="text-primary">PrepCoach</span>
-          </h2>
-          <p className="text-lg text-gray-600 mb-4 leading-relaxed max-w-2xl mx-auto">
-            Your personal AI coach that walks you through every preparation
-            step - so you show up organized, confident, and lender-ready.
-          </p>
-          <p className="text-gray-500 mb-10 leading-relaxed max-w-2xl mx-auto">
-            It doesn&apos;t replace experts - it prepares you to work smarter
-            with them. The result? Faster responses, better terms, and deals
-            that close.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button size="lg" asChild className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300">
-              <Link href="/prepcoach">
-                Explore PrepCoach
-                <Bot className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild className="hover:bg-primary hover:text-primary-foreground transition-all duration-300">
-              <Link href="/workbook">
-                Financing Success Kit
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
           </div>
         </div>
       </section>
@@ -481,12 +481,18 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">Start Learning</p>
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-5">
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
               Free Educational Content
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
               Start building your knowledge today - no sign-up, no cost.
             </p>
+            <div className="inline-block bg-primary/5 border border-primary/20 rounded-2xl px-8 py-5 mt-2">
+              <h3 className="text-xl md:text-2xl font-bold text-primary mb-2">Top Tier Technology</h3>
+              <p className="text-base text-gray-600 max-w-xl mx-auto leading-relaxed">
+                Our Prep Coach AI agent delivers institutional quality technology to small commercial investors.
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
