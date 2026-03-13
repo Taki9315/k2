@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -622,6 +623,18 @@ export default function DealDetailPage() {
                   ? `${files.length} file${files.length > 1 ? 's' : ''} uploaded.`
                   : 'Start by uploading your first document.'}
               </p>
+              {/* Certified Borrower / Kit Buyer badge + name */}
+              {fullName && (
+                <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary border border-primary/20">
+                  <Image src="/assets/Borrower_Logo.png" alt="Badge" width={20} height={20} className="h-5 w-5 object-contain" />
+                  {isCertifiedBorrower ? 'K2 Certified Borrower' : 'Kit Buyer'}
+                  <span className="mx-1 text-primary/30">|</span>
+                  <span className="font-medium text-primary/80">{fullName}</span>
+                  {isCertifiedBorrower && membershipNumber && (
+                    <span className="text-xs font-mono text-primary/60 ml-1">({membershipNumber})</span>
+                  )}
+                </div>
+              )}
             </div>
             <div className="flex items-center gap-2">
               {/* Change Password */}

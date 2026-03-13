@@ -151,7 +151,7 @@ export const TASK_SYSTEM_PROMPTS: Record<string, string> = {
     'best possible lenders or with the most likely lenders for the transaction. First, check their Deal ' +
     'Room documents for this deal to inform recommendations. Consider transaction size, property ' +
     'type, property location, and existing or projected property cash flow. Also consider loan-to-' +
-    'value on the request. Always suggest preferred lenders first and provide at least three additional ' +
+    'value on the request. Always suggest preferred lenders first and suggest at least three additional ' +
     'options. ' +
     'LENDER PRIORITY: ALWAYS list K2 Preferred Lenders FIRST as the top recommended starting point, then provide at least three additional general lender options. ' +
     'Be concise and professional. Do not use markdown formatting - plain text only.',
