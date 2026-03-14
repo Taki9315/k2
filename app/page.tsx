@@ -182,6 +182,11 @@ export default function Home() {
             Your personal AI coach that walks you through every preparation
             step - so you show up organized, confident, and lender-ready.
           </p>
+          <p className="text-lg text-gray-600 mb-4 leading-relaxed max-w-2xl mx-auto">
+            Prep Coach is your unfair competitive advantage. &mdash; A turnkey AI
+            system specifically for commercial real estate investors and business
+            owners.
+          </p>
           <p className="text-gray-500 mb-10 leading-relaxed max-w-2xl mx-auto">
             It doesn&apos;t replace experts - it prepares you to work smarter
             with them. The result? Faster responses, better terms, and deals
@@ -239,13 +244,14 @@ export default function Home() {
                 </p>
                 <div className="space-y-3 mb-6">
                   {[
-                    { text: 'Full Success Kit (50+ pages)', included: true },
-                    { text: 'Limited Prep Coach Access', included: true },
-                    { text: 'Document Vault Templates', included: true },
-                    { text: 'Online Flipbook Viewer', included: true },
-                    { text: 'Preferred Lender Network', included: false },
-                    { text: 'Deal Room & Document Review', included: false },
-                    { text: 'Expert Coaching Calls', included: false },
+                    { text: 'Document Vault Templates — Application documents and checklists', included: true },
+                    { text: 'Immediate Download', included: true },
+                    { text: 'Online Flip Book Viewer — Read Success Kit online', included: true },
+                    { text: 'Deal Room — Track each deal individually', included: true },
+                    { text: 'One-on-One Document Review Call (with a real person, not AI)', included: true },
+                    { text: 'Preferred Lender Network Access', included: true },
+                    { text: 'Unlimited Prep Coach Access', included: true },
+                    { text: 'Done-for-You Deal Placement', included: true },
                   ].map((item) => (
                     <div key={item.text} className="flex items-center gap-2">
                       {item.included ? (
@@ -288,17 +294,19 @@ export default function Home() {
                 </div>
                 <p className="text-gray-600 text-sm mb-6 leading-relaxed">
                   The complete CRE financing acceleration program. Everything in
-                  the Kit plus expert placement, deal review, and our full
-                  lender/vendor network.
+                  the Financing Success Kit plus expert placement, deal review,
+                  and our full lender/vendor network &mdash; faster decisions, better terms.
                 </p>
                 <div className="space-y-3 mb-6">
                   {[
-                    'Full Success Kit (included)',
-                    'Full Prep Coach Access + Free-Form AI',
-                    'Preferred Lender Network',
-                    'Deal Room & Expert Document Review',
+                    'Everything in Financing Success Kit +',
+                    'Expert placement deal review',
+                    'Full lender + vendor network',
+                    'One-on-One Document Review (prior to submission)',
                     'Borrower Certification Badge',
                     'Priority Deal Placement',
+                    '$1,000 Closing Credit',
+                    'Professional Community dedicated to your success',
                   ].map((text) => (
                     <div key={text} className="flex items-center gap-2">
                       <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />

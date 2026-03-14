@@ -328,13 +328,18 @@ export default function CertifiedBorrowerSample() {
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Meet PrepCoach
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-4">
             Your personal AI coach that walks you through every preparation
             step - so you show up organized, confident, and lender-ready.
           </p>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-4">
+            Prep Coach is your unfair competitive advantage. &mdash; A turnkey AI
+            system specifically for commercial real estate investors and business
+            owners.
+          </p>
           <p className="text-gray-500 max-w-2xl mx-auto mb-8">
             It doesn&apos;t replace experts - it prepares you to work smarter
-            with them. Faster responses, better terms, deals that close.
+            with them. Faster decisions, better terms, deals that close.
           </p>
           <Link
             href="/prepcoach"

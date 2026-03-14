@@ -344,6 +344,16 @@ function PrepCoachPromptsContent() {
   const hasFullAccess = isCertifiedBorrower || isAdmin;
   const userTier = isKitBuyer ? 'kit' : 'certified';
 
+  /* ---- DB prompts state ---- */
+  const [dbPrompts, setDbPrompts] = useState<{ id: string; title: string; content: string; order: number }[]>([]);
+
+  useEffect(() => {
+    fetch('/api/prep-coach-prompts')
+      .then((r) => r.ok ? r.json() : [])
+      .then((data) => setDbPrompts(Array.isArray(data) ? data : []))
+      .catch(() => {});
+  }, []);
+
   /* ---- chat state ---- */
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
@@ -555,6 +565,55 @@ function PrepCoachPromptsContent() {
           {/* ──── LEFT: Prompt Grid ──── */}
           <div className="lg:w-[55%] xl:w-[50%] flex-shrink-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Admin-managed DB prompts */}
+              {dbPrompts.map((dbp) => {
+                const active = activeTitle === dbp.title;
+                return (
+                  <button
+                    key={`db-${dbp.id}`}
+                    onClick={() =>
+                      handleLaunch({
+                        id: `db-${dbp.id}`,
+                        taskId: 'onboarding',
+                        title: dbp.title,
+                        shortDesc: dbp.content.slice(0, 60) + (dbp.content.length > 60 ? '…' : ''),
+                        icon: <Bot className="h-5 w-5" />,
+                        color: 'bg-primary/10 text-primary',
+                        availableForKit: true,
+                        buildPrompt: () => dbp.content,
+                      })
+                    }
+                    disabled={loading}
+                    className={`group text-left rounded-xl border-2 transition-all duration-200 ${
+                      active
+                        ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
+                        : 'border-slate-200 bg-white hover:border-primary/30 hover:shadow-md cursor-pointer'
+                    }`}
+                  >
+                    <div className="p-4">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-200">
+                          <Bot className="h-5 w-5" />
+                        </div>
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] bg-emerald-50 text-emerald-600 border-emerald-200"
+                        >
+                          New
+                        </Badge>
+                      </div>
+                      <h3 className="text-sm font-semibold text-gray-900 mb-0.5">
+                        {dbp.title}
+                      </h3>
+                      <p className="text-xs text-gray-500 leading-relaxed">
+                        {dbp.content.slice(0, 80)}{dbp.content.length > 80 ? '…' : ''}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+
+              {/* Hardcoded prompt cards */}
               {PROMPT_CARDS.map((card) => {
                 const locked = !hasFullAccess && !card.availableForKit;
                 const active = activeTitle === card.title;

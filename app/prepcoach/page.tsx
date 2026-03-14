@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -768,6 +768,16 @@ function PromptsSection() {
     prompt: string;
   } | null>(null);
 
+  /* ── DB-managed prompts ─────────────────────────────────── */
+  const [dbPrompts, setDbPrompts] = useState<{ id: string; title: string; content: string; order: number }[]>([]);
+
+  useEffect(() => {
+    fetch('/api/prep-coach-prompts')
+      .then((r) => r.ok ? r.json() : [])
+      .then((data: unknown) => setDbPrompts(Array.isArray(data) ? data : []))
+      .catch(() => {});
+  }, []);
+
   const toggle = (id: string) =>
     setOpenId((prev) => (prev === id ? null : id));
 
@@ -820,6 +830,70 @@ function PromptsSection() {
         )}
 
         <div className="space-y-4">
+          {/* DB-managed prompts (from admin) */}
+          {dbPrompts.map((dbp) => {
+            const dbId = `db-${dbp.id}`;
+            const isOpen = openId === dbId;
+
+            return (
+              <Card
+                key={dbId}
+                className={`border-2 transition-all duration-200 ${
+                  isOpen
+                    ? 'border-primary/40 shadow-lg'
+                    : 'border-slate-200 hover:border-primary/20 hover:shadow-md'
+                }`}
+              >
+                <button
+                  onClick={() => toggle(dbId)}
+                  className="w-full text-left"
+                >
+                  <CardContent className="flex items-center gap-4 p-5 md:p-6">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <Bot className="h-6 w-6" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {dbp.title}
+                      </h3>
+                      <p className="text-sm text-gray-500 mt-0.5">
+                        {dbp.content.slice(0, 100)}{dbp.content.length > 100 ? '…' : ''}
+                      </p>
+                    </div>
+                    <ChevronDown
+                      className={`h-5 w-5 shrink-0 text-gray-400 transition-transform duration-300 ${
+                        isOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </CardContent>
+                </button>
+                <div
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+                  }`}
+                >
+                  <div className="border-t border-slate-100 px-5 pb-6 pt-5 md:px-6">
+                    <p className="text-sm text-gray-600 leading-relaxed mb-6 whitespace-pre-wrap">
+                      {dbp.content}
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <Button
+                        onClick={() =>
+                          setLaunchTask({ taskId: 'onboarding', prompt: dbp.content })
+                        }
+                        className="gap-2 shadow-md shadow-primary/20"
+                      >
+                        <Rocket className="h-4 w-4" />
+                        Launch PrepCoach
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
+
+          {/* Hardcoded task templates */}
           {TASK_TEMPLATES.map((template) => {
             const isOpen = openId === template.id;
             const values = fieldValues[template.id] ?? {};

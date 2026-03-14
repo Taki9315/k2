@@ -11,8 +11,22 @@ export type NotificationType = 'signup' | 'login' | 'logout' | 'upload' | 'conta
  */
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { type, title, message, user_id, user_name, user_email, metadata } = body;
+    let body: Record<string, unknown>;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid or empty JSON body' }, { status: 400 });
+    }
+
+    const { type, title, message, user_id, user_name, user_email, metadata } = body as {
+      type?: string;
+      title?: string;
+      message?: string;
+      user_id?: string;
+      user_name?: string;
+      user_email?: string;
+      metadata?: Record<string, unknown>;
+    };
 
     if (!type || !title) {
       return NextResponse.json({ error: 'type and title required' }, { status: 400 });

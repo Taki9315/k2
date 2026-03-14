@@ -58,7 +58,7 @@ const SUCCESSKIT_FEATURES = [
   {
     title: 'Reseller Rights',
     description:
-      'K2 Success Kit owners receive reseller rights — earn $5 on every sale you refer.',
+      'K2 Success Kit owners receive reseller rights — earn $5 on every sale you refer. Help others on their journey to real estate success.',
     image:
       'https://images.pexels.com/photos/7947656/pexels-photo-7947656.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
@@ -257,7 +257,7 @@ export default function WorkbookPage() {
                   'Finding the right lender - hint... it may not be your local bank',
                   'Navigating Underwriting and Closing your deal',
                   'Document Vault - All the forms a lender may request, ready for download',
-                  'Reseller Rights — earn $5 on every sale you refer',
+                  'Reseller Rights — earn $5 on every sale you refer. Help others on their journey to real estate success.',
                 ].map((feature) => (
                   <li key={feature} className="flex items-start group">
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 mr-3 flex-shrink-0 mt-0.5 group-hover:bg-green-200 transition-colors">
@@ -358,9 +358,14 @@ export default function WorkbookPage() {
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 Meet Your Prep Coach
               </h2>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+              <p className="text-lg text-gray-600 mb-4 leading-relaxed">
                 Our AI-powered Prep Coach walks you through every step of your loan preparation — from building
                 executive summaries to crafting lender scripts. Think of it as a financing consultant in your pocket.
+              </p>
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                Prep Coach is your unfair competitive advantage. &mdash; A turnkey AI
+                system specifically for commercial real estate investors and business
+                owners.
               </p>
               <ul className="space-y-3 mb-8">
                 {[
@@ -368,6 +373,7 @@ export default function WorkbookPage() {
                   'AI-generated executive summaries & lender scripts',
                   'DSCR calculations & financial statement builders',
                   'Available 24/7 — work at your own pace',
+                  'No experience needed — Prep Coach leads the way',
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-gray-700">
                     <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />

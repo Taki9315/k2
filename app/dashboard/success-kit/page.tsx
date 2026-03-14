@@ -18,6 +18,8 @@ import {
   ExternalLink,
   CheckCircle2,
   Sparkles,
+  FileSpreadsheet,
+  FileText,
 } from 'lucide-react';
 
 /**
@@ -198,6 +200,57 @@ export default function SuccessKitDashboardPage() {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Companion downloads */}
+        <div className="mt-8">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Companion Downloads</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card className="border-primary/20">
+              <CardContent className="p-5 flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <FileText className="h-6 w-6 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-semibold text-gray-900">
+                    K2 Financing Success Kit — Full Guide
+                  </h4>
+                  <p className="text-xs text-gray-500 mt-0.5 mb-3">
+                    The complete 4-chapter guide: preparation, loan programs,
+                    finding lenders, and closing your deal.
+                  </p>
+                  <Button variant="outline" size="sm" asChild className="gap-1.5">
+                    <a href="/assets/K2_Financing_Success_Kit.md" download>
+                      <Download className="h-4 w-4" />
+                      Download Guide
+                    </a>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="border-emerald-200">
+              <CardContent className="p-5 flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                  <FileSpreadsheet className="h-6 w-6 text-emerald-600" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-semibold text-gray-900">
+                    Loan Comparison Spreadsheet
+                  </h4>
+                  <p className="text-xs text-gray-500 mt-0.5 mb-3">
+                    Side-by-side loan comparison worksheet with key formulas
+                    and example entries — ready to fill in.
+                  </p>
+                  <Button variant="outline" size="sm" asChild className="gap-1.5">
+                    <a href="/assets/K2_Loan_Comparison_Spreadsheet.xlsx" download>
+                      <Download className="h-4 w-4" />
+                      Download Spreadsheet
+                    </a>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Certified upsell (only for Kit users) */}
