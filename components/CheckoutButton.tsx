@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { StripePaymentDialog } from '@/components/StripePaymentDialog';
 
 interface CheckoutButtonProps {
   product: 'kit' | 'certified';
@@ -24,70 +26,66 @@ export function CheckoutButton({
   size = 'lg',
   children,
 }: CheckoutButtonProps) {
-  const [loading, setLoading] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const router = useRouter();
 
-  const handleCheckout = async () => {
-    setLoading(true);
+  const handleClick = async () => {
+    setChecking(true);
     try {
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
-      // Kit purchases can proceed without authentication (guest checkout)
-      // Certified purchases still require login
+      // Certified purchases require login
       if (!session?.access_token && product !== 'kit') {
         window.location.href = `/login?redirect=/membership/${product === 'certified' ? 'certified-borrower' : ''}`;
         return;
       }
 
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      };
-      if (session?.access_token) {
-        headers['Authorization'] = `Bearer ${session.access_token}`;
-      }
-
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ product, referralCode }),
-      });
-
-      const data = await res.json();
-
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        console.error('Checkout error:', data.error);
-        alert('Something went wrong. Please try again.');
-      }
+      // Open the embedded payment dialog
+      setDialogOpen(true);
     } catch (err) {
       console.error('Checkout error:', err);
-      alert('Something went wrong. Please try again.');
     } finally {
-      setLoading(false);
+      setChecking(false);
     }
   };
+
+  const handleSuccess = useCallback((paymentIntentId: string) => {
+    // Redirect to success page after payment completes
+    router.push(`/checkout/success?payment=elements&pi=${paymentIntentId}`);
+  }, [router]);
 
   const defaultLabel =
     product === 'certified' ? 'Enroll Now — $250' : 'Get Success Kit — $15';
 
   return (
-    <Button
-      onClick={handleCheckout}
-      disabled={loading}
-      variant={variant}
-      size={size}
-      className={className}
-    >
-      {loading ? (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Redirecting to checkout…
-        </>
-      ) : (
-        children || label || defaultLabel
-      )}
-    </Button>
+    <>
+      <Button
+        onClick={handleClick}
+        disabled={checking}
+        variant={variant}
+        size={size}
+        className={className}
+      >
+        {checking ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Loading…
+          </>
+        ) : (
+          children || label || defaultLabel
+        )}
+      </Button>
+
+      <StripePaymentDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        product={product}
+        referralCode={referralCode}
+        onSuccess={handleSuccess}
+      />
+    </>
   );
 }

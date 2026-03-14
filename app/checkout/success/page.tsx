@@ -25,17 +25,53 @@ export default function CheckoutSuccessPage() {
 function CheckoutSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
+  const isElementsFlow = searchParams.get('payment') === 'elements';
+  const paymentIntentId = searchParams.get('pi');
   const { refreshProfile } = useAuth();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [product, setProduct] = useState<string | null>(null);
 
   useEffect(() => {
+    // Elements flow: confirm server-side then refresh profile
+    if (isElementsFlow) {
+      const confirm = async () => {
+        try {
+          if (paymentIntentId) {
+            const { supabase } = await import('@/lib/supabase');
+            const { data: { session } } = await supabase.auth.getSession();
+
+            const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+            if (session?.access_token) {
+              headers['Authorization'] = `Bearer ${session.access_token}`;
+            }
+
+            const res = await fetch('/api/checkout/confirm-payment', {
+              method: 'POST',
+              headers,
+              body: JSON.stringify({ paymentIntentId }),
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              setProduct(data.product);
+            }
+          }
+        } catch (err) {
+          console.error('Confirm payment error:', err);
+        }
+        await refreshProfile();
+        setStatus('success');
+      };
+      confirm();
+      return;
+    }
+
     if (!sessionId) {
       setStatus('error');
       return;
     }
 
-    // Verify session and refresh profile
+    // Verify session and refresh profile (legacy Checkout Session flow)
     const verify = async () => {
       try {
         const res = await fetch(`/api/checkout/verify?session_id=${sessionId}`);
@@ -43,7 +79,6 @@ function CheckoutSuccessContent() {
           const data = await res.json();
           setProduct(data.product);
           setStatus('success');
-          // Refresh the auth profile so the UI reflects the new role immediately
           await refreshProfile();
         } else {
           setStatus('error');
@@ -56,7 +91,7 @@ function CheckoutSuccessContent() {
     };
 
     verify();
-  }, [sessionId, refreshProfile]);
+  }, [sessionId, isElementsFlow, refreshProfile]);
 
   if (status === 'loading') {
     return (
