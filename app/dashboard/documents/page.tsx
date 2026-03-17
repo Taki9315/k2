@@ -98,7 +98,7 @@ export default function DocumentLibraryPage() {
         <div className="max-w-3xl mx-auto px-4 py-20 text-center">
           <Lock className="h-16 w-16 text-slate-300 mx-auto mb-6" />
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Application Documentation
+            Document Library
           </h1>
           <p className="text-lg text-gray-600 mb-8 max-w-xl mx-auto">
             Access professional loan application documents, templates, and
@@ -129,7 +129,7 @@ export default function DocumentLibraryPage() {
               <FileText className="h-5 w-5 text-primary" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900">
-              Application Documentation
+              Document Library
             </h1>
           </div>
           <p className="text-lg font-semibold text-primary max-w-2xl">

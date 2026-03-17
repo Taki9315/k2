@@ -350,7 +350,12 @@ function PrepCoachPromptsContent() {
   useEffect(() => {
     fetch('/api/prep-coach-prompts')
       .then((r) => r.ok ? r.json() : [])
-      .then((data) => setDbPrompts(Array.isArray(data) ? data : []))
+      .then((data) => {
+        const arr = Array.isArray(data) ? data : [];
+        // Sort by admin-defined order
+        arr.sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
+        setDbPrompts(arr);
+      })
       .catch(() => {});
   }, []);
 
@@ -545,7 +550,7 @@ function PrepCoachPromptsContent() {
             </span>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">
-            Prep Coach Tasks / View All
+            Prep Coach
           </h1>
           <p className="text-gray-600 text-sm max-w-2xl">
             Select a prompt to launch PrepCoach with a focused task. Follow up

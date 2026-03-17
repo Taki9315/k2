@@ -44,21 +44,18 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
     ? (() => {
         const links: { href: string; label: string }[] = [
           { href: '/dashboard', label: 'Home' },
-          { href: '/content', label: 'Document Library' },
-          { href: '/dashboard/resources', label: 'Resources' },
         ];
 
-        if (isCertifiedBorrower) {
-          // Certified: Home → Document Library → Prep Coach → Deal Room
-          links.push({ href: '/prepcoach/prompts', label: 'Prep Coach' });
-          links.push({ href: '/dashboard/deal-room', label: 'Deal Room' });
-        } else if (isKitBuyer) {
-          // Kit: Home → Document Library → Prep Coach → Deal Room
+        if (isCertifiedBorrower || isKitBuyer) {
+          links.push({ href: '/dashboard/success-kit', label: 'Success Kit' });
+          links.push({ href: '/dashboard/documents', label: 'Document Library' });
+          links.push({ href: '/content', label: 'Resources' });
           links.push({ href: '/prepcoach/prompts', label: 'Prep Coach' });
           links.push({ href: '/dashboard/deal-room', label: 'Deal Room' });
         } else {
-          // Basic borrower: Success Kit upsell
+          // Basic borrower: show public resources + Success Kit upsell
           links.push({ href: '/workbook', label: 'Success Kit' });
+          links.push({ href: '/content', label: 'Resources' });
         }
 
         return links;
@@ -125,17 +122,17 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
                   </DropdownMenuItem>
                   {(isCertifiedBorrower || isKitBuyer) && (
                     <DropdownMenuItem asChild>
-                      <Link href="/dashboard/documents">Application Docs</Link>
+                      <Link href="/dashboard/success-kit">Success Kit</Link>
+                    </DropdownMenuItem>
+                  )}
+                  {isCertifiedBorrower && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/dashboard/booking">Schedule Call</Link>
                     </DropdownMenuItem>
                   )}
                   {isCertifiedBorrower && (
                     <DropdownMenuItem asChild>
                       <Link href="/dashboard/resources">Partner Network</Link>
-                    </DropdownMenuItem>
-                  )}
-                  {isPartner && (
-                    <DropdownMenuItem asChild>
-                      <Link href="/dashboard/affiliate">Affiliate Portal</Link>
                     </DropdownMenuItem>
                   )}
                   {isAdmin && (
@@ -321,11 +318,20 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
                 </Link>
                 {(isCertifiedBorrower || isKitBuyer) && (
                   <Link
-                    href="/dashboard/documents"
+                    href="/dashboard/success-kit"
                     className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Application Docs
+                    Success Kit
+                  </Link>
+                )}
+                {isCertifiedBorrower && (
+                  <Link
+                    href="/dashboard/booking"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Schedule Call
                   </Link>
                 )}
                 {isCertifiedBorrower && (

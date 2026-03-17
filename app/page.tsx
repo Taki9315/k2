@@ -23,6 +23,7 @@ import {
 import { ReadinessQuiz } from '@/components/ReadinessQuiz';
 import { PathsAccordion } from '@/components/PathsAccordion';
 import { GuaranteePopover } from '@/components/GuaranteePopover';
+import { HomeRedirect } from '@/components/HomeRedirect';
 
 const TESTIMONIALS = [
   {
@@ -51,6 +52,8 @@ const TESTIMONIALS = [
 export default function Home() {
   return (
     <div className="flex flex-col">
+      {/* Redirect logged-in kit buyers / certified borrowers to dashboard */}
+      <HomeRedirect />
       {/* ============================================================ */}
       {/*  HERO                                                         */}
       {/* ============================================================ */}

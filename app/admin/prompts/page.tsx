@@ -73,6 +73,9 @@ export default function AdminPromptsPage() {
   // Delete confirmation
   const [deletePrompt, setDeletePrompt] = useState<Prompt | null>(null);
 
+  // Inline order editing
+  const [editingOrder, setEditingOrder] = useState<Record<string, string>>({});
+
   /* ── Fetch ─────────────────────────────────────────────────── */
 
   const fetchPrompts = useCallback(async () => {
@@ -193,6 +196,28 @@ export default function AdminPromptsPage() {
     }
   };
 
+  /* ── Save individual order number ──────────────────────────── */
+
+  const saveOrderNumber = async (promptId: string, newOrder: number) => {
+    try {
+      const res = await fetch("/api/admin/prompts", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: promptId, order: newOrder }),
+      });
+      if (!res.ok) throw new Error("Failed to update order");
+      await fetchPrompts();
+      // Clear inline edit state
+      setEditingOrder((prev) => {
+        const next = { ...prev };
+        delete next[promptId];
+        return next;
+      });
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
   /* ── Delete ────────────────────────────────────────────────── */
 
   const handleDelete = async () => {
@@ -281,17 +306,48 @@ export default function AdminPromptsPage() {
               }`}
             >
               <div className="flex items-start gap-4">
-                {/* Grip indicator */}
-                <div className="pt-1 text-muted-foreground/40">
-                  <GripVertical className="h-5 w-5" />
+                {/* Order number input */}
+                <div className="pt-1 flex flex-col items-center gap-1">
+                  <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                    Order
+                  </label>
+                  <div className="flex items-center gap-1">
+                    <Input
+                      type="number"
+                      min={0}
+                      className="w-16 h-8 text-center text-sm font-bold"
+                      value={
+                        editingOrder[prompt.id] !== undefined
+                          ? editingOrder[prompt.id]
+                          : prompt.order
+                      }
+                      onChange={(e) =>
+                        setEditingOrder((prev) => ({
+                          ...prev,
+                          [prompt.id]: e.target.value,
+                        }))
+                      }
+                      onBlur={() => {
+                        const val = editingOrder[prompt.id];
+                        if (val !== undefined && val !== String(prompt.order)) {
+                          saveOrderNumber(prompt.id, parseInt(val, 10) || 0);
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          const val = editingOrder[prompt.id];
+                          if (val !== undefined) {
+                            saveOrderNumber(prompt.id, parseInt(val, 10) || 0);
+                          }
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-bold text-primary/70 uppercase tracking-wider">
-                      #{index + 1}
-                    </span>
                     {prompt.is_hidden && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
                         <EyeOff className="h-3 w-3" />

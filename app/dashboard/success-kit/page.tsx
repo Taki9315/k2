@@ -110,7 +110,7 @@ export default function SuccessKitDashboardPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" asChild className="gap-1.5">
+              <Button size="sm" asChild className="gap-1.5 bg-black hover:bg-black/80 text-white">
                 <a href={PDF_URL} download>
                   <Download className="h-4 w-4" />
                   Download PDF
@@ -149,7 +149,7 @@ export default function SuccessKitDashboardPage() {
                 The interactive flipbook viewer is being prepared. In the
                 meantime, download the PDF directly to read and print.
               </p>
-              <Button asChild className="gap-2">
+              <Button asChild className="gap-2 bg-black hover:bg-black/80 text-white">
                 <a href={PDF_URL} download>
                   <Download className="h-4 w-4" />
                   Download Success Kit PDF

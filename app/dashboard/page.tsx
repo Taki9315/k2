@@ -36,6 +36,7 @@ import {
   User,
   ExternalLink,
   Zap,
+  Download,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { cn } from '@/lib/utils';
@@ -210,19 +211,9 @@ export default function DashboardPage() {
   /* ── Quick action cards config ─────────────────────────────────── */
   const quickActions = [
     {
-      icon: FileText,
-      title: 'Application Documents',
-      description: 'Download forms, templates & application documents',
-      href: '/dashboard/documents',
-      btnLabel: 'View Documents',
-      gradient: 'from-emerald-500/10 to-emerald-600/5',
-      iconBg: 'bg-emerald-100 text-emerald-700',
-      available: true,
-    },
-    {
       icon: Upload,
       title: 'Deal Room',
-      description: 'Upload documents for lender review',
+      description: 'Upload documents and manage your deals',
       href: (isCertifiedBorrower || isKitBuyer) ? '/dashboard/deal-room' : '/membership/certified-borrower',
       btnLabel: (isCertifiedBorrower || isKitBuyer) ? 'Open Deal Room' : 'Upgrade to Access',
       gradient: 'from-gray-900/5 to-gray-800/5',
@@ -232,14 +223,24 @@ export default function DashboardPage() {
     },
     {
       icon: Calendar,
-      title: 'Book Appointment',
-      description: 'Schedule a transaction review session',
+      title: 'Schedule Call',
+      description: 'Book a transaction review session',
       href: isCertifiedBorrower ? '/dashboard/booking' : '/membership/certified-borrower',
       btnLabel: isCertifiedBorrower ? 'Book Now' : 'Upgrade to Access',
       gradient: 'from-emerald-500/8 to-white',
       iconBg: 'bg-emerald-50 text-emerald-700',
       available: true,
       locked: !isCertifiedBorrower,
+    },
+    {
+      icon: FileText,
+      title: 'Document Library',
+      description: 'Download forms, templates & application documents',
+      href: '/dashboard/documents',
+      btnLabel: 'View Documents',
+      gradient: 'from-emerald-500/10 to-emerald-600/5',
+      iconBg: 'bg-emerald-100 text-emerald-700',
+      available: true,
     },
   ];
 
@@ -357,37 +358,60 @@ export default function DashboardPage() {
       <section className="py-8 md:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          {/* ── Quick Action Cards ─────────────────────────────── */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
-            {quickActions.map((action) => (
-              <Link key={action.title} href={action.href} className="group">
-                <Card className={`relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 bg-gradient-to-br ${action.gradient} h-full`}>
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className={`h-12 w-12 rounded-xl ${action.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                        <action.icon className="h-6 w-6" />
+          {/* ══════════════════════════════════════════════════════════
+              SUCCESS KIT — TOP / MOST PROMINENT (for kit buyers + certified)
+              ══════════════════════════════════════════════════════════ */}
+          {(isKitBuyer || isCertifiedBorrower) && (
+            <div className="mb-10">
+              <Card className="border-0 shadow-lg overflow-hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
+                <CardContent className="p-0">
+                  <div className="flex flex-col md:flex-row items-center">
+                    {/* Cover image */}
+                    <div className="md:w-1/3 flex items-center justify-center p-8">
+                      <div className="w-48 h-64 rounded-xl bg-gradient-to-br from-primary/30 to-emerald-500/20 flex items-center justify-center border border-white/10 shadow-2xl">
+                        <div className="text-center">
+                          <BookOpen className="h-12 w-12 text-primary mx-auto mb-3" />
+                          <h3 className="text-white font-bold text-sm">K2 Financing</h3>
+                          <p className="text-white/60 text-xs">Success Kit</p>
+                        </div>
                       </div>
-                      {action.locked && (
-                        <Lock className="h-4 w-4 text-slate-400" />
-                      )}
                     </div>
-                    <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-primary transition-colors">
-                      {action.title}
-                    </h3>
-                    <p className="text-sm text-gray-500 mb-4">
-                      {action.description}
-                    </p>
-                    <div className="flex items-center text-sm font-medium text-primary gap-1">
-                      {action.btnLabel}
-                      <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
 
-          {/* ── Basic borrower welcome banner ──────────────── */}
+                    {/* Info + buttons */}
+                    <div className="md:w-2/3 p-8 md:pl-0">
+                      <div className="inline-flex items-center gap-2 rounded-full bg-primary/20 border border-primary/30 px-3 py-1 text-xs font-semibold text-primary mb-4">
+                        <BookOpen className="h-3.5 w-3.5" />
+                        YOUR SUCCESS KIT
+                      </div>
+                      <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                        K2 Financing Success Kit
+                      </h2>
+                      <p className="text-slate-400 mb-6 max-w-lg">
+                        Your comprehensive guide to CRE financing success. Read online with our
+                        interactive flipbook viewer or download the PDF.
+                      </p>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <Button size="lg" className="bg-black hover:bg-black/80 text-white shadow-lg" asChild>
+                          <Link href="/dashboard/success-kit">
+                            <BookOpen className="mr-2 h-5 w-5" />
+                            Read Now
+                          </Link>
+                        </Button>
+                        <Button size="lg" className="bg-black hover:bg-black/80 text-white shadow-lg" asChild>
+                          <a href="/assets/success-kit.pdf" download>
+                            <Download className="mr-2 h-5 w-5" />
+                            Download Success Kit
+                          </a>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* ── Basic borrower welcome banner (Success Kit upsell) ──── */}
           {isBasicBorrower && (
             <div className="mb-10 relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-emerald-50/30 to-white p-8 md:p-10 shadow-sm">
               <div className="flex flex-col lg:flex-row lg:items-center gap-8">
@@ -416,7 +440,7 @@ export default function DashboardPage() {
                     ))}
                   </div>
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                    <Button size="lg" className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30" asChild>
+                    <Button size="lg" className="bg-black hover:bg-black/80 text-white shadow-lg" asChild>
                       <Link href="/workbook">
                         Get the Success Kit — $15
                         <ArrowRight className="ml-2 h-5 w-5" />
@@ -446,9 +470,204 @@ export default function DashboardPage() {
             </div>
           )}
 
+          {/* ── My Deals / Deal Room ───────────────────────────── */}
+          <Card className="border-0 shadow-sm overflow-hidden mb-8">
+            <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b pb-4">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2.5 text-lg">
+                  <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                    <Upload className="h-4 w-4 text-emerald-600" />
+                  </div>
+                  My Deals
+                </CardTitle>
+                {(isCertifiedBorrower || isKitBuyer) && (
+                  <Button variant="ghost" size="sm" asChild className="text-primary">
+                    <Link href="/dashboard/deal-room">
+                      View All
+                      <ChevronRight className="ml-1 h-3.5 w-3.5" />
+                    </Link>
+                  </Button>
+                )}
+              </div>
+            </CardHeader>
+            <CardContent className="p-5">
+              {(isCertifiedBorrower || isKitBuyer) ? (
+                <>
+                  {submissions.length === 0 ? (
+                    <div className="text-center py-6">
+                      <div className="h-16 w-16 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+                        <FileText className="h-8 w-8 text-emerald-300" />
+                      </div>
+                      <p className="text-sm text-gray-500 mb-4">
+                        No deals yet. Start your first deal in the Deal Room.
+                      </p>
+                      <Button size="sm" className="bg-black hover:bg-black/80 text-white" asChild>
+                        <Link href="/dashboard/deal-room">
+                          Open Deal Room
+                          <ArrowRight className="ml-1.5 h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {submissions.slice(0, 5).map((submission) => (
+                        <Link
+                          key={submission.id}
+                          href="/dashboard/deal-room"
+                          className="block rounded-xl border border-slate-100 p-4 hover:border-primary/30 hover:bg-slate-50/80 transition-colors"
+                        >
+                          <div className="flex items-center justify-between gap-3 mb-1">
+                            <div className="flex items-center gap-2">
+                              <div className={`h-2 w-2 rounded-full ${submission.summary_text ? 'bg-primary' : 'bg-amber-400'}`} />
+                              <p className="font-medium text-sm text-gray-900">
+                                {submission.summary_text ? 'Summary Generated' : 'Intake Saved'}
+                              </p>
+                            </div>
+                            <span className="text-xs text-gray-400 flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              {new Date(submission.created_at).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-500 line-clamp-2 ml-4">
+                            {submission.summary_text ?? 'Summary not generated yet.'}
+                          </p>
+                        </Link>
+                      ))}
+                      <Button size="sm" variant="outline" className="w-full" asChild>
+                        <Link href="/dashboard/deal-room">
+                          Go to Deal Room
+                          <ArrowRight className="ml-1.5 h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                    <Lock className="h-7 w-7 text-slate-300" />
+                  </div>
+                  <p className="text-sm text-gray-600 mb-1 font-medium">
+                    Private Deal Room
+                  </p>
+                  <p className="text-xs text-gray-400 mb-4 max-w-xs mx-auto">
+                    Upload documents to your private deal room as a Kit Buyer or Certified Borrower.
+                  </p>
+                  <Button size="sm" variant="outline" asChild>
+                    <Link href="/workbook">
+                      Get Started — Success Kit $15
+                      <ArrowRight className="ml-1.5 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* ── Two-column: Prep Coach + Quick Actions ────────── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+
+            {/* ── Work with Prep Coach ──────────────────────────── */}
+            <Card className="border-0 shadow-sm overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b pb-4">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2.5 text-lg">
+                    <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Bot className="h-4.5 w-4.5 text-primary" />
+                    </div>
+                    Work with Prep Coach
+                  </CardTitle>
+                  <Button variant="ghost" size="sm" asChild className="text-primary">
+                    <Link href="/prepcoach/prompts">
+                      View All
+                      <ChevronRight className="ml-1 h-3.5 w-3.5" />
+                    </Link>
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5">
+                <p className="text-base font-semibold text-primary mb-4">
+                  {isCertifiedBorrower
+                    ? 'Select a task to get step-by-step AI coaching for your loan package.'
+                    : 'Get started with core templates. Upgrade to unlock all tasks.'}
+                </p>
+                <div className="grid grid-cols-1 gap-3">
+                  {/* View All first */}
+                  <Link
+                    href="/prepcoach/prompts"
+                    className="group flex items-center gap-3 rounded-xl border border-primary/20 bg-primary/5 p-3.5 hover:border-primary/40 hover:bg-primary/10 transition-all duration-200"
+                  >
+                    <div className="h-10 w-10 rounded-lg bg-primary/20 text-primary flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                      <Bot className="h-5 w-5" />
+                    </div>
+                    <span className="text-sm font-medium text-primary group-hover:text-primary">
+                      View All Prep Coach Tasks
+                    </span>
+                    <ChevronRight className="h-4 w-4 text-primary/50 ml-auto group-hover:translate-x-0.5 transition-all" />
+                  </Link>
+                  {prepTasks.slice(0, 3).map((task) => (
+                    <Link
+                      key={task.label}
+                      href="/prepcoach/prompts"
+                      className="group flex items-center gap-3 rounded-xl border border-slate-100 p-3.5 hover:border-primary/30 hover:bg-slate-50/80 transition-all duration-200"
+                    >
+                      <div className={`h-10 w-10 rounded-lg ${task.color} flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform`}>
+                        <task.icon className="h-5 w-5" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                        {task.label}
+                      </span>
+                      <ChevronRight className="h-4 w-4 text-slate-300 ml-auto group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+                    </Link>
+                  ))}
+                </div>
+                {isKitBuyer && (
+                  <div className="mt-4 p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-2 text-sm text-gray-500">
+                    <Lock className="h-4 w-4 text-slate-400 flex-shrink-0" />
+                    Advanced tasks require{' '}
+                    <Link href="/membership/certified-borrower" className="text-primary hover:underline font-medium">
+                      Certified Borrower
+                    </Link>{' '}
+                    access
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* ── Quick Actions / Sidebar ──────────────────────── */}
+            <div className="space-y-5">
+              {quickActions.map((action) => (
+                <Link key={action.title} href={action.href} className="group block">
+                  <Card className={`relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 bg-gradient-to-br ${action.gradient} h-full`}>
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className={`h-12 w-12 rounded-xl ${action.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                          <action.icon className="h-6 w-6" />
+                        </div>
+                        {action.locked && (
+                          <Lock className="h-4 w-4 text-slate-400" />
+                        )}
+                      </div>
+                      <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-primary transition-colors">
+                        {action.title}
+                      </h3>
+                      <p className="text-sm text-gray-500 mb-4">
+                        {action.description}
+                      </p>
+                      <div className="flex items-center text-sm font-medium text-primary gap-1">
+                        {action.btnLabel}
+                        <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+
           {/* ── Kit buyer upgrade banner ──────────────────────── */}
           {isKitBuyer && (
-            <div className="mb-10 relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-px">
+            <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-px">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/20" />
               <div className="relative rounded-2xl bg-gradient-to-r from-slate-900/95 via-slate-800/95 to-slate-900/95 p-8 md:p-10">
                 <div className="flex flex-col lg:flex-row lg:items-center gap-8">
@@ -477,7 +696,7 @@ export default function DashboardPage() {
                       ))}
                     </div>
                     <div className="flex items-center gap-4">
-                      <Button size="lg" className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30" asChild>
+                      <Button size="lg" className="bg-black hover:bg-black/80 text-white shadow-lg" asChild>
                         <Link href="/membership/certified-borrower">
                           Enroll Now — $250
                           <ArrowRight className="ml-2 h-5 w-5" />
@@ -502,460 +721,252 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* ── Two-column grid ───────────────────────────────── */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-            {/* ──── LEFT COLUMN (2/3) ─────────────────────────── */}
-            <div className="lg:col-span-2 space-y-8">
-
-              {/* Download Kit CTA for kit buyers */}
-              {isKitBuyer && (
-                <Card className="border-0 shadow-sm bg-gradient-to-br from-primary/5 to-emerald-50/50 overflow-hidden">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-4">
-                      <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <BookOpen className="h-7 w-7 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900">Download Your Success Kit</h3>
-                        <p className="text-sm text-gray-500">Access your purchased kit materials and templates</p>
-                      </div>
-                      <Button size="sm" className="flex-shrink-0" asChild>
-                        <Link href="/workbook">
-                          Download
-                          <ArrowRight className="ml-1.5 h-4 w-4" />
-                        </Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* ── PrepCoach Tasks ──────────────────────────────── */}
-              <Card className="border-0 shadow-sm overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b pb-4">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2.5 text-lg">
-                      <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <Bot className="h-4.5 w-4.5 text-primary" />
-                      </div>
-                      Work with Prep Coach
-                    </CardTitle>
-                    <Button variant="ghost" size="sm" asChild className="text-primary">
-                      <Link href="/prepcoach">
-                        View All
-                        <ChevronRight className="ml-1 h-3.5 w-3.5" />
-                      </Link>
-                    </Button>
+          {/* ── K2 Partner Network (lower on page) ────────────── */}
+          <Card className="border-0 shadow-sm overflow-hidden mb-8">
+            <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b pb-4">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2.5 text-lg">
+                  <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                    <Handshake className="h-4.5 w-4.5 text-emerald-600" />
                   </div>
-                </CardHeader>
-                <CardContent className="p-5">
-                  <p className="text-base font-semibold text-primary mb-4">
-                    {isCertifiedBorrower
-                      ? 'Select a task to get step-by-step AI coaching for your loan package.'
-                      : 'Get started with core templates. Upgrade to unlock all tasks.'}
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {/* View All first */}
-                    <Link
-                      href="/prepcoach"
-                      className="group flex items-center gap-3 rounded-xl border border-primary/20 bg-primary/5 p-3.5 hover:border-primary/40 hover:bg-primary/10 transition-all duration-200"
-                    >
-                      <div className="h-10 w-10 rounded-lg bg-primary/20 text-primary flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                        <Bot className="h-5 w-5" />
-                      </div>
-                      <span className="text-sm font-medium text-primary group-hover:text-primary">
-                        View All Tasks
-                      </span>
-                      <ChevronRight className="h-4 w-4 text-primary/50 ml-auto group-hover:translate-x-0.5 transition-all" />
+                  K2 Partner Network
+                </CardTitle>
+                {isCertifiedBorrower && (
+                  <Button variant="ghost" size="sm" asChild className="text-primary">
+                    <Link href="/dashboard/resources">
+                      View All
+                      <ChevronRight className="ml-1 h-3.5 w-3.5" />
                     </Link>
-                    {prepTasks.slice(0, 3).map((task) => (
-                      <Link
-                        key={task.label}
-                        href={task.href}
-                        className="group flex items-center gap-3 rounded-xl border border-slate-100 p-3.5 hover:border-primary/30 hover:bg-slate-50/80 transition-all duration-200"
-                      >
-                        <div className={`h-10 w-10 rounded-lg ${task.color} flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform`}>
-                          <task.icon className="h-5 w-5" />
-                        </div>
-                        <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                          {task.label}
-                        </span>
-                        <ChevronRight className="h-4 w-4 text-slate-300 ml-auto group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
-                      </Link>
-                    ))}
+                  </Button>
+                )}
+              </div>
+            </CardHeader>
+            <CardContent className="p-5">
+              {isCertifiedBorrower ? (
+                <>
+                  <p className="text-sm text-gray-500 mb-4">
+                    Browse vetted lenders and trusted vendors for your CRE needs.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Link
+                      href="/dashboard/resources?filter=lender"
+                      className="group flex items-center gap-3 rounded-xl border border-slate-100 p-4 hover:border-primary/30 hover:bg-slate-50/80 transition-all"
+                    >
+                      <div className="h-12 w-12 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                        <Image src="/assets/Lender_Logo.png" alt="Lenders" width={32} height={32} className="object-contain" />
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900 text-sm">Find Targeted Lenders</h4>
+                        <p className="text-xs text-gray-500">100+ vetted lenders</p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-slate-300 ml-auto group-hover:text-primary" />
+                    </Link>
+                    <Link
+                      href="/dashboard/lender-outreach"
+                      className="group flex items-center gap-3 rounded-xl border border-slate-100 p-4 hover:border-primary/30 hover:bg-slate-50/80 transition-all"
+                    >
+                      <div className="h-12 w-12 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                        <TrendingUp className="h-6 w-6 text-emerald-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900 text-sm">Track Lender Submissions</h4>
+                        <p className="text-xs text-gray-500">Monitor your outreach</p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-slate-300 ml-auto group-hover:text-primary" />
+                    </Link>
                   </div>
-                  {isKitBuyer && (
-                    <div className="mt-4 p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-2 text-sm text-gray-500">
-                      <Lock className="h-4 w-4 text-slate-400 flex-shrink-0" />
-                      Advanced tasks require{' '}
-                      <Link href="/membership/certified-borrower" className="text-primary hover:underline font-medium">
-                        Certified Borrower
-                      </Link>{' '}
-                      access
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                </>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="h-20 w-20 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                    <Handshake className="h-10 w-10 text-slate-300" />
+                  </div>
+                  <p className="text-sm text-gray-500 mb-1 font-medium">
+                    Unlock our partner network
+                  </p>
+                  <p className="text-xs text-gray-400 mb-4 max-w-xs mx-auto">
+                    100+ preferred lenders and trusted vendors await Certified Borrowers.
+                  </p>
+                  <Button size="sm" asChild>
+                    <Link href="/membership/certified-borrower">
+                      Upgrade to Access
+                      <ArrowRight className="ml-1.5 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
-              {/* ── K2 Partner Network ────────────────────────────── */}
-              <Card className="border-0 shadow-sm overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b pb-4">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2.5 text-lg">
-                      <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
-                        <Handshake className="h-4.5 w-4.5 text-emerald-600" />
-                      </div>
-                      K2 Partner Network
-                    </CardTitle>
-                    {isCertifiedBorrower && (
-                      <Button variant="ghost" size="sm" asChild className="text-primary">
-                        <Link href="/dashboard/resources">
-                          View All
-                          <ChevronRight className="ml-1 h-3.5 w-3.5" />
-                        </Link>
-                      </Button>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent className="p-5">
-                  {isCertifiedBorrower ? (
-                    <>
-                      <p className="text-sm text-gray-500 mb-4">
-                        Browse vetted lenders and trusted vendors for your CRE needs.
-                      </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <Link
-                          href="/dashboard/resources?filter=lender"
-                          className="group flex items-center gap-3 rounded-xl border border-slate-100 p-4 hover:border-primary/30 hover:bg-slate-50/80 transition-all"
-                        >
-                          <div className="h-12 w-12 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
-                            <Image src="/assets/Lender_Logo.png" alt="Lenders" width={32} height={32} className="object-contain" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium text-gray-900 text-sm">Preferred Lenders</h4>
-                            <p className="text-xs text-gray-500">100+ vetted lenders</p>
-                          </div>
-                          <ChevronRight className="h-4 w-4 text-slate-300 ml-auto group-hover:text-primary" />
-                        </Link>
-                        <Link
-                          href="/dashboard/resources?filter=vendor"
-                          className="group flex items-center gap-3 rounded-xl border border-slate-100 p-4 hover:border-primary/30 hover:bg-slate-50/80 transition-all"
-                        >
-                          <div className="h-12 w-12 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
-                            <Image src="/assets/Vendor_Logo.png" alt="Vendors" width={32} height={32} className="object-contain" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium text-gray-900 text-sm">Trusted Vendors</h4>
-                            <p className="text-xs text-gray-500">CRE service providers</p>
-                          </div>
-                          <ChevronRight className="h-4 w-4 text-slate-300 ml-auto group-hover:text-primary" />
-                        </Link>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-center py-8">
-                      <div className="h-20 w-20 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
-                        <Image src="/assets/Network_Logo.png" alt="Network" width={48} height={48} className="object-contain opacity-50" />
-                      </div>
-                      <p className="text-sm text-gray-500 mb-1 font-medium">
-                        Unlock our partner network
-                      </p>
-                      <p className="text-xs text-gray-400 mb-4 max-w-xs mx-auto">
-                        100+ preferred lenders and trusted vendors await Certified Borrowers.
-                      </p>
-                      <Button size="sm" asChild>
-                        <Link href="/membership/certified-borrower">
-                          Upgrade to Access
-                          <ArrowRight className="ml-1.5 h-4 w-4" />
-                        </Link>
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* ── My Deals ─────────────────────────────────── */}
-              <Card className="border-0 shadow-sm overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b pb-4">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2.5 text-lg">
-                      <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
-                        <Upload className="h-4 w-4 text-emerald-600" />
-                      </div>
-                      My Deals
-                    </CardTitle>
-                    {(isCertifiedBorrower || isKitBuyer) && (
-                      <Button variant="ghost" size="sm" asChild className="text-primary">
-                        <Link href="/dashboard/deal-room">
-                          View All
-                          <ChevronRight className="ml-1 h-3.5 w-3.5" />
-                        </Link>
-                      </Button>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent className="p-5">
-                  {(isCertifiedBorrower || isKitBuyer) ? (
-                    <>
-                      {submissions.length === 0 ? (
-                        <div className="text-center py-6">
-                          <div className="h-16 w-16 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
-                            <FileText className="h-8 w-8 text-emerald-300" />
-                          </div>
-                          <p className="text-sm text-gray-500 mb-4">
-                            No deals yet. Start your first deal in the Deal Room.
-                          </p>
-                          <Button size="sm" asChild>
-                            <Link href="/dashboard/deal-room">
-                              Open Deal Room
-                              <ArrowRight className="ml-1.5 h-4 w-4" />
-                            </Link>
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          {submissions.slice(0, 5).map((submission) => (
-                            <Link
-                              key={submission.id}
-                              href="/dashboard/deal-room"
-                              className="block rounded-xl border border-slate-100 p-4 hover:border-primary/30 hover:bg-slate-50/80 transition-colors"
-                            >
-                              <div className="flex items-center justify-between gap-3 mb-1">
-                                <div className="flex items-center gap-2">
-                                  <div className={`h-2 w-2 rounded-full ${submission.summary_text ? 'bg-primary' : 'bg-amber-400'}`} />
-                                  <p className="font-medium text-sm text-gray-900">
-                                    {submission.summary_text ? 'Summary Generated' : 'Intake Saved'}
-                                  </p>
-                                </div>
-                                <span className="text-xs text-gray-400 flex items-center gap-1">
-                                  <Clock className="h-3 w-3" />
-                                  {new Date(submission.created_at).toLocaleDateString()}
-                                </span>
-                              </div>
-                              <p className="text-xs text-gray-500 line-clamp-2 ml-4">
-                                {submission.summary_text ?? 'Summary not generated yet.'}
-                              </p>
-                            </Link>
-                          ))}
-                          <Button size="sm" variant="outline" className="w-full" asChild>
-                            <Link href="/dashboard/deal-room">
-                              Go to Deal Room
-                              <ArrowRight className="ml-1.5 h-4 w-4" />
-                            </Link>
-                          </Button>
-                        </div>
+          {/* ── Profile + Purchase history row ────────────────── */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Profile card */}
+            <Card className="border-0 shadow-sm overflow-hidden">
+              {/* Header: avatar left + badge right */}
+              <div className="relative flex items-center justify-between px-5 py-4 bg-gradient-to-r from-primary/80 to-emerald-400/80">
+                <div className="h-14 w-14 rounded-xl bg-white shadow-md flex items-center justify-center text-lg font-bold text-primary border-2 border-white/80 flex-shrink-0">
+                  {initials}
+                </div>
+                {(isCertifiedBorrower || isKitBuyer) && (
+                  <div className="flex items-center gap-2">
+                    <div className="flex flex-col items-end">
+                      <span className="text-[10px] font-semibold text-white/80 uppercase tracking-wide">
+                        {isCertifiedBorrower ? 'K2 Certified Borrower' : 'Kit Buyer'}
+                      </span>
+                      <span className="text-xs font-bold text-white leading-tight">{displayName}</span>
+                      {isCertifiedBorrower && membershipNumber && (
+                        <span className="text-[10px] font-mono text-white/70">{membershipNumber}</span>
                       )}
-                    </>
-                  ) : (
-                    <div className="text-center py-8">
-                      <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
-                        <Lock className="h-7 w-7 text-slate-300" />
-                      </div>
-                      <p className="text-sm text-gray-600 mb-1 font-medium">
-                        Private Deal Room
-                      </p>
-                      <p className="text-xs text-gray-400 mb-4 max-w-xs mx-auto">
-                        Upload documents to your private deal room as a Certified Borrower.
-                      </p>
-                      <Button size="sm" variant="outline" asChild>
-                        <Link href="/membership/certified-borrower">
-                          Upgrade to Access
-                          <ArrowRight className="ml-1.5 h-4 w-4" />
-                        </Link>
-                      </Button>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* ──── RIGHT SIDEBAR (1/3) ───────────────────────── */}
-            <div className="space-y-6">
-
-              {/* Profile card */}
-              <Card className="border-0 shadow-sm overflow-hidden">
-                {/* Header: avatar left + badge right */}
-                <div className="relative flex items-center justify-between px-5 py-4 bg-gradient-to-r from-primary/80 to-emerald-400/80">
-                  <div className="h-14 w-14 rounded-xl bg-white shadow-md flex items-center justify-center text-lg font-bold text-primary border-2 border-white/80 flex-shrink-0">
-                    {initials}
+                    <Image
+                      src="/assets/Borrower_Logo.png"
+                      alt="K2 Badge"
+                      width={48}
+                      height={48}
+                      className="h-12 w-12 object-contain drop-shadow-md"
+                    />
                   </div>
-                  {(isCertifiedBorrower || isKitBuyer) && (
-                    <div className="flex items-center gap-2">
-                      <div className="flex flex-col items-end">
-                        <span className="text-[10px] font-semibold text-white/80 uppercase tracking-wide">
-                          {isCertifiedBorrower ? 'K2 Certified Borrower' : 'Kit Buyer'}
-                        </span>
-                        <span className="text-xs font-bold text-white leading-tight">{displayName}</span>
-                        {isCertifiedBorrower && membershipNumber && (
-                          <span className="text-[10px] font-mono text-white/70">{membershipNumber}</span>
-                        )}
-                      </div>
-                      <Image
-                        src="/assets/Borrower_Logo.png"
-                        alt="K2 Badge"
-                        width={48}
-                        height={48}
-                        className="h-12 w-12 object-contain drop-shadow-md"
-                      />
-                    </div>
+                )}
+              </div>
+              <CardContent className="p-5">
+                <h3 className="font-semibold text-gray-900 text-sm">{displayName}</h3>
+                <p className="text-xs text-gray-400 mb-3 truncate">{user.email}</p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {isCertifiedBorrower && (
+                    <Badge className="bg-primary/10 text-primary text-[10px] px-2 py-0.5 gap-1">
+                      <Image src="/assets/Borrower_Logo.png" alt="" width={12} height={12} className="h-3 w-3 object-contain" />
+                      Certified
+                    </Badge>
+                  )}
+                  {isCertifiedBorrower && membershipNumber && (
+                    <Badge variant="outline" className="text-[10px] px-2 py-0.5 font-mono">{membershipNumber}</Badge>
+                  )}
+                  {isKitBuyer && (
+                    <Badge variant="outline" className="text-[10px] px-2 py-0.5 gap-1">
+                      <Image src="/assets/Borrower_Logo.png" alt="" width={12} height={12} className="h-3 w-3 object-contain" />
+                      Kit Owner
+                    </Badge>
+                  )}
+                  {isBasicBorrower && (
+                    <Badge variant="outline" className="text-[10px] px-2 py-0.5">Borrower</Badge>
                   )}
                 </div>
-                <CardContent className="p-5">
-                  <h3 className="font-semibold text-gray-900 text-sm">{displayName}</h3>
-                  <p className="text-xs text-gray-400 mb-3 truncate">{user.email}</p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {isCertifiedBorrower && (
-                      <Badge className="bg-primary/10 text-primary text-[10px] px-2 py-0.5 gap-1">
-                        <Image src="/assets/Borrower_Logo.png" alt="" width={12} height={12} className="h-3 w-3 object-contain" />
-                        Certified
-                      </Badge>
-                    )}
-                    {isCertifiedBorrower && membershipNumber && (
-                      <Badge variant="outline" className="text-[10px] px-2 py-0.5 font-mono">{membershipNumber}</Badge>
-                    )}
-                    {isKitBuyer && (
-                      <Badge variant="outline" className="text-[10px] px-2 py-0.5 gap-1">
-                        <Image src="/assets/Borrower_Logo.png" alt="" width={12} height={12} className="h-3 w-3 object-contain" />
-                        Kit Owner
-                      </Badge>
-                    )}
-                    {isBasicBorrower && (
-                      <Badge variant="outline" className="text-[10px] px-2 py-0.5">Borrower</Badge>
-                    )}
-                  </div>
-                  <div className="mt-4 pt-4 border-t">
-                    <Button variant="outline" size="sm" className="w-full text-xs" asChild>
-                      <Link href="/profile">
-                        <User className="mr-1.5 h-3 w-3" />
-                        Edit Profile
-                      </Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                <div className="mt-4 pt-4 border-t">
+                  <Button variant="outline" size="sm" className="w-full text-xs" asChild>
+                    <Link href="/profile">
+                      <User className="mr-1.5 h-3 w-3" />
+                      Edit Profile
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
 
-              {/* Quick links */}
+            {/* Quick links */}
+            <Card className="border-0 shadow-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-semibold text-gray-900">Quick Links</CardTitle>
+              </CardHeader>
+              <CardContent className="p-3 pt-0 space-y-1">
+                {[
+                  ...(isCertifiedBorrower || isKitBuyer ? [{ icon: BookOpen, label: 'Success Kit', href: '/dashboard/success-kit' }] : []),
+                  { icon: FileText, label: 'Document Library', href: '/dashboard/documents' },
+                  ...(isCertifiedBorrower || isKitBuyer ? [{ icon: Upload, label: 'Deal Room', href: '/dashboard/deal-room' }] : []),
+                  { icon: Bot, label: 'Prep Coach', href: '/prepcoach/prompts' },
+                  { icon: Video, label: 'Free Content', href: '/content' },
+                  ...(isCertifiedBorrower ? [{ icon: Calendar, label: 'Schedule Call', href: '/dashboard/booking' }] : []),
+                  ...(isCertifiedBorrower ? [{ icon: Handshake, label: 'Partner Network', href: '/dashboard/resources' }] : []),
+                  ...(isAdmin ? [{ icon: Shield, label: 'Admin Panel', href: '/admin' }] : []),
+                ].map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-600 hover:bg-slate-50 hover:text-gray-900 transition-colors"
+                  >
+                    <link.icon className="h-4 w-4 text-slate-400 group-hover:text-primary transition-colors flex-shrink-0" />
+                    <span className="flex-1">{link.label}</span>
+                    <ExternalLink className="h-3 w-3 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </Link>
+                ))}
+                {isCertifiedBorrower && (
+                  <div className="pt-1">
+                    <AssistantDialog
+                      triggerLabel="Open PrepCoach"
+                      triggerVariant="outline"
+                      triggerClassName="w-full text-xs"
+                    />
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Purchase history */}
+            {orders.length > 0 ? (
               <Card className="border-0 shadow-sm">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-semibold text-gray-900">Quick Links</CardTitle>
+                  <CardTitle className="text-sm font-semibold text-gray-900">Your Purchases</CardTitle>
                 </CardHeader>
-                <CardContent className="p-3 pt-0 space-y-1">
-                  {[
-                    { icon: BookOpen, label: 'Document Library', href: '/content' },
-                    ...(isCertifiedBorrower || isKitBuyer ? [{ icon: Upload, label: 'Deal Room', href: '/dashboard/deal-room' }] : []),
-                    { icon: Bot, label: 'Prep Coach Prompts', href: '/prepcoach' },
-                    { icon: BookOpen, label: 'Success Kit', href: '/workbook' },
-                    { icon: Video, label: 'Free Content', href: '/content' },
-                    ...(isCertifiedBorrower ? [{ icon: Calendar, label: 'Schedule Call', href: '/dashboard/booking' }] : []),
-                    ...(isCertifiedBorrower ? [{ icon: Handshake, label: 'Partner Network', href: '/dashboard/resources' }] : []),
-                    ...(isAdmin ? [{ icon: Shield, label: 'Admin Panel', href: '/admin' }] : []),
-                  ].map((link) => (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-600 hover:bg-slate-50 hover:text-gray-900 transition-colors"
-                    >
-                      <link.icon className="h-4 w-4 text-slate-400 group-hover:text-primary transition-colors flex-shrink-0" />
-                      <span className="flex-1">{link.label}</span>
-                      <ExternalLink className="h-3 w-3 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </Link>
-                  ))}
-                  {isCertifiedBorrower && (
-                    <div className="pt-1">
-                      <AssistantDialog
-                        triggerLabel="Open PrepCoach"
-                        triggerVariant="outline"
-                        triggerClassName="w-full text-xs"
-                      />
-                    </div>
-                  )}
+                <CardContent className="p-3 pt-0">
+                  <div className="space-y-3">
+                    {orders.map((order) => (
+                      <div
+                        key={order.id}
+                        className="flex items-center gap-3 p-3 rounded-xl bg-slate-50/80"
+                      >
+                        <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <ShoppingBag className="h-4 w-4 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {order.products.name}
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            {new Date(order.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <span className="text-sm font-semibold text-gray-700">
+                          ${(order.amount / 100).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
-
-              {/* Purchase history */}
-              {orders.length > 0 && (
-                <Card className="border-0 shadow-sm">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-semibold text-gray-900">Your Purchases</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-3 pt-0">
-                    <div className="space-y-3">
-                      {orders.map((order) => (
-                        <div
-                          key={order.id}
-                          className="flex items-center gap-3 p-3 rounded-xl bg-slate-50/80"
-                        >
-                          <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <ShoppingBag className="h-4 w-4 text-primary" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">
-                              {order.products.name}
-                            </p>
-                            <p className="text-xs text-gray-400">
-                              {new Date(order.created_at).toLocaleDateString()}
-                            </p>
-                          </div>
-                          <span className="text-sm font-semibold text-gray-700">
-                            ${(order.amount / 100).toFixed(2)}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Upgrade nudge (sidebar) for kit buyers */}
-              {isKitBuyer && (
-                <Card className="border-0 shadow-sm bg-gradient-to-br from-primary/5 to-emerald-50 overflow-hidden">
-                  <CardContent className="p-5">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Zap className="h-4 w-4 text-primary" />
-                      <h3 className="font-semibold text-sm text-gray-900">Ready to Level Up?</h3>
-                    </div>
-                    <p className="text-xs text-gray-500 mb-4">
-                      Certified Borrowers get full partner access, deal room, and priority support.
-                    </p>
-                    <Button size="sm" className="w-full" asChild>
-                      <Link href="/membership/certified-borrower">
-                        Enroll Now — $250
-                        <ArrowRight className="ml-1.5 h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Upgrade nudge (sidebar) for basic borrowers */}
-              {isBasicBorrower && (
-                <Card className="border-0 shadow-sm bg-gradient-to-br from-primary/5 to-emerald-50 overflow-hidden">
-                  <CardContent className="p-5">
-                    <div className="flex items-center gap-2 mb-3">
-                      <BookOpen className="h-4 w-4 text-primary" />
-                      <h3 className="font-semibold text-sm text-gray-900">Start Your Journey</h3>
-                    </div>
-                    <p className="text-xs text-gray-500 mb-4">
-                      Get the Success Kit for essential CRE templates, scripts, and financial tools.
-                    </p>
-                    <Button size="sm" className="w-full" asChild>
+            ) : (
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-primary/5 to-emerald-50 overflow-hidden">
+                <CardContent className="p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <BookOpen className="h-4 w-4 text-primary" />
+                    <h3 className="font-semibold text-sm text-gray-900">
+                      {isBasicBorrower ? 'Start Your Journey' : 'Ready to Level Up?'}
+                    </h3>
+                  </div>
+                  <p className="text-xs text-gray-500 mb-4">
+                    {isBasicBorrower
+                      ? 'Get the Success Kit for essential CRE templates, scripts, and financial tools.'
+                      : isCertifiedBorrower
+                      ? 'You have full access to all K2 platform features.'
+                      : 'Certified Borrowers get full partner access, deal room, and priority support.'}
+                  </p>
+                  {isBasicBorrower && (
+                    <Button size="sm" className="w-full bg-black hover:bg-black/80 text-white" asChild>
                       <Link href="/workbook">
                         Get Success Kit — $15
                         <ArrowRight className="ml-1.5 h-4 w-4" />
                       </Link>
                     </Button>
-                    <div className="mt-3 pt-3 border-t border-primary/10">
-                      <Button size="sm" variant="ghost" className="w-full text-xs text-gray-500" asChild>
-                        <Link href="/membership/certified-borrower">
-                          Or become Certified — $250
-                        </Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
+                  )}
+                  {isKitBuyer && (
+                    <Button size="sm" className="w-full bg-black hover:bg-black/80 text-white" asChild>
+                      <Link href="/membership/certified-borrower">
+                        Enroll Now — $250
+                        <ArrowRight className="ml-1.5 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </section>

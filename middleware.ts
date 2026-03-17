@@ -45,7 +45,13 @@ export async function middleware(request: NextRequest) {
   // IMPORTANT: Do NOT use supabase.auth.getSession() here.
   // getUser() sends a request to the Supabase Auth server every time,
   // which guarantees the token is fresh and validated server-side.
-  await supabase.auth.getUser();
+  try {
+    await supabase.auth.getUser();
+  } catch (error) {
+    // Supabase may be temporarily unreachable — continue without crashing
+    // the request. The client-side auth context will handle re-auth.
+    console.warn('Middleware: Supabase getUser failed, continuing without auth refresh.');
+  }
 
   return supabaseResponse;
 }
