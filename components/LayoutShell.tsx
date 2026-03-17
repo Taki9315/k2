@@ -43,7 +43,6 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
       {!viewAs && <Navigation />}
       {viewAs && <Navigation hideHeader />}
       <main className="flex-grow">{children}</main>
-      <AssistantLauncher />
       <Footer />
     </div>
   );
