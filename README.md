@@ -37,7 +37,7 @@ app/
 │   │   └── [dealId]/         # Per-deal lender table + status steps
 │   ├── booking/              # Schedule appointments
 │   ├── resources/            # Partner network
-│   └── affiliate/            # Affiliate portal
+│   └── success-kit/          # Success Kit flipbook viewer
 ├── prepcoach/                # AI coaching tool (PrepCoach)
 │   ├── page.tsx              # Marketing page + prompts + Excel tips
 │   └── prompts/              # Interactive prompt templates

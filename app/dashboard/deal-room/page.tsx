@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
 import {
   Plus,
@@ -23,6 +24,7 @@ import {
   KeyRound,
   Eye,
   EyeOff,
+  CheckCircle2,
 } from 'lucide-react';
 
 type Deal = {
@@ -45,6 +47,7 @@ export default function DealRoomPage() {
   const [newDealPassword, setNewDealPassword] = useState('');
   const [showNewDealPassword, setShowNewDealPassword] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!loading && !user) router.push('/login');
@@ -105,6 +108,10 @@ export default function DealRoomPage() {
 
       if (res.ok) {
         const data = await res.json();
+        toast({
+          title: '\u2705 Deal Created Successfully',
+          description: `"${name}" is ready. Start uploading documents.`,
+        });
         router.push(`/dashboard/deal-room/${data.deal.id}`);
       } else {
         const data = await res.json();
@@ -279,11 +286,12 @@ export default function DealRoomPage() {
                   </button>
                 </div>
               </div>
-              <div className="flex items-center gap-3 justify-end">
-                <p className="text-xs text-amber-600 flex-1 flex items-center gap-1">
-                  <Lock className="h-3 w-3" />
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:justify-end">
+                <p className="text-xs text-amber-600 flex items-center gap-1 order-last sm:order-first sm:flex-1">
+                  <Lock className="h-3 w-3 flex-shrink-0" />
                   Password is required — viewers must enter it to access shared links.
                 </p>
+                <div className="flex items-center gap-3 self-end">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -298,6 +306,7 @@ export default function DealRoomPage() {
                 <Button onClick={handleCreateDeal} disabled={creating || !newDealName.trim() || !newDealPassword.trim()}>
                   {creating ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Create Deal'}
                 </Button>
+                </div>
               </div>
             </CardContent>
           </Card>

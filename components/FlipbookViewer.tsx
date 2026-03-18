@@ -181,14 +181,14 @@ export function FlipbookViewer({
             <>
               <button
                 onClick={goPrev}
-                className="absolute left-0 top-0 bottom-0 w-16 opacity-0 hover:opacity-100 bg-gradient-to-r from-black/10 to-transparent transition-opacity flex items-center justify-start pl-2"
+                className="absolute left-0 top-0 bottom-0 w-16 opacity-20 sm:opacity-0 sm:hover:opacity-100 bg-gradient-to-r from-black/10 to-transparent transition-opacity flex items-center justify-start pl-2"
                 aria-label="Previous page"
               >
                 <ChevronLeft className="h-8 w-8 text-white drop-shadow-lg" />
               </button>
               <button
                 onClick={goNext}
-                className="absolute right-0 top-0 bottom-0 w-16 opacity-0 hover:opacity-100 bg-gradient-to-l from-black/10 to-transparent transition-opacity flex items-center justify-end pr-2"
+                className="absolute right-0 top-0 bottom-0 w-16 opacity-20 sm:opacity-0 sm:hover:opacity-100 bg-gradient-to-l from-black/10 to-transparent transition-opacity flex items-center justify-end pr-2"
                 aria-label="Next page"
               >
                 <ChevronRight className="h-8 w-8 text-white drop-shadow-lg" />

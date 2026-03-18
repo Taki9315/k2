@@ -95,7 +95,7 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
                 alt="Brand"
                 width={250}
                 height={126}
-                className="object-contain"
+                className="object-contain w-[160px] sm:w-[200px] md:w-[250px] h-auto"
               />
             </Link>
           </div>
@@ -151,7 +151,7 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
               </DropdownMenu>
               </>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="hidden md:flex items-center space-x-2">
                 <Button variant="default" asChild className="bg-primary hover:bg-primary/90 text-white font-semibold shadow-md">
                   <Link href="/login">Member Login</Link>
                 </Button>
@@ -249,7 +249,7 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
       {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-primary bg-primary">
-          <div className="px-2 pt-2 pb-3 space-y-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="pt-2 pb-3 space-y-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {navLinks.map((link) => {
               // Content dropdown with sub-links (public/logged-out only)
               if (link.href === '/content' && !user) {

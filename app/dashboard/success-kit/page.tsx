@@ -110,7 +110,7 @@ export default function SuccessKitDashboardPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Button size="sm" variant="outline" asChild className="gap-1.5">
                 <Link href="/dashboard/documents">
                   <FolderOpen className="h-4 w-4" />
