@@ -55,13 +55,6 @@ const SUCCESSKIT_FEATURES = [
     image:
       'https://images.pexels.com/photos/6801643/pexels-photo-6801643.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
-  {
-    title: 'Reseller Rights',
-    description:
-      'K2 Success Kit owners receive reseller rights — earn $5 on every sale you refer. Help others on their journey to real estate success.',
-    image:
-      'https://images.pexels.com/photos/7947656/pexels-photo-7947656.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
 ];
 
 export default function WorkbookPage() {
@@ -257,7 +250,6 @@ export default function WorkbookPage() {
                   'Finding the right lender - hint... it may not be your local bank',
                   'Navigating Underwriting and Closing your deal',
                   'Document Vault - All the forms a lender may request, ready for download',
-                  'Reseller Rights — earn $5 on every sale you refer. Help others on their journey to real estate success.',
                 ].map((feature) => (
                   <li key={feature} className="flex items-start group">
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 mr-3 flex-shrink-0 mt-0.5 group-hover:bg-green-200 transition-colors">

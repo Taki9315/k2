@@ -48,12 +48,6 @@ const BENEFITS = [
       'Upload documents and a 2-minute video introduction to your firm — so borrowers can get to know you before they even reach out.',
   },
   {
-    icon: DollarSign,
-    title: 'Reseller Rights & Referral Revenue',
-    description:
-      'Customize and sell K2 Success Kits / Certified memberships. Earn $5 per Kit referral and $48 per Certified Borrower referral.',
-  },
-  {
     icon: Users,
     title: 'Direct Access to Qualified Borrowers',
     description:
@@ -336,7 +330,6 @@ export default function PartnerRecruitmentPage() {
                     'Custom website page in K2 partner ecosystem',
                     'Prep Coach always suggests your firm first',
                     'Upload documents & 2-min video intro',
-                    'Reseller rights: $5 per Kit, $48 per Certified referral',
                     'K2 Preferred Badge on your profile',
                     'Direct access to pre-qualified borrowers',
                     'Priority support & partner dashboard',

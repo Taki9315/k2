@@ -20,6 +20,7 @@ import {
   Sparkles,
   FileSpreadsheet,
   FileText,
+  FolderOpen,
 } from 'lucide-react';
 
 /**
@@ -110,6 +111,12 @@ export default function SuccessKitDashboardPage() {
             </div>
 
             <div className="flex items-center gap-2">
+              <Button size="sm" variant="outline" asChild className="gap-1.5">
+                <Link href="/dashboard/documents">
+                  <FolderOpen className="h-4 w-4" />
+                  Document Library
+                </Link>
+              </Button>
               <Button size="sm" asChild className="gap-1.5 bg-black hover:bg-black/80 text-white">
                 <a href={PDF_URL} download>
                   <Download className="h-4 w-4" />
@@ -252,6 +259,30 @@ export default function SuccessKitDashboardPage() {
             </Card>
           </div>
         </div>
+
+        {/* Access Document Library — prominent CTA */}
+        <Card className="mt-8 border-primary/20 bg-gradient-to-br from-emerald-50/50 to-white">
+          <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-4">
+            <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <FolderOpen className="h-7 w-7 text-primary" />
+            </div>
+            <div className="flex-1 text-center sm:text-left">
+              <h3 className="text-lg font-bold text-gray-900 mb-1">
+                Access Document Library
+              </h3>
+              <p className="text-sm text-gray-600">
+                Download application forms, companion worksheets, templates, and all
+                the documents you need for your loan package.
+              </p>
+            </div>
+            <Button size="lg" asChild className="gap-2 bg-black hover:bg-black/80 text-white shadow-md flex-shrink-0">
+              <Link href="/dashboard/documents">
+                <FolderOpen className="h-5 w-5" />
+                Open Document Library
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Certified upsell (only for Kit users) */}
         {isKitBuyer && (

@@ -32,7 +32,7 @@ export default function LoginPage() {
     if (isAdmin) {
       router.push('/admin');
     } else if (isPartner) {
-      router.push('/dashboard/affiliate');
+      router.push('/dashboard');
     } else if (isCertifiedBorrower) {
       // Certified: full dashboard with deal room, network, etc.
       router.push('/dashboard');
