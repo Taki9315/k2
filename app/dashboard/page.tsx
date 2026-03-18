@@ -403,7 +403,7 @@ export default function DashboardPage() {
                             Download Success Kit
                           </a>
                         </Button>
-                        <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 shadow-lg" asChild>
+                        <Button size="lg" variant="outline" className="bg-transparent border-white/20 text-white hover:bg-white/10 shadow-lg" asChild>
                           <Link href="/dashboard/documents">
                             <FileText className="mr-2 h-5 w-5" />
                             Document Library
