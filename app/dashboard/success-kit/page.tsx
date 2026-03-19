@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { FlipbookViewer } from '@/components/FlipbookViewer';
 import {
@@ -21,6 +22,9 @@ import {
   FileSpreadsheet,
   FileText,
   FolderOpen,
+  FileImage,
+  File,
+  X,
 } from 'lucide-react';
 
 /**
@@ -37,10 +41,48 @@ function getPageUrl(page: number): string {
   return `/assets/success-kit-pages/page-${page}.jpg`;
 }
 
+/** Detect file format from mime type or file URL */
+function getFileFormat(mimeType: string, fileUrl: string): { label: string; color: string; icon: typeof FileText } {
+  const url = fileUrl.toLowerCase();
+  if (mimeType === 'application/pdf' || url.endsWith('.pdf')) {
+    return { label: 'PDF', color: 'bg-red-100 text-red-700 border-red-200', icon: FileText };
+  }
+  if (
+    mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+    mimeType === 'application/vnd.ms-excel' ||
+    url.endsWith('.xlsx') || url.endsWith('.xls') || url.endsWith('.csv')
+  ) {
+    return { label: url.endsWith('.csv') ? 'CSV' : 'Excel', color: 'bg-emerald-100 text-emerald-700 border-emerald-200', icon: FileSpreadsheet };
+  }
+  if (
+    mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+    mimeType === 'application/msword' ||
+    url.endsWith('.docx') || url.endsWith('.doc')
+  ) {
+    return { label: 'Word', color: 'bg-blue-100 text-blue-700 border-blue-200', icon: FileText };
+  }
+  if (
+    mimeType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
+    mimeType === 'application/vnd.ms-powerpoint' ||
+    url.endsWith('.pptx') || url.endsWith('.ppt')
+  ) {
+    return { label: 'PowerPoint', color: 'bg-orange-100 text-orange-700 border-orange-200', icon: FileText };
+  }
+  if (mimeType.startsWith('image/') || url.match(/\.(jpg|jpeg|png|gif|svg|webp)$/)) {
+    return { label: 'Image', color: 'bg-purple-100 text-purple-700 border-purple-200', icon: FileImage };
+  }
+  if (url.endsWith('.md') || mimeType === 'text/markdown') {
+    return { label: 'Markdown', color: 'bg-gray-100 text-gray-700 border-gray-200', icon: FileText };
+  }
+  return { label: 'File', color: 'bg-slate-100 text-slate-600 border-slate-200', icon: File };
+}
+
 export default function SuccessKitDashboardPage() {
   const { user, loading, isCertifiedBorrower, isKitBuyer, isAdmin } = useAuth();
   const router = useRouter();
   const [pdfReady, setPdfReady] = useState(false);
+  const [libraryDocs, setLibraryDocs] = useState<{ id: string; title: string; description: string | null; file_url: string; file_size: number; mime_type: string; category: string }[]>([]);
+  const [viewingPdf, setViewingPdf] = useState<{ title: string; url: string } | null>(null);
 
   useEffect(() => {
     if (!loading && !user) router.push('/login');
@@ -54,6 +96,15 @@ export default function SuccessKitDashboardPage() {
       .then((res) => setPdfReady(res.ok))
       .catch(() => setPdfReady(false));
   }, []);
+
+  // Fetch document library docs
+  useEffect(() => {
+    if (!hasAccess) return;
+    fetch('/api/document-library')
+      .then((res) => res.ok ? res.json() : { docs: [] })
+      .then((data) => setLibraryDocs(data.docs || []))
+      .catch(() => {});
+  }, [hasAccess]);
 
   if (loading || !user) {
     return (
@@ -146,24 +197,105 @@ export default function SuccessKitDashboardPage() {
             className="mb-8"
           />
         ) : (
-          <Card className="mb-8">
-            <CardContent className="py-16 text-center">
-              <BookOpen className="h-16 w-16 text-slate-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Flipbook Coming Soon
-              </h3>
-              <p className="text-sm text-gray-600 max-w-md mx-auto mb-6">
-                The interactive flipbook viewer is being prepared. In the
-                meantime, download the PDF directly to read and print.
-              </p>
-              <Button asChild className="gap-2 bg-black hover:bg-black/80 text-white">
-                <a href={PDF_URL} download>
-                  <Download className="h-4 w-4" />
-                  Download Success Kit PDF
-                </a>
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="mb-8 space-y-4">
+            {/* PDF Download card */}
+            <Card>
+              <CardContent className="py-8 text-center">
+                <BookOpen className="h-12 w-12 text-slate-300 mx-auto mb-3" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                  Success Kit PDF
+                </h3>
+                <p className="text-sm text-gray-600 max-w-md mx-auto mb-4">
+                  Download the full Success Kit PDF to read and print.
+                </p>
+                <Button asChild className="gap-2 bg-black hover:bg-black/80 text-white">
+                  <a href={PDF_URL} download>
+                    <Download className="h-4 w-4" />
+                    Download Success Kit PDF
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Document Library listing */}
+            {libraryDocs.length > 0 && (
+              <Card>
+                <CardContent className="p-5">
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <FolderOpen className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900">Document Library</h3>
+                      <p className="text-xs text-gray-500">{libraryDocs.length} {libraryDocs.length === 1 ? 'document' : 'documents'} available</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {libraryDocs.map((doc) => {
+                      const fmt = getFileFormat(doc.mime_type, doc.file_url);
+                      const isPdf = fmt.label === 'PDF';
+                      const FormatIcon = fmt.icon;
+                      return (
+                        <div
+                          key={doc.id}
+                          className="flex items-center justify-between gap-3 rounded-lg border border-slate-100 p-3 hover:bg-slate-50/80 transition-colors"
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className={`h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 ${fmt.color.split(' ')[0]}`}>
+                              <FormatIcon className={`h-4 w-4 ${fmt.color.split(' ')[1]}`} />
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-medium text-gray-900 truncate">{doc.title}</p>
+                              {doc.description && (
+                                <p className="text-xs text-gray-500 truncate">{doc.description}</p>
+                              )}
+                              <div className="flex items-center gap-2 mt-0.5">
+                                <Badge className={`text-[10px] px-1.5 py-0 border ${fmt.color}`}>
+                                  {fmt.label}
+                                </Badge>
+                                {doc.category && (
+                                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                                    {doc.category}
+                                  </Badge>
+                                )}
+                                {doc.file_size > 0 && (
+                                  <span className="text-[10px] text-gray-400">
+                                    {doc.file_size < 1024 * 1024
+                                      ? (doc.file_size / 1024).toFixed(1) + ' KB'
+                                      : (doc.file_size / (1024 * 1024)).toFixed(1) + ' MB'}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1.5 flex-shrink-0">
+                            {isPdf && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="gap-1.5 h-8"
+                                title="Open PDF viewer"
+                                onClick={() => setViewingPdf({ title: doc.title, url: doc.file_url })}
+                              >
+                                <BookOpen className="h-3.5 w-3.5" />
+                                View
+                              </Button>
+                            )}
+                            <Button size="sm" variant="outline" asChild className="gap-1.5 h-8">
+                              <a href={doc.file_url} download>
+                                <Download className="h-3.5 w-3.5" />
+                                Download
+                              </a>
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         )}
 
         {/* Quick info cards */}
@@ -307,6 +439,35 @@ export default function SuccessKitDashboardPage() {
           </Card>
         )}
       </div>
+
+      {/* PDF Viewer Dialog */}
+      <Dialog open={!!viewingPdf} onOpenChange={() => setViewingPdf(null)}>
+        <DialogContent className="max-w-5xl h-[90vh] flex flex-col p-0 gap-0">
+          <DialogHeader className="px-5 py-3 border-b flex-shrink-0">
+            <DialogTitle className="flex items-center gap-2 text-base pr-8">
+              <BookOpen className="h-4 w-4 text-primary" />
+              {viewingPdf?.title}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 min-h-0 relative">
+            <div className="absolute top-2 right-2 z-10">
+              <Button size="sm" variant="secondary" asChild className="gap-1.5 h-7 text-xs shadow-sm">
+                <a href={viewingPdf?.url || ''} download>
+                  <Download className="h-3 w-3" />
+                  Download
+                </a>
+              </Button>
+            </div>
+            {viewingPdf && (
+              <iframe
+                src={viewingPdf.url}
+                className="w-full h-full border-0"
+                title={viewingPdf.title}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -68,6 +68,15 @@ type GeneratedDocument = {
   created_at: string;
 };
 
+type Deal = {
+  id: string;
+  name: string;
+  hasPassword: boolean;
+  fileCount: number;
+  created_at: string;
+  updated_at: string;
+};
+
 export default function DashboardPage() {
   const { user, loading, isCertifiedBorrower, isKitBuyer, isBasicBorrower, isAdmin, fullName, membershipNumber } = useAuth();
   const router = useRouter();
@@ -75,6 +84,7 @@ export default function DashboardPage() {
 
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [generatedDocs, setGeneratedDocs] = useState<GeneratedDocument[]>([]);
+  const [deals, setDeals] = useState<Deal[]>([]);
   const [dealCount, setDealCount] = useState(0);
 
   useEffect(() => {
@@ -151,7 +161,9 @@ export default function DashboardPage() {
       });
       if (res.ok) {
         const data = await res.json();
-        setDealCount(data.deals?.length ?? 0);
+        const dealsList = data.deals ?? [];
+        setDeals(dealsList);
+        setDealCount(dealsList.length);
       }
     } catch (error) {
       console.error('Error fetching deal count:', error);
@@ -499,7 +511,7 @@ export default function DashboardPage() {
             <CardContent className="p-5">
               {(isCertifiedBorrower || isKitBuyer) ? (
                 <>
-                  {submissions.length === 0 ? (
+                  {dealCount === 0 && submissions.length === 0 ? (
                     <div className="text-center py-6">
                       <div className="h-16 w-16 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
                         <FileText className="h-8 w-8 text-emerald-300" />
@@ -516,6 +528,44 @@ export default function DashboardPage() {
                     </div>
                   ) : (
                     <div className="space-y-3">
+                      {deals.slice(0, 4).map((deal) => (
+                        <Link
+                          key={deal.id}
+                          href="/dashboard/deal-room"
+                          className="block rounded-xl border border-slate-100 p-4 hover:border-primary/30 hover:bg-slate-50/80 transition-colors"
+                        >
+                          <div className="flex items-center justify-between gap-3 mb-1">
+                            <div className="flex items-center gap-2.5">
+                              <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                                <Building2 className="h-4 w-4 text-emerald-600" />
+                              </div>
+                              <p className="font-medium text-sm text-gray-900">
+                                {deal.name}
+                              </p>
+                            </div>
+                            <span className="text-xs text-gray-400 flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              {new Date(deal.created_at).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-500 ml-[42px]">
+                            {deal.fileCount} {deal.fileCount === 1 ? 'document' : 'documents'} uploaded
+                          </p>
+                        </Link>
+                      ))}
+                      {deals.length > 4 && (
+                        <div className="flex items-center justify-between rounded-lg border border-dashed border-slate-200 px-4 py-3">
+                          <p className="text-xs text-gray-500">
+                            +{deals.length - 4} more {deals.length - 4 === 1 ? 'deal' : 'deals'}
+                          </p>
+                          <Button size="sm" variant="outline" asChild>
+                            <Link href="/dashboard/deal-room">
+                              View More
+                              <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                            </Link>
+                          </Button>
+                        </div>
+                      )}
                       {submissions.slice(0, 5).map((submission) => (
                         <Link
                           key={submission.id}

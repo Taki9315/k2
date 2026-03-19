@@ -357,13 +357,24 @@ export default function AdminPromptsPage() {
                   </div>
                   <h3 className="text-base font-semibold text-foreground">
                     {prompt.title}
+                    {prompt.content && (
+                      <span className="italic">
+                        {" ("}
+                        {prompt.content.split(/[.!?]\s/)[0]}
+                        {prompt.content.split(/[.!?]\s/).length > 1 ? "." : ""}
+                        {")"
+                        }
+                      </span>
+                    )}
                   </h3>
-                  <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                    {prompt.content || "No content"}
-                  </p>
+                  {prompt.content && (
+                    <div className="mt-2 rounded-lg bg-muted/50 border border-border/50 px-3 py-2">
+                      <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 whitespace-pre-wrap">
+                        {prompt.content}
+                      </p>
+                    </div>
+                  )}
                 </div>
-
-                {/* Actions */}
                 <div className="flex items-center gap-1 shrink-0">
                   {/* Reorder */}
                   <Button

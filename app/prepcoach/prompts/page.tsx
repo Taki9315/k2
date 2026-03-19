@@ -332,12 +332,27 @@ function PrepCoachPromptsContent() {
                       </div>
                       <h3 className="text-sm font-semibold text-gray-900 mb-0.5">
                         {dbp.title}
+                        {!locked && dbp.content && (
+                          <span className="italic">
+                            {' ('}
+                            {dbp.content.split(/[.!?]\s/)[0]}
+                            {dbp.content.split(/[.!?]\s/).length > 1 ? '.' : ''}
+                            {')'}
+                          </span>
+                        )}
                       </h3>
-                      <p className="text-xs text-gray-500 leading-relaxed">
-                        {locked
-                          ? 'Upgrade to Certified Borrower to access this prompt.'
-                          : dbp.content.slice(0, 80) + (dbp.content.length > 80 ? '…' : '')}
-                      </p>
+                      {!locked && dbp.content && (
+                        <div className="mt-1.5 rounded-md bg-slate-50 border border-slate-100 px-2.5 py-1.5">
+                          <p className="text-[11px] text-gray-400 leading-relaxed whitespace-pre-wrap">
+                            {dbp.content}
+                          </p>
+                        </div>
+                      )}
+                      {locked && (
+                        <p className="text-xs text-gray-500 leading-relaxed">
+                          Upgrade to Certified Borrower to access this prompt.
+                        </p>
+                      )}
                     </div>
                   </button>
                 );
