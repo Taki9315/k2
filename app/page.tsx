@@ -181,20 +181,34 @@ export default function Home() {
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
             Meet <span className="text-primary">PrepCoach</span>
           </h2>
-          <p className="text-lg text-gray-600 mb-4 leading-relaxed max-w-2xl mx-auto">
-            Your personal AI coach that walks you through every preparation
-            step - so you show up organized, confident, and lender-ready.
+          <p className="text-xl text-gray-700 mb-3 leading-relaxed max-w-2xl mx-auto font-medium">
+            AI made simple &mdash; the first AI agent designed exclusively for small commercial property investors.
           </p>
           <p className="text-lg text-gray-600 mb-4 leading-relaxed max-w-2xl mx-auto">
-            Prep Coach is your unfair competitive advantage. &mdash; A turnkey AI
-            system specifically for commercial real estate investors and business
-            owners.
+            Turnkey program &mdash; no tech expertise needed. Click prompts &rarr; get expert guidance instantly.
           </p>
-          <p className="text-gray-500 mb-10 leading-relaxed max-w-2xl mx-auto">
-            It doesn&apos;t replace experts - it prepares you to work smarter
-            with them. The result? Faster responses, better terms, and deals
-            that close.
+          <p className="text-lg text-gray-600 mb-4 leading-relaxed max-w-2xl mx-auto">
+            Prep Coach is your unfair competitive advantage &mdash; a turnkey AI
+            system that prepares you to work smarter with lenders and advisors.
+            The result? Faster responses, better terms, and deals that close.
           </p>
+
+          {/* Benefit highlights */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto mb-10 mt-8">
+            {[
+              { icon: Zap, text: 'Click prompts → get expert guidance instantly' },
+              { icon: Shield, text: 'Turnkey program — no tech expertise needed' },
+              { icon: Star, text: 'Designed exclusively for CRE investors' },
+            ].map((item) => (
+              <div key={item.text} className="flex flex-col items-center gap-2 rounded-xl bg-white/80 border border-slate-200 p-4 shadow-sm">
+                <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <item.icon className="h-5 w-5 text-primary" />
+                </div>
+                <p className="text-sm font-medium text-gray-700 text-center leading-snug">{item.text}</p>
+              </div>
+            ))}
+          </div>
+
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" asChild className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300">
               <Link href="/prepcoach">

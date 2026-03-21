@@ -24,7 +24,10 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [contentDropdownOpen, setContentDropdownOpen] = useState(false);
   const [mobileContentOpen, setMobileContentOpen] = useState(false);
+  const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
+  const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const contentDropdownRef = useRef<HTMLDivElement>(null);
+  const resourcesDropdownRef = useRef<HTMLDivElement>(null);
 
 
   // Close desktop dropdown when clicking outside
@@ -32,6 +35,9 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
     function handleClickOutside(e: MouseEvent) {
       if (contentDropdownRef.current && !contentDropdownRef.current.contains(e.target as Node)) {
         setContentDropdownOpen(false);
+      }
+      if (resourcesDropdownRef.current && !resourcesDropdownRef.current.contains(e.target as Node)) {
+        setResourcesDropdownOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -42,20 +48,29 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
   // When logged out: full public marketing nav
   const navLinks = user
     ? (() => {
-        const links: { href: string; label: string }[] = [
+        const links: { href: string; label: string; dropdown?: boolean }[] = [
           { href: '/dashboard', label: 'Home' },
         ];
 
-        if (isCertifiedBorrower || isKitBuyer) {
+        if (isCertifiedBorrower) {
+          // Certified nav: Home → Success Kit → Document Library → Prep Coach → Deal Room → Resources → Track Lender Submissions & Deal Status
           links.push({ href: '/dashboard/success-kit', label: 'Success Kit' });
           links.push({ href: '/dashboard/documents', label: 'Document Library' });
-          links.push({ href: '/content', label: 'Resources' });
           links.push({ href: '/prepcoach/prompts', label: 'Prep Coach' });
           links.push({ href: '/dashboard/deal-room', label: 'Deal Room' });
+          links.push({ href: '__resources__', label: 'Resources', dropdown: true });
+          links.push({ href: '/dashboard/lender-outreach', label: 'Track Submissions' });
+        } else if (isKitBuyer) {
+          // Kit Buyer nav: Home → Success Kit → Document Library → Deal Room → Resources → Unlock Full Access
+          links.push({ href: '/dashboard/success-kit', label: 'Success Kit' });
+          links.push({ href: '/dashboard/documents', label: 'Document Library' });
+          links.push({ href: '/dashboard/deal-room', label: 'Deal Room' });
+          links.push({ href: '__resources__', label: 'Resources', dropdown: true });
+          links.push({ href: '/membership/certified-borrower', label: 'Unlock Full Access' });
         } else {
           // Basic borrower: show public resources + Success Kit upsell
           links.push({ href: '/workbook', label: 'Success Kit' });
-          links.push({ href: '/content', label: 'Resources' });
+          links.push({ href: '__resources__', label: 'Resources', dropdown: true });
         }
 
         return links;
@@ -70,6 +85,12 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
         { href: '/partnership', label: 'Partnership Inquiry' },
         { href: '/contact', label: 'Contact' },
       ];
+
+  const resourcesSubLinks = [
+    { href: '/content?tab=videos', label: 'Videos' },
+    { href: '/content?tab=articles', label: 'Articles' },
+    { href: '/Resource', label: 'Third-Party Tools' },
+  ];
 
   const contentSubLinks = [
     { href: '/workbook', label: 'Success Kit' },
@@ -225,6 +246,39 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
                     </div>
                   );
                 }
+                // Resources dropdown for logged-in users
+                if (link.href === '__resources__') {
+                  return (
+                    <div key="resources-dropdown" ref={resourcesDropdownRef} className="relative">
+                      <button
+                        onClick={() => setResourcesDropdownOpen(!resourcesDropdownOpen)}
+                        className={cn(
+                          'inline-flex items-center gap-1 text-sm font-medium transition-colors hover:opacity-90',
+                          pathname.startsWith('/content') || pathname === '/Resource'
+                            ? 'text-primary-foreground'
+                            : 'text-primary-foreground/80'
+                        )}
+                      >
+                        {link.label}
+                        <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', resourcesDropdownOpen && 'rotate-180')} />
+                      </button>
+                      {resourcesDropdownOpen && (
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-48 rounded-lg border border-slate-200 bg-white py-1.5 shadow-xl z-50">
+                          {resourcesSubLinks.map((sub) => (
+                            <Link
+                              key={sub.href}
+                              href={sub.href}
+                              onClick={() => setResourcesDropdownOpen(false)}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-50 hover:text-gray-900 transition-colors"
+                            >
+                              {sub.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
                 return (
                   <Link
                     key={link.href}
@@ -291,6 +345,39 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
                   </div>
                 );
               }
+              // Resources dropdown for logged-in users
+              if (link.href === '__resources__') {
+                return (
+                  <div key="mobile-resources-group">
+                    <button
+                      onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}
+                      className={cn(
+                        'flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium',
+                        pathname.startsWith('/content') || pathname === '/Resource'
+                          ? 'bg-primary/80 text-primary-foreground'
+                          : 'text-primary-foreground/90 hover:bg-primary/90'
+                      )}
+                    >
+                      {link.label}
+                      <ChevronDown className={cn('h-4 w-4 transition-transform', mobileResourcesOpen && 'rotate-180')} />
+                    </button>
+                    {mobileResourcesOpen && (
+                      <div className="ml-4 mt-1 space-y-1">
+                        {resourcesSubLinks.map((sub) => (
+                          <Link
+                            key={sub.href}
+                            href={sub.href}
+                            className="block px-3 py-1.5 rounded-md text-sm font-medium text-primary-foreground/80 hover:bg-primary/90"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
               return (
                 <Link
                   key={link.href}
@@ -309,40 +396,6 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
             })}
             {user ? (
               <>
-                <Link
-                  href="/dashboard"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Dashboard
-                </Link>
-                {(isCertifiedBorrower || isKitBuyer) && (
-                  <Link
-                    href="/dashboard/success-kit"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Success Kit
-                  </Link>
-                )}
-                {isCertifiedBorrower && (
-                  <Link
-                    href="/dashboard/booking"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Schedule Call
-                  </Link>
-                )}
-                {isCertifiedBorrower && (
-                  <Link
-                    href="/dashboard/resources"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Partner Network
-                  </Link>
-                )}
                 {isAdmin && (
                   <Link
                     href="/admin"

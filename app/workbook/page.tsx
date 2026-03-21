@@ -350,14 +350,15 @@ export default function WorkbookPage() {
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 Meet Your Prep Coach
               </h2>
+              <p className="text-xl text-gray-700 mb-3 leading-relaxed font-medium">
+                AI made simple &mdash; the first AI agent designed exclusively for small commercial property investors.
+              </p>
               <p className="text-lg text-gray-600 mb-4 leading-relaxed">
-                Our AI-powered Prep Coach walks you through every step of your loan preparation — from building
-                executive summaries to crafting lender scripts. Think of it as a financing consultant in your pocket.
+                Turnkey program &mdash; no tech expertise needed. Click prompts &rarr; get expert guidance instantly.
               </p>
               <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                Prep Coach is your unfair competitive advantage. &mdash; A turnkey AI
-                system specifically for commercial real estate investors and business
-                owners.
+                Prep Coach is your unfair competitive advantage &mdash; a turnkey AI
+                system that prepares you to work smarter with lenders and advisors.
               </p>
               <ul className="space-y-3 mb-8">
                 {[

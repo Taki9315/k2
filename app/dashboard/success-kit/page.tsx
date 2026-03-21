@@ -198,22 +198,35 @@ export default function SuccessKitDashboardPage() {
           />
         ) : (
           <div className="mb-8 space-y-4">
-            {/* PDF Download card */}
-            <Card>
-              <CardContent className="py-8 text-center">
-                <BookOpen className="h-12 w-12 text-slate-300 mx-auto mb-3" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                  Success Kit PDF
-                </h3>
-                <p className="text-sm text-gray-600 max-w-md mx-auto mb-4">
-                  Download the full Success Kit PDF to read and print.
-                </p>
-                <Button asChild className="gap-2 bg-black hover:bg-black/80 text-white">
-                  <a href={PDF_URL} download>
-                    <Download className="h-4 w-4" />
-                    Download Success Kit PDF
-                  </a>
-                </Button>
+            {/* Embedded PDF viewer — scrollable online reader */}
+            <Card className="overflow-hidden">
+              <CardContent className="p-0">
+                <div className="bg-slate-900 px-4 py-2.5 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-white text-sm font-medium">
+                    <BookOpen className="h-4 w-4 text-primary" />
+                    K2 Financing Success Kit — Online Reader
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button size="sm" variant="ghost" className="h-7 text-white/80 hover:text-white hover:bg-white/10 text-xs gap-1.5" asChild>
+                      <a href={PDF_URL} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink className="h-3 w-3" />
+                        Open in New Tab
+                      </a>
+                    </Button>
+                    <Button size="sm" variant="ghost" className="h-7 text-white/80 hover:text-white hover:bg-white/10 text-xs gap-1.5" asChild>
+                      <a href={PDF_URL} download>
+                        <Download className="h-3 w-3" />
+                        Download
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+                <iframe
+                  src={PDF_URL}
+                  className="w-full border-0"
+                  style={{ height: '80vh', minHeight: '600px' }}
+                  title="K2 Financing Success Kit"
+                />
               </CardContent>
             </Card>
 
@@ -343,6 +356,36 @@ export default function SuccessKitDashboardPage() {
 
         {/* Companion downloads */}
         <div className="mt-8">
+
+          {/* PrepCoach upsell box */}
+          <Card className="mb-8 border-primary/20 bg-gradient-to-br from-primary/5 via-emerald-50/30 to-white overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Sparkles className="h-8 w-8 text-primary" />
+                </div>
+                <div className="flex-1 text-center md:text-left">
+                  <h3 className="text-lg font-bold text-gray-900 mb-1">
+                    AI Made Simple &mdash; Meet PrepCoach
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-2">
+                    The first AI agent designed exclusively for small commercial property investors.
+                    Turnkey program &mdash; no tech expertise needed.
+                  </p>
+                  <p className="text-sm text-primary font-medium">
+                    Click prompts &rarr; get expert guidance instantly.
+                  </p>
+                </div>
+                <Button size="lg" asChild className="flex-shrink-0 shadow-md">
+                  <Link href="/prepcoach">
+                    Explore PrepCoach
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           <h3 className="text-lg font-bold text-gray-900 mb-4">Companion Downloads</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card className="border-primary/20">

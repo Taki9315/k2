@@ -42,6 +42,7 @@ import {
   Bot,
   ChevronRight,
   Phone,
+  Handshake,
 } from 'lucide-react';
 
 /* ───── Legacy categories (kept for backward-compat display) ───── */
@@ -799,32 +800,57 @@ export default function DealDetailPage() {
             );
           })}
 
-          {/* Find Targeted Lenders — 3rd column, spans 2 rows */}
+          {/* View Preferred Lender & Vendor Network — 3rd column (Certified only) */}
+          {(isCertifiedBorrower || isAdmin) ? (
           <Link
-            href={`/prepcoach/prompts?dealId=${dealId}`}
+            href="/dashboard/resources"
             className="lg:col-start-3 lg:row-start-1"
           >
             <Card className="h-full border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-emerald-50/50 to-white hover:border-primary/40 hover:shadow-xl transition-all duration-300 group overflow-hidden flex flex-col justify-center">
               <CardContent className="p-5 flex flex-col items-center text-center justify-center h-full">
                 <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-                  <Search className="h-6 w-6 text-primary" />
+                  <Handshake className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-sm font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors">
-                  Find Targeted Lenders
+                  View Preferred Lender &amp; Vendor Network
                 </h3>
                 <p className="text-xs text-gray-500 mb-3 leading-relaxed">
-                  Match your deal to the best lenders
+                  Browse vetted lenders and vendors for your deal
                 </p>
                 <div className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-lg shadow-primary/20 group-hover:shadow-primary/30 transition-all">
-                  <Bot className="h-3 w-3" />
-                  Open Prep Coach
+                  <Handshake className="h-3 w-3" />
+                  Partner Network
                   <ChevronRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
                 </div>
               </CardContent>
             </Card>
           </Link>
+          ) : (
+          <div className="lg:col-start-3 lg:row-start-1">
+            <Card className="h-full border-2 border-slate-200 bg-gradient-to-br from-slate-50 via-white to-slate-50 overflow-hidden flex flex-col justify-center">
+              <CardContent className="p-5 flex flex-col items-center text-center justify-center h-full">
+                <div className="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center mb-3">
+                  <Lock className="h-6 w-6 text-slate-400" />
+                </div>
+                <h3 className="text-sm font-bold text-gray-900 mb-1">
+                  Preferred Lender &amp; Vendor Network
+                </h3>
+                <p className="text-xs text-gray-500 mb-3 leading-relaxed">
+                  Upgrade to access our vetted lender &amp; vendor network
+                </p>
+                <Link href="/membership/certified-borrower">
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-lg">
+                    Unlock Full Access
+                    <ChevronRight className="h-3 w-3" />
+                  </div>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+          )}
 
-          {/* Track Lender Submissions — next to Find Targeted Lenders */}
+          {/* Track Lender Submissions & Deal Status (Certified only) */}
+          {(isCertifiedBorrower || isAdmin) ? (
           <Link
             href={`/dashboard/lender-outreach/${dealId}`}
             className="lg:col-start-3 lg:row-start-2"
@@ -835,10 +861,10 @@ export default function DealDetailPage() {
                   <Phone className="h-6 w-6 text-blue-600" />
                 </div>
                 <h3 className="text-sm font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
-                  Track Lender Submissions
+                  Track Lender Submissions &amp; Deal Status
                 </h3>
                 <p className="text-xs text-gray-500 mb-3 leading-relaxed">
-                  Name, contact, status &amp; follow-ups
+                  K2 will update or add your own
                 </p>
                 <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-lg shadow-blue-600/20 group-hover:shadow-blue-600/30 transition-all">
                   <Phone className="h-3 w-3" />
@@ -848,6 +874,29 @@ export default function DealDetailPage() {
               </CardContent>
             </Card>
           </Link>
+          ) : (
+          <div className="lg:col-start-3 lg:row-start-2">
+            <Card className="h-full border-2 border-slate-200 bg-gradient-to-br from-slate-50 via-white to-slate-50 overflow-hidden flex flex-col justify-center">
+              <CardContent className="p-5 flex flex-col items-center text-center justify-center h-full">
+                <div className="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center mb-3">
+                  <Lock className="h-6 w-6 text-slate-400" />
+                </div>
+                <h3 className="text-sm font-bold text-gray-900 mb-1">
+                  Track Lender Submissions &amp; Deal Status
+                </h3>
+                <p className="text-xs text-gray-500 mb-3 leading-relaxed">
+                  Upgrade to track submissions &amp; deal status
+                </p>
+                <Link href="/membership/certified-borrower">
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
+                    Unlock Full Access
+                    <ChevronRight className="h-3 w-3" />
+                  </div>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+          )}
         </div>
 
         {/* Compact drag & drop zone */}

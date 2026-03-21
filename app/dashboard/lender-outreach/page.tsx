@@ -56,7 +56,7 @@ export default function LenderOutreachPage() {
     if (!loading && !user) router.push('/login');
   }, [user, loading, router]);
 
-  const hasAccess = isCertifiedBorrower || isKitBuyer || isAdmin;
+  const hasAccess = isCertifiedBorrower || isAdmin;
 
   const fetchDeals = useCallback(async () => {
     if (!user) return;
@@ -100,10 +100,10 @@ export default function LenderOutreachPage() {
             <Phone className="h-12 w-12 text-primary mx-auto mb-4" />
             <h2 className="text-xl font-bold mb-2">Lender Outreach</h2>
             <p className="text-gray-600 mb-4">
-              Track your lender outreach across all deals. Available with the Success Kit or Certified Borrower membership.
+              Track your lender outreach across all deals. This feature is available to K2 Certified Borrowers.
             </p>
             <Button asChild>
-              <Link href="/membership">View Membership Options</Link>
+              <Link href="/membership/certified-borrower">Upgrade to Certified Borrower</Link>
             </Button>
           </CardContent>
         </Card>

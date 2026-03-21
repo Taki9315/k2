@@ -221,7 +221,7 @@ export default function DashboardPage() {
   const prepTasks = isCertifiedBorrower ? fullPrepCoachTasks : kitPrepCoachTasks;
 
   /* ── Quick action cards config ─────────────────────────────────── */
-  const quickActions = [
+  const allQuickActions = [
     {
       icon: Upload,
       title: 'Deal Room',
@@ -232,6 +232,7 @@ export default function DashboardPage() {
       iconBg: 'bg-gray-100 text-gray-800',
       available: true,
       locked: !(isCertifiedBorrower || isKitBuyer),
+      showForKit: true,
     },
     {
       icon: Calendar,
@@ -243,6 +244,7 @@ export default function DashboardPage() {
       iconBg: 'bg-emerald-50 text-emerald-700',
       available: true,
       locked: !isCertifiedBorrower,
+      showForKit: false,
     },
     {
       icon: FileText,
@@ -253,8 +255,14 @@ export default function DashboardPage() {
       gradient: 'from-emerald-500/10 to-emerald-600/5',
       iconBg: 'bg-emerald-100 text-emerald-700',
       available: true,
+      showForKit: true,
     },
   ];
+
+  // Kit Buyers see only Deal Room, Document Library, and the upgrade prompt
+  const quickActions = (isKitBuyer && !isCertifiedBorrower)
+    ? allQuickActions.filter((a) => a.showForKit)
+    : allQuickActions;
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
@@ -404,16 +412,16 @@ export default function DashboardPage() {
                       </p>
                       <div className="flex flex-wrap items-center gap-3">
                         <Button size="lg" className="bg-black hover:bg-black/80 text-white shadow-lg" asChild>
-                          <Link href="/dashboard/success-kit">
-                            <BookOpen className="mr-2 h-5 w-5" />
-                            Read Now
-                          </Link>
-                        </Button>
-                        <Button size="lg" className="bg-black hover:bg-black/80 text-white shadow-lg" asChild>
                           <a href="/assets/success-kit.pdf" download>
                             <Download className="mr-2 h-5 w-5" />
                             Download Success Kit
                           </a>
+                        </Button>
+                        <Button size="lg" className="bg-primary hover:bg-primary/90 text-white shadow-lg" asChild>
+                          <Link href="/dashboard/success-kit">
+                            <BookOpen className="mr-2 h-5 w-5" />
+                            Read Online
+                          </Link>
                         </Button>
                         <Button size="lg" variant="outline" className="bg-transparent border-white/20 text-white hover:bg-white/10 shadow-lg" asChild>
                           <Link href="/dashboard/documents">
@@ -621,9 +629,10 @@ export default function DashboardPage() {
           </Card>
 
           {/* ── Two-column: Prep Coach + Quick Actions ────────── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div className={`grid grid-cols-1 ${(!isKitBuyer || isCertifiedBorrower) ? 'lg:grid-cols-2' : ''} gap-8 mb-8`}>
 
-            {/* ── Work with Prep Coach ──────────────────────────── */}
+            {/* ── Work with Prep Coach (hidden for Kit-only buyers) ── */}
+            {(!isKitBuyer || isCertifiedBorrower) && (
             <Card className="border-0 shadow-sm overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b pb-4">
                 <div className="flex items-center justify-between">
@@ -689,6 +698,7 @@ export default function DashboardPage() {
                 )}
               </CardContent>
             </Card>
+            )}
 
             {/* ── Quick Actions / Sidebar ──────────────────────── */}
             <div className="space-y-5">
@@ -777,7 +787,8 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* ── K2 Partner Network (lower on page) ────────────── */}
+          {/* ── K2 Partner Network (lower on page — hidden for Kit-only buyers) ── */}
+          {(!isKitBuyer || isCertifiedBorrower) && (
           <Card className="border-0 shadow-sm overflow-hidden mb-8">
             <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b pb-4">
               <div className="flex items-center justify-between">
@@ -853,6 +864,7 @@ export default function DashboardPage() {
               )}
             </CardContent>
           </Card>
+          )}
 
           {/* ── Profile + Purchase history row ────────────────── */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -928,8 +940,9 @@ export default function DashboardPage() {
                   ...(isCertifiedBorrower || isKitBuyer ? [{ icon: BookOpen, label: 'Success Kit', href: '/dashboard/success-kit' }] : []),
                   { icon: FileText, label: 'Document Library', href: '/dashboard/documents' },
                   ...(isCertifiedBorrower || isKitBuyer ? [{ icon: Upload, label: 'Deal Room', href: '/dashboard/deal-room' }] : []),
-                  { icon: Bot, label: 'Prep Coach', href: '/prepcoach/prompts' },
-                  { icon: Video, label: 'Free Content', href: '/content' },
+                  // Show Prep Coach & Free Content only for non-Kit-only users
+                  ...(!isKitBuyer || isCertifiedBorrower ? [{ icon: Bot, label: 'Prep Coach', href: '/prepcoach/prompts' }] : []),
+                  ...(!isKitBuyer || isCertifiedBorrower ? [{ icon: Video, label: 'Free Content', href: '/content' }] : []),
                   ...(isCertifiedBorrower ? [{ icon: Calendar, label: 'Schedule Call', href: '/dashboard/booking' }] : []),
                   ...(isCertifiedBorrower ? [{ icon: Handshake, label: 'Partner Network', href: '/dashboard/resources' }] : []),
                   ...(isAdmin ? [{ icon: Shield, label: 'Admin Panel', href: '/admin' }] : []),
