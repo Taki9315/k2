@@ -66,7 +66,7 @@ const resources: Resource[] = [
       'The step-by-step guide that walks you through everything lenders want to see. Stop guessing and start preparing like a pro - this is the same framework used by borrowers who close deals.',
     href: '/workbook',
     icon: <BookOpen className="h-6 w-6" />,
-    badge: '$15',
+    badge: '$20',
   },
   {
     title: 'LivePlan - Business Plan Software',

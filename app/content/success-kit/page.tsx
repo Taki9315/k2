@@ -74,7 +74,7 @@ export default function SuccessKitViewerPage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button asChild>
               <Link href="/workbook">
-                Get the Success Kit — $15
+                Get the Success Kit — $20
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>

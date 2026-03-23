@@ -468,7 +468,7 @@ export default function DashboardPage() {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <Button size="lg" className="bg-black hover:bg-black/80 text-white shadow-lg" asChild>
                       <Link href="/workbook">
-                        Get the Success Kit — $15
+                        Get the Success Kit — $20
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Link>
                     </Button>

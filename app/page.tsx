@@ -75,13 +75,13 @@ export default function Home() {
                 Elite Expertise | Exceptional Outcomes
               </p>
               <p className="text-lg text-gray-700 mb-6 leading-relaxed italic">
-                This $15 Success Kit positions you as the borrower banks WANT to fund and your deal as one they’ll compete for.
+                This $20 Success Kit positions you as the borrower banks WANT to fund and your deal as one they'll compete for.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 mb-6">
                 <Button size="lg" asChild className="text-lg px-8 py-6 shadow-lg shadow-primary/20">
                   <Link href="/workbook">
-                    Get Your Success Kit - $15
+                    Get Your Success Kit - $20
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
@@ -251,7 +251,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900">Financing Success Kit</h3>
-                    <p className="text-2xl font-bold text-primary mt-1">$15</p>
+                    <p className="text-2xl font-bold text-primary mt-1">$20</p>
                   </div>
                 </div>
                 <p className="text-gray-600 text-sm mb-6 leading-relaxed">
@@ -284,7 +284,7 @@ export default function Home() {
                 </div>
                 <Button asChild className="w-full" variant="outline">
                   <Link href="/workbook">
-                    Get the Kit – $15
+Get the Kit – $20
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
@@ -618,7 +618,7 @@ export default function Home() {
               className="text-lg px-8 py-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300"
             >
               <Link href="/workbook">
-                Get the Kit – $15
+                Get the Kit – $20
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>

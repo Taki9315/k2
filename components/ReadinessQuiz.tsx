@@ -144,7 +144,7 @@ const RESULTS: Record<PathType, QuizResult> = {
       'Foundation to upgrade to Certified later if your timeline accelerates',
     ],
     cta: {
-      label: 'Get the Success Kit for $15 – Start Prepping Now',
+      label: 'Get the Success Kit for $20 – Start Prepping Now',
       href: '/workbook',
     },
     secondary: {

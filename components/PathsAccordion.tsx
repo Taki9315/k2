@@ -15,18 +15,28 @@ import {
   ChevronDown,
 } from 'lucide-react';
 
+type RichBullet = {
+  title: string;
+  description?: string;
+  subBullets?: string[];
+};
+
+type BulletItem = string | RichBullet;
+
 type PathItem = {
   step: number;
   icon: typeof BookOpen;
   title: string;
+  subtitle?: string;
   idealFor: string;
-  bullets: string[];
+  bullets: BulletItem[];
   commitment: string;
   cta: { label: string; href: string };
   featured?: boolean;
   feeTransparency?: {
     title: string;
     text: string;
+    bullets?: string[];
   };
 };
 
@@ -48,39 +58,92 @@ const PATHS: PathItem[] = [
     step: 2,
     icon: FileCheck,
     title: 'Go Independent \u2013 Financing Success Kit',
-    idealFor: `you're organized, self-motivated, and ready to take control\u2014wanting to submit clean, professional packages that lenders actually want to fund, while skipping expensive brokers and saving thousands in fees.`,
+    subtitle: 'A small investment that protects a very big decision.',
+    idealFor: `organized, self\u2011motivated borrowers who want to submit clean, professional loan packages lenders actually want to fund\u2014targeting lenders on your own and avoiding broker involvement.`,
     featured: true,
     bullets: [
-      '$15 one-time instant access (50+ pages, 15+ ready-to-use worksheets & templates)',
-      'Step-by-step tools to pick the right loan program, organize docs lenders love, compare offers apples-to-apples, and dodge common deal-killers',
-      'Private Document Vault with checklists, tear sheets, lifetime updates, and immediate download',
-      'Pro-level polish without needing years of experience',
+      {
+        title: 'Instant Access \u2013 $20 One\u2011Time',
+        description: 'A complete DIY financing system: instantly downloadable guidance and online tools to help you move through the financing process with clarity and purpose.',
+      },
+      {
+        title: 'Step\u2011By\u2011Step Loan Prep Tools',
+        description: 'A clear path to choosing the right loan program, organizing lender\u2011ready documents, accelerating your process and avoiding the mistakes that quietly kill deals.',
+      },
+      {
+        title: 'Document Library \u2013 Everything Lenders Expect',
+        description: 'Personal financial statements, borrower forms, templates lenders expect, and supporting docs\u2014organized, downloadable, and ready to use.',
+      },
+      {
+        title: 'Deal Room \u2013 Track Each Deal Independently',
+        description: 'Each deal gets its own dedicated workspace. Upload documents, track progress, and keep everything organized and lender\u2011ready.',
+      },
+      {
+        title: 'Submission Tracker \u2013 Know Exactly Where You Stand',
+        description: 'Log every lender you\u2019ve submitted to and track the status of each one. This alone saves hours and prevents deals from stalling.',
+      },
+      {
+        title: 'Pro\u2011Level Polish, Zero Experience Required',
+        description: 'Everything you need to present a clean, credible, lender\u2011friendly package\u2014without years of industry experience.',
+      },
     ],
-    commitment: '$15 one-time. No subscriptions, no hidden upsells \u2013 pure leverage for the DIY borrower.',
-    cta: { label: 'Get the Kit \u2013 Only $15', href: '/workbook' },
+    commitment: '$20 one\u2011time. No subscriptions. No upsells. Just a powerful, self\u2011directed system that puts you in control.',
+    cta: { label: 'Get the Kit \u2013 $20 One\u2011Time', href: '/workbook' },
   },
   {
     step: 3,
     icon: Headphones,
-    title: 'K2 Certified Borrower \u2013 Expert Placement & AI Support',
-    idealFor: `you want expert guidance, lender placement, and AI-powered prep support to maximize your close probability and terms.`,
+    title: 'K2 Certified Borrower',
+    subtitle: 'Partner with K2 Commercial Finance',
+    idealFor: `borrowers ready to stop chasing mismatched lenders\u2014partner with K2 for expert lender matching, warm introductions, and lifetime tools.`,
     bullets: [
-      'K2 Certified Borrower status + lifetime unlimited access ($250 one-time)',
-      'PrepCoach \u2013 your dedicated AI agent built specifically for small commercial borrowers: guides every step of prep, spots gaps, and helps you show up lender-ready. CRE expertise available 24/7/365',
-      '30-minute free expert consultation to personally review your loan submission package, strategy, and positioning',
-      'Done-for-you Transaction Overview \u2013 professional, lender-attractive Executive Summary we customize for your deal',
-      'Direct access to our Preferred Lender network \u2013 we handle the placement work, introductions, and follow-through to get your deal in front of the right capital sources - or contact lenders on your own',
-      'Advanced video library, document review support, ongoing chat / email support',
-      '$1,000 closing credit from any Preferred Lender you close with (4x ROI on your membership fee) *Terms Apply*',
+      {
+        title: '30\u2011Minute Private Strategy & Coaching Call',
+        description: 'We review your paperwork and deal in detail, then craft a custom lender\u2011targeting plan.',
+      },
+      {
+        title: 'Expert Lender Matching & Warm Introductions \u2013 Done For You',
+        description: 'We match your specifics to our vetted Preferred Lenders, then make trusted, warm introductions. After the intro, it\u2019s you and the lender\u2014direct and efficient.',
+      },
+      {
+        title: 'K2 PrepCoach\u2122 \u2013 Unlimited 24/7 AI Co\u2011Pilot',
+        description: 'Always\u2011available expert trained on small commercial deals.',
+        subBullets: [
+          'Instant deal health score + prioritized fixes',
+          'Document gap detector & missing\u2011item alerts',
+          'Polished narrative/cover letter generator',
+          'Red\u2011flag scanner for underwriting risks',
+          'Rate/term/total\u2011cost comparisons',
+          'Realistic closing timeline predictor',
+        ],
+      },
+      {
+        title: 'Secure Deal Builder & Private Data Room',
+        description: 'Guided narrative building + password\u2011protected vault to upload, organize, version\u2011control, and reuse files across deals.',
+      },
+      {
+        title: 'Readiness Checklists & Pro Tools',
+        description: 'Step\u2011by\u2011step tasks to identify and fix issues early.',
+      },
+      {
+        title: '$1,000 Closing Credit*',
+        description: 'Credited at closing on any funded deal through our Preferred Lenders. (*Terms apply.)',
+      },
     ],
     feeTransparency: {
-      title: 'How We Get Paid',
-      text: 'Flat, success-only fee paid by the lender on closed loans (typically 1\u20132% depending on size) \u2013 zero cost to you if it doesn\u2019t close, full transparency, no hidden upfront fees.',
+      title: 'Full Transparency: Your Low Fee Structure',
+      text: 'No hidden incentives, no yield\u2011spread games.',
+      bullets: [
+        'Maximum fee just 2% (typically lender\u2011paid only on funded deals)',
+        'Everything disclosed upfront in writing',
+        'No undisclosed yield\u2011spread premiums',
+        'Our success depends on your deal closing on strong terms',
+      ],
     },
     commitment:
-      '$250 one-time – with 4X payback via closing $1,000 credit + dramatically higher close probability and better terms.',
+      '$250 one\u2011time \u2013 Lifetime access. First 100 Certified Borrowers secure lifetime access\u2014spots are limited.',
     cta: {
-      label: 'Become K2 Certified – $250',
+      label: 'Become a Certified Borrower \u2013 $250',
       href: '/membership/certified-borrower',
     },
   },
@@ -138,6 +201,11 @@ export function PathsAccordion() {
               <CardTitle className="text-xl leading-snug">
                 {item.title}
               </CardTitle>
+              {item.subtitle && (
+                <p className="text-base text-gray-500 font-medium mt-1 leading-snug">
+                  {item.subtitle}
+                </p>
+              )}
               <p className="text-sm text-primary/90 mt-3 leading-relaxed">
                 <span className="font-semibold">Best if:</span> {item.idealFor}
               </p>
@@ -159,7 +227,7 @@ export function PathsAccordion() {
             {/* Expandable content */}
             <div
               className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                isOpen ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'
+                isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
               }`}
             >
               <CardContent className="flex-1 flex flex-col min-h-0 pt-0">
@@ -169,15 +237,42 @@ export function PathsAccordion() {
                       What You Get
                     </p>
                     <ul className="space-y-3">
-                      {item.bullets.map((bullet, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-2.5 text-sm text-gray-600 leading-relaxed"
-                        >
-                          <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                          {bullet}
-                        </li>
-                      ))}
+                      {item.bullets.map((bullet, i) => {
+                        if (typeof bullet === 'string') {
+                          return (
+                            <li
+                              key={i}
+                              className="flex items-start gap-2.5 text-sm text-gray-600 leading-relaxed"
+                            >
+                              <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                              {bullet}
+                            </li>
+                          );
+                        }
+                        return (
+                          <li key={i} className="space-y-1">
+                            <div className="flex items-start gap-2.5">
+                              <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-1" />
+                              <div>
+                                <p className="text-sm font-semibold text-gray-800">{bullet.title}</p>
+                                {bullet.description && (
+                                  <p className="text-sm text-gray-600 leading-relaxed mt-0.5">{bullet.description}</p>
+                                )}
+                                {bullet.subBullets && (
+                                  <ul className="mt-1.5 space-y-1 ml-0.5">
+                                    {bullet.subBullets.map((sub, j) => (
+                                      <li key={j} className="flex items-start gap-2 text-sm text-gray-600">
+                                        <span className="text-primary mt-0.5">&bull;</span>
+                                        {sub}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
+                            </div>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                   {item.feeTransparency && (
@@ -188,6 +283,16 @@ export function PathsAccordion() {
                       <p className="text-gray-600 mb-2">
                         {item.feeTransparency.text}
                       </p>
+                      {item.feeTransparency.bullets && (
+                        <ul className="space-y-1 mt-2">
+                          {item.feeTransparency.bullets.map((b, i) => (
+                            <li key={i} className="flex items-start gap-2 text-gray-600">
+                              <span className="text-primary mt-0.5">&bull;</span>
+                              {b}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   )}
                 </div>

@@ -125,7 +125,7 @@ export default function SuccessKitDashboardPage() {
             download, and print-ready version.
           </p>
           <Button asChild>
-            <Link href="/workbook">Get the Success Kit - $15</Link>
+            <Link href="/workbook">Get the Success Kit - $20</Link>
           </Button>
         </div>
       </div>
