@@ -8,11 +8,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
-import { FlipbookViewer } from '@/components/FlipbookViewer';
 import {
   BookOpen,
   Download,
-  Printer,
   ArrowLeft,
   Lock,
   Loader2,
@@ -24,22 +22,12 @@ import {
   FolderOpen,
   FileImage,
   File,
-  X,
 } from 'lucide-react';
 
 /**
- * Success Kit dashboard page — provides an embedded flipbook viewer
- * for the Success Kit PDF. Kit users + Certified users can view & download.
+ * Success Kit dashboard page — provides document library access,
+ * companion downloads, and PrepCoach for Kit + Certified users.
  */
-
-const PDF_URL = '/assets/success-kit.pdf';
-const TOTAL_PAGES = 52; // Update when final PDF is ready
-
-// Generate page image URLs — when actual page images are available,
-// point this to your CDN / public directory structure.
-function getPageUrl(page: number): string {
-  return `/assets/success-kit-pages/page-${page}.jpg`;
-}
 
 /** Detect file format from mime type or file URL */
 function getFileFormat(mimeType: string, fileUrl: string): { label: string; color: string; icon: typeof FileText } {
@@ -80,7 +68,6 @@ function getFileFormat(mimeType: string, fileUrl: string): { label: string; colo
 export default function SuccessKitDashboardPage() {
   const { user, loading, isCertifiedBorrower, isKitBuyer, isAdmin } = useAuth();
   const router = useRouter();
-  const [pdfReady, setPdfReady] = useState(false);
   const [libraryDocs, setLibraryDocs] = useState<{ id: string; title: string; description: string | null; file_url: string; file_size: number; mime_type: string; category: string }[]>([]);
   const [viewingPdf, setViewingPdf] = useState<{ title: string; url: string } | null>(null);
 
@@ -89,13 +76,6 @@ export default function SuccessKitDashboardPage() {
   }, [user, loading, router]);
 
   const hasAccess = isCertifiedBorrower || isKitBuyer || isAdmin;
-
-  // Check if the PDF / page images exist
-  useEffect(() => {
-    fetch('/assets/success-kit-pages/page-1.jpg', { method: 'HEAD' })
-      .then((res) => setPdfReady(res.ok))
-      .catch(() => setPdfReady(false));
-  }, []);
 
   // Fetch document library docs
   useEffect(() => {
@@ -151,13 +131,9 @@ export default function SuccessKitDashboardPage() {
                 <h1 className="text-2xl font-bold text-gray-900">
                   Financing Success Kit
                 </h1>
-                <Badge className="bg-primary/10 text-primary border-primary/20 gap-1">
-                  <BookOpen className="h-3 w-3" />
-                  Online Viewer
-                </Badge>
               </div>
               <p className="text-sm text-gray-600 mt-1">
-                Read online, download PDF, or print your Success Kit.
+                Access your documents, companion downloads, and tools.
               </p>
             </div>
 
@@ -168,71 +144,15 @@ export default function SuccessKitDashboardPage() {
                   Document Library
                 </Link>
               </Button>
-              <Button size="sm" asChild className="gap-1.5 bg-black hover:bg-black/80 text-white">
-                <a href={PDF_URL} download>
-                  <Download className="h-4 w-4" />
-                  Download PDF
-                </a>
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-1.5"
-                onClick={() => window.print()}
-              >
-                <Printer className="h-4 w-4" />
-                Print
-              </Button>
             </div>
           </div>
         </div>
       </section>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {pdfReady ? (
-          <FlipbookViewer
-            pdfUrl={PDF_URL}
-            totalPages={TOTAL_PAGES}
-            getPageUrl={getPageUrl}
-            className="mb-8"
-          />
-        ) : (
-          <div className="mb-8 space-y-4">
-            {/* Embedded PDF viewer — scrollable online reader */}
-            <Card className="overflow-hidden">
-              <CardContent className="p-0">
-                <div className="bg-slate-900 px-4 py-2.5 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-white text-sm font-medium">
-                    <BookOpen className="h-4 w-4 text-primary" />
-                    K2 Financing Success Kit — Online Reader
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button size="sm" variant="ghost" className="h-7 text-white/80 hover:text-white hover:bg-white/10 text-xs gap-1.5" asChild>
-                      <a href={PDF_URL} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-3 w-3" />
-                        Open in New Tab
-                      </a>
-                    </Button>
-                    <Button size="sm" variant="ghost" className="h-7 text-white/80 hover:text-white hover:bg-white/10 text-xs gap-1.5" asChild>
-                      <a href={PDF_URL} download>
-                        <Download className="h-3 w-3" />
-                        Download
-                      </a>
-                    </Button>
-                  </div>
-                </div>
-                <iframe
-                  src={PDF_URL}
-                  className="w-full border-0"
-                  style={{ height: '80vh', minHeight: '600px' }}
-                  title="K2 Financing Success Kit"
-                />
-              </CardContent>
-            </Card>
-
-            {/* Document Library listing */}
-            {libraryDocs.length > 0 && (
-              <Card>
+        {/* Document Library listing */}
+        {libraryDocs.length > 0 && (
+          <Card className="mb-8">
                 <CardContent className="p-5">
                   <div className="flex items-center gap-2.5 mb-4">
                     <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -307,8 +227,6 @@ export default function SuccessKitDashboardPage() {
                   </div>
                 </CardContent>
               </Card>
-            )}
-          </div>
         )}
 
         {/* Quick info cards */}
