@@ -199,17 +199,21 @@ export default function CertifiedBorrowerPage() {
 
           <p className="text-base text-gray-700 max-w-2xl mx-auto mb-8 leading-relaxed">
             By becoming a K2 Certified Borrower, you partner with K2 Commercial
-            Finance to unlock our proprietary expertise: a private strategy call
-            to review your deal, targeted warm introductions to the best&ndash;fit
-            lenders in our vetted network, and unlimited access to PrepCoach AI +
-            pro tools to strengthen your package anytime you want.
+            Finance to access our proprietary deal closing systems and expertise:
+            unlimited access to PrepCoach AI + pro tools to manage your process,
+            a one&ndash;on&ndash;one strategy call to position your transaction for success,
+            targeted warm introductions to the best&ndash;fit lenders in our extensive
+            network, and personalized support from the start through closing, on
+            as many deals as you&rsquo;d like.
           </p>
 
           <p className="text-base text-gray-600 max-w-2xl mx-auto mb-8 leading-relaxed">
             Once we make the connection, you communicate directly with the
-            lenders&mdash;no ongoing middleman. This is the professional
-            partnership that positions serious borrowers for faster approvals,
-            better terms, and real momentum.
+            lenders&mdash;no ongoing middleman. PrepCoach can answer most
+            questions that come up during the process and a K2 representative is
+            never more than a phone call away if additional support is helpful.
+            This is the professional partnership that positions serious borrowers
+            for faster approvals, better terms, and real momentum.
           </p>
 
           {/* Trust badges */}
@@ -266,8 +270,8 @@ export default function CertifiedBorrowerPage() {
               'Appropriate lenders are hard to find. Many lenders ignore submissions or reject them over unseen "fit" issues.',
               'Traditional brokers often operate with opacity: hidden yield-spread premiums where lenders pay them more for steering you to higher rates/terms that cost you big.',
               'Industry broker fees frequently hit 3\u20135%, with little transparency on how compensation influences recommendations.',
-              'Even strong prep can\u2019t deliver access to the right lenders at the right time or the pre-vetted credibility that opens doors.',
-              'Time drags, deals stall, and hidden incentives quietly erode your outcome.',
+              'Even strong prep can\u2019t deliver fast, targeted access to the lenders most likely to fund your deal. Our relationships become yours. Don\u2019t underestimate the power of personal introductions.',
+              'Time drags, deals stall, and misaligned incentives quietly erode your outcome.',
             ].map((item, i) => (
               <div
                 key={i}
@@ -334,9 +338,11 @@ export default function CertifiedBorrowerPage() {
               efficient.
             </p>
             <p className="mt-3 text-gray-600">
-              You retain total flexibility: Use PrepCoach AI 24/7 to ask
+              You retain total flexibility: Use PrepCoach AI 24/7 to answer
               questions, spot gaps, generate narratives, compare options, and
-              refine deals whenever inspiration hits.
+              refine deals whenever inspiration hits. As a Certified Borrower
+              you can also access support from K2 Commercial Finance on an
+              ongoing basis.
             </p>
           </div>
         </div>
@@ -726,9 +732,7 @@ export default function CertifiedBorrowerPage() {
       <section className="py-6 bg-slate-100 border-t border-slate-200">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <p className="text-xs text-gray-500">
-            Lifetime access. $1,000 closing credit* from Preferred Lender at
-            close. Lender-paid fees only on funded Preferred deals. $250
-            one-time. *Terms may apply.
+            $1,000 closing credit* from Preferred Lender at close. *Terms may apply.
           </p>
         </div>
       </section>

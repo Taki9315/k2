@@ -95,7 +95,7 @@ const PATHS: PathItem[] = [
     icon: Headphones,
     title: 'K2 Certified Borrower',
     subtitle: 'Partner with K2 Commercial Finance',
-    idealFor: `borrowers ready to stop chasing mismatched lenders\u2014partner with K2 for expert lender matching, warm introductions, and lifetime tools.`,
+    idealFor: `borrowers ready to move fast\u2014partner with K2 for expert lender matching, warm introductions, and lifetime tools.`,
     bullets: [
       {
         title: '30\u2011Minute Private Strategy & Coaching Call',

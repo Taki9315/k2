@@ -93,7 +93,6 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
   ];
 
   const contentSubLinks = [
-    { href: '/workbook', label: 'Success Kit' },
     { href: '/content?tab=videos', label: 'Videos' },
     { href: '/content?tab=articles', label: 'Articles' },
   ];
