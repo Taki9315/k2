@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useState, useEffect, useCallback } from "react";
-import { Plus, ExternalLink, Pencil, Trash2, Video, FileText, Link, Eye, EyeOff, Image } from "lucide-react";
+import { Plus, ExternalLink, Pencil, Trash2, Video, FileText, Link, Eye, EyeOff, Image, ArrowUp, ArrowDown } from "lucide-react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { DataTable, type Column } from "@/components/admin/DataTable";
 import { Button } from "@/components/ui/button";
@@ -79,7 +79,67 @@ export default function ResourcesPage() {
 
   const getResourceUrl = (r: ResourceRow) => r.file_url || r.url || "#";
 
+  const moveResource = async (index: number, direction: "up" | "down") => {
+    const newResources = [...resources];
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= newResources.length) return;
+
+    // Swap
+    [newResources[index], newResources[targetIndex]] = [
+      newResources[targetIndex],
+      newResources[index],
+    ];
+
+    // Reassign sort_order values
+    const items = newResources.map((r, i) => ({ id: r.id, sort_order: i }));
+    setResources(newResources.map((r, i) => ({ ...r, sort_order: i })));
+
+    try {
+      const res = await fetch("/api/admin/resources", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items }),
+      });
+      if (!res.ok) throw new Error("Failed to reorder");
+    } catch (err) {
+      console.error("Reorder error:", err);
+      toast({ title: "Error", description: "Failed to reorder resources", variant: "destructive" });
+      await fetchResources(); // revert on error
+    }
+  };
+
   const columns = [
+    {
+      key: "order",
+      header: "Order",
+      render: (r: ResourceRow) => {
+        const index = resources.findIndex((res) => res.id === r.id);
+        return (
+          <div className="flex items-center gap-0.5">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              disabled={index === 0}
+              onClick={() => moveResource(index, "up")}
+              title="Move up"
+            >
+              <ArrowUp className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              disabled={index === resources.length - 1}
+              onClick={() => moveResource(index, "down")}
+              title="Move down"
+            >
+              <ArrowDown className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        );
+      },
+    },
     {
       key: "title",
       header: "Title",

@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Handshake, CheckCircle2, Building2, Wrench, Shield } from 'lucide-react';
+import { Handshake, CheckCircle2, Building2, Wrench, Shield, ArrowRight } from 'lucide-react';
 
 export default function PartnershipPage() {
   const [formData, setFormData] = useState({
@@ -91,6 +92,25 @@ export default function PartnershipPage() {
             related vendors. If you&apos;re interested in being considered for
             our Preferred Partner program, fill out the form below.
           </p>
+          <div className="mt-8 space-y-4 text-center">
+            <p className="text-2xl font-semibold text-gray-900">
+              Interested? Click Here for More Information.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button size="lg" asChild className="gap-2 text-base px-8">
+                <Link href="/partnership/lenders">
+                  For Lenders
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild className="gap-2 text-base px-8">
+                <Link href="/partnership/partners">
+                  For Partners
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
 

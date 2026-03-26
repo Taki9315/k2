@@ -119,6 +119,40 @@ export async function PUT(request: Request) {
 }
 
 /**
+ * PATCH /api/admin/resources
+ * Bulk reorder resources.
+ * Expects JSON body: { items: { id: string; sort_order: number }[] }
+ */
+export async function PATCH(request: Request) {
+  try {
+    const supabase = createServiceRoleClient();
+    const body = await request.json();
+
+    if (!body.items || !Array.isArray(body.items)) {
+      return NextResponse.json({ error: "Missing items array" }, { status: 400 });
+    }
+
+    // Update each item's sort_order
+    for (const item of body.items) {
+      const { error } = await supabase
+        .from("resources")
+        .update({ sort_order: item.sort_order })
+        .eq("id", item.id);
+
+      if (error) {
+        console.error("Resources reorder error:", error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("Resources PATCH error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+/**
  * DELETE /api/admin/resources
  * Delete a resource by id (query param).
  */
