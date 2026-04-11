@@ -154,7 +154,7 @@ export default function WorkbookPage() {
             30&nbsp;days for a full refund.
           </p>
           <CheckoutButton product="kit" size="default" className="w-full">
-            Get the Success Kit &mdash; $20
+            Get the Success Kit &mdash; $39
             <ArrowRight className="ml-2 h-4 w-4" />
           </CheckoutButton>
         </div>
@@ -189,7 +189,7 @@ export default function WorkbookPage() {
               </p>
 
               <div className="flex items-baseline gap-3 mb-2">
-                <span className="text-5xl font-bold text-gray-900">$20</span>
+                <span className="text-5xl font-bold text-gray-900">$39</span>
                 <span className="text-gray-500">One&ndash;Time &middot; Instant Access</span>
               </div>
 
@@ -198,7 +198,7 @@ export default function WorkbookPage() {
                 size="lg"
                 className="text-lg px-8 py-6 w-full sm:w-auto mt-6"
               >
-                Get the Kit &ndash; $20
+                Get the Kit &ndash; $39
                 <Download className="ml-2 h-5 w-5" />
               </CheckoutButton>
 
@@ -228,7 +228,7 @@ export default function WorkbookPage() {
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-600">Price</span>
-                  <span className="font-bold text-primary text-lg">$20</span>
+                  <span className="font-bold text-primary text-lg">$39</span>
                 </div>
               </div>
             </div>
@@ -262,7 +262,7 @@ export default function WorkbookPage() {
               What You Get
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-              Instant Access &ndash; $20 One&#x2011;Time
+              Instant Access &ndash; $39 One&#x2011;Time
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               A complete DIY financing system: instantly downloadable guidance and
@@ -374,7 +374,7 @@ export default function WorkbookPage() {
               size="lg"
               className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
             >
-              Get the Kit &ndash; $20 One&ndash;Time
+              Get the Kit &ndash; $39 One&ndash;Time
               <ArrowRight className="ml-2 h-5 w-5" />
             </CheckoutButton>
           </div>
@@ -486,7 +486,7 @@ export default function WorkbookPage() {
                 instantly.
               </p>
               <p>
-                For <span className="font-bold text-primary">$20</span>, you get
+                For <span className="font-bold text-primary">$39</span>, you get
                 the tools, documents, and structure that keep deals alive and
                 moving.
               </p>
@@ -495,7 +495,7 @@ export default function WorkbookPage() {
                 process&mdash;and the one that can change your outcome the most.
               </p>
               <p className="text-gray-900 font-bold">
-                Don&apos;t risk a major financial decision over a $20 shortcut.
+                Don&apos;t risk a major financial decision over a $39 shortcut.
               </p>
             </div>
 
@@ -505,7 +505,7 @@ export default function WorkbookPage() {
                 size="lg"
                 className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
               >
-                Get the Kit &ndash; $20 One&ndash;Time
+                Get the Kit &ndash; $39 One&ndash;Time
                 <ArrowRight className="ml-2 h-5 w-5" />
               </CheckoutButton>
             </div>
@@ -595,7 +595,7 @@ export default function WorkbookPage() {
             Download the Success Kit and start preparing today
           </p>
           <div className="flex items-baseline gap-3 justify-center mb-8">
-            <span className="text-5xl font-bold">$20</span>
+            <span className="text-5xl font-bold">$39</span>
             <span className="text-slate-300">One&ndash;Time</span>
           </div>
           <CheckoutButton
@@ -604,7 +604,7 @@ export default function WorkbookPage() {
             size="lg"
             className="text-lg px-8 py-6"
           >
-            Get the Kit &ndash; $20
+            Get the Kit &ndash; $39
             <Download className="ml-2 h-5 w-5" />
           </CheckoutButton>
           <p className="text-sm text-slate-400 mt-4">

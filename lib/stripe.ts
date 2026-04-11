@@ -18,7 +18,7 @@ export const PRODUCTS = {
     name: 'K2 Success Kit',
     description:
       'Core document templates, 4 PrepCoach prompts, and foundational CRE financing guidance.',
-    priceAmount: 2000, // $20.00 in cents
+    priceAmount: 3900, // $39.00 in cents
     role: 'borrower' as const,
     envPriceKey: 'STRIPE_PRICE_KIT',
   },

@@ -58,7 +58,7 @@ export function CheckoutButton({
   }, [router]);
 
   const defaultLabel =
-    product === 'certified' ? 'Enroll Now — $250' : 'Get Success Kit — $20';
+    product === 'certified' ? 'Enroll Now — $250' : 'Get Success Kit — $39';
 
   return (
     <>

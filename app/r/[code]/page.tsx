@@ -96,13 +96,13 @@ export default function ReferralPage() {
             PrepCoach prompts.
           </p>
 
-          <p className="text-3xl font-bold text-gray-900 mb-2">$20</p>
+          <p className="text-3xl font-bold text-gray-900 mb-2">$39</p>
           <p className="text-sm text-gray-500 mb-8">One-time purchase</p>
 
           <CheckoutButton
             product="kit"
             referralCode={code}
-            label="Get Your Success Kit — $20"
+            label="Get Your Success Kit — $39"
             size="lg"
             className="text-lg px-8 py-4 shadow-lg shadow-primary/20"
           />

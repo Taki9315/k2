@@ -131,7 +131,7 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
             <div className="flex items-center justify-between">
               <div>
                 <Label htmlFor="workbook">Kit Purchased</Label>
-                <p className="text-xs text-muted-foreground mt-0.5">User has purchased the $20 Success Kit</p>
+                <p className="text-xs text-muted-foreground mt-0.5">User has purchased the $39 Success Kit</p>
               </div>
               <Switch id="workbook" checked={workbookPurchased} onCheckedChange={setWorkbookPurchased} />
             </div>

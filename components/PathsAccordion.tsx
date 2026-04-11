@@ -63,7 +63,7 @@ const PATHS: PathItem[] = [
     featured: true,
     bullets: [
       {
-        title: 'Instant Access \u2013 $20 One\u2011Time',
+        title: 'Instant Access \u2013 $39 One\u2011Time',
         description: 'A complete DIY financing system: instantly downloadable guidance and online tools to help you move through the financing process with clarity and purpose.',
       },
       {
@@ -87,8 +87,8 @@ const PATHS: PathItem[] = [
         description: 'Everything you need to present a clean, credible, lender\u2011friendly package\u2014without years of industry experience.',
       },
     ],
-    commitment: '$20 one\u2011time. No subscriptions. No upsells. Just a powerful, self\u2011directed system that puts you in control.',
-    cta: { label: 'Get the Kit \u2013 $20 One\u2011Time', href: '/workbook' },
+    commitment: '$39 one\u2011time. No subscriptions. No upsells. Just a powerful, self\u2011directed system that puts you in control.',
+    cta: { label: 'Get the Kit \u2013 $39 One\u2011Time', href: '/workbook' },
   },
   {
     step: 3,
