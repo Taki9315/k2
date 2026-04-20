@@ -14,7 +14,7 @@ A full-featured commercial real estate (CRE) financing platform built with **Nex
 | Styling | Tailwind CSS + shadcn/ui (Radix primitives) |
 | Icons | Lucide React |
 | Payments | Stripe Checkout |
-| Hosting | Netlify |
+| Hosting | Cloudflare Workers |
 
 ---
 
@@ -164,6 +164,33 @@ supabase/migrations/20260308000000_deal_room_document_name.sql
 
 ## Deployment
 
-Configured for **Netlify** via `netlify.toml` with `@netlify/plugin-nextjs`.
+Configured for **Cloudflare Workers** using OpenNext + Wrangler.
 
-Push to `main` branch to trigger auto-deploy.
+### Deploy Steps
+
+```bash
+npm run cf:build
+npm run cf:deploy
+```
+
+### One-Time Setup
+
+```bash
+npx wrangler login
+npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+npx wrangler secret put STRIPE_SECRET_KEY
+npx wrangler secret put STRIPE_WEBHOOK_SECRET
+npx wrangler secret put OPENAI_API_KEY
+npx wrangler secret put RESEND_API_KEY
+npx wrangler secret put ADMIN_NOTIFICATION_EMAIL
+```
+
+Set non-secret runtime vars in Cloudflare (Workers & Pages settings), for example:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+- `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_CALENDLY_URL`
+- `NEXT_PUBLIC_SUCCESS_KIT_PAGES`
+- `NEXT_PUBLIC_SUCCESS_KIT_PDF_URL`
