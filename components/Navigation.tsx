@@ -24,9 +24,12 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [contentDropdownOpen, setContentDropdownOpen] = useState(false);
   const [mobileContentOpen, setMobileContentOpen] = useState(false);
+  const [lenderReadyDropdownOpen, setLenderReadyDropdownOpen] = useState(false);
+  const [mobileLenderReadyOpen, setMobileLenderReadyOpen] = useState(false);
   const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const contentDropdownRef = useRef<HTMLDivElement>(null);
+  const lenderReadyDropdownRef = useRef<HTMLDivElement>(null);
   const resourcesDropdownRef = useRef<HTMLDivElement>(null);
 
 
@@ -35,6 +38,9 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
     function handleClickOutside(e: MouseEvent) {
       if (contentDropdownRef.current && !contentDropdownRef.current.contains(e.target as Node)) {
         setContentDropdownOpen(false);
+      }
+      if (lenderReadyDropdownRef.current && !lenderReadyDropdownRef.current.contains(e.target as Node)) {
+        setLenderReadyDropdownOpen(false);
       }
       if (resourcesDropdownRef.current && !resourcesDropdownRef.current.contains(e.target as Node)) {
         setResourcesDropdownOpen(false);
@@ -77,14 +83,21 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
       })()
     : [
         { href: '/', label: 'Home' },
-        { href: '/about', label: 'About K2 Commercial Finance' },
-        { href: '/workbook', label: 'Success Kit' },
+        { href: '/about', label: 'About' },
+        // { href: '/workbook', label: 'Learn' },
+        { href: '__lender_ready__', label: 'Lender-Ready System', dropdown: true },
         { href: '/membership/certified-borrower', label: 'K2 Certification' },
-        { href: '/content', label: 'Free Educational Content' },
+        { href: '/content', label: 'Learn' },
         { href: '/Resource', label: 'Resources' },
-        { href: '/partnership', label: 'Partnership Inquiry' },
+        // { href: '/partnership', label: 'Partnership Inquiry' },
         { href: '/contact', label: 'Contact' },
       ];
+
+  const lenderReadySubLinks = [
+    { href: '/lender-ready', label: 'Lender-Ready System' },
+    { href: '/lender-ready/what-include', label: "What's Included" },
+    { href: '/lender-ready/meet-coach', label: 'Meet PrepCoach' },
+  ];
 
   const resourcesSubLinks = [
     { href: '/content?tab=videos', label: 'Videos' },
@@ -245,6 +258,36 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
                     </div>
                   );
                 }
+                if (link.href === '__lender_ready__' && !user) {
+                  return (
+                    <div key="lender-ready-dropdown" ref={lenderReadyDropdownRef} className="relative">
+                      <button
+                        onClick={() => setLenderReadyDropdownOpen(!lenderReadyDropdownOpen)}
+                        className={cn(
+                          'inline-flex items-center gap-1 text-sm font-medium transition-colors hover:opacity-90',
+                          pathname.startsWith('/lender-ready') ? 'text-primary-foreground' : 'text-primary-foreground/80'
+                        )}
+                      >
+                        {link.label}
+                        <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', lenderReadyDropdownOpen && 'rotate-180')} />
+                      </button>
+                      {lenderReadyDropdownOpen && (
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-52 rounded-lg border border-slate-200 bg-white py-1.5 shadow-xl z-50">
+                          {lenderReadySubLinks.map((sub) => (
+                            <Link
+                              key={sub.href}
+                              href={sub.href}
+                              onClick={() => setLenderReadyDropdownOpen(false)}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-50 hover:text-gray-900 transition-colors"
+                            >
+                              {sub.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
                 // Resources dropdown for logged-in users
                 if (link.href === '__resources__') {
                   return (
@@ -330,6 +373,38 @@ export function Navigation({ hideHeader = false }: { hideHeader?: boolean } = {}
                           All Content
                         </Link>
                         {contentSubLinks.map((sub) => (
+                          <Link
+                            key={sub.href}
+                            href={sub.href}
+                            className="block px-3 py-1.5 rounded-md text-sm font-medium text-primary-foreground/80 hover:bg-primary/90"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              if (link.href === '__lender_ready__' && !user) {
+                return (
+                  <div key="mobile-lender-ready-group">
+                    <button
+                      onClick={() => setMobileLenderReadyOpen(!mobileLenderReadyOpen)}
+                      className={cn(
+                        'flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium',
+                        pathname.startsWith('/lender-ready')
+                          ? 'bg-primary/80 text-primary-foreground'
+                          : 'text-primary-foreground/90 hover:bg-primary/90'
+                      )}
+                    >
+                      {link.label}
+                      <ChevronDown className={cn('h-4 w-4 transition-transform', mobileLenderReadyOpen && 'rotate-180')} />
+                    </button>
+                    {mobileLenderReadyOpen && (
+                      <div className="ml-4 mt-1 space-y-1">
+                        {lenderReadySubLinks.map((sub) => (
                           <Link
                             key={sub.href}
                             href={sub.href}
