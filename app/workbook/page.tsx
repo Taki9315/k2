@@ -1,617 +1,518 @@
-'use client';
-
 import Image from 'next/image';
-import { useState, useEffect, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { CheckoutButton } from '@/components/CheckoutButton';
-import {
-  ArrowRight,
-  Bot,
-  CheckCircle2,
-  ChevronDown,
-  Download,
-  FileText,
-  FolderOpen,
-  LayoutDashboard,
-  ListChecks,
-  Shield,
-  Star,
-  X,
-  Zap,
-} from 'lucide-react';
-import { GuaranteePopover } from '@/components/GuaranteePopover';
+import { Montserrat, Playfair_Display } from 'next/font/google';
 
-/* ------------------------------------------------------------------ */
-/*  Expandable section component                                       */
-/* ------------------------------------------------------------------ */
-function Expandable({
-  title,
-  icon: Icon,
-  children,
-  defaultOpen = false,
-}: {
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['600', '700'],
+});
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+});
+
+type DividerCopy = {
   title: string;
-  icon: React.ElementType;
-  children: React.ReactNode;
-  defaultOpen?: boolean;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white hover:shadow-lg transition-shadow">
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-4 p-6 md:p-8 text-left cursor-pointer"
-      >
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary flex-shrink-0">
-          <Icon className="h-6 w-6" />
-        </div>
-        <h3 className="flex-1 text-lg md:text-xl font-bold text-gray-900">
-          {title}
-        </h3>
-        <ChevronDown
-          className={`h-5 w-5 text-gray-400 transition-transform duration-300 ${
-            open ? 'rotate-180' : ''
-          }`}
-        />
-      </button>
-      <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          open ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'
-        }`}
-      >
-        <div className="px-6 md:px-8 pb-6 md:pb-8 pt-0">{children}</div>
-      </div>
-    </div>
-  );
-}
+  subtitle: string;
+  footer: string;
+  subItems: string[];
+};
 
-/* ------------------------------------------------------------------ */
-/*  Hero image                                                         */
-/* ------------------------------------------------------------------ */
-const SUCCESSKIT_HERO_IMAGE =
-  'https://images.pexels.com/photos/6801643/pexels-photo-6801643.jpeg?auto=compress&cs=tinysrgb&w=1400';
+const dividerList: DividerCopy[] = [
+  // ── Main sections ─────────────────────────────────────────────────
+  {
+    title: 'Start Here',
+    subtitle: 'Welcome to the K2 Lender-Ready System and everything it includes.',
+    footer: 'A cleaner process starts with a clearer plan.',
+    subItems: [
+      '1.1 Welcome to the K2 Lender-Ready System',
+      '1.2 What Is Included in the System',
+      '1.3 How to Use This Workbook',
+      '1.4 Why This Process Works',
+      '1.5 What Lenders Are Actually Looking For',
+      '1.6 Before You Begin',
+      '1.7 Recommended Workflow',
+      '1.8 What a Complete Submission Usually Includes',
+      '1.9 Submission Best Practices',
+      '1.10 Common Mistakes to Avoid',
+      '1.11 Final Note',
+    ],
+  },
+  {
+    title: 'Commercial Loan Application',
+    subtitle: 'Complete the application correctly before anything else moves.',
+    footer: 'A strong application is the foundation of a credible file.',
+    subItems: [
+      '2.1 Why This Application Matters',
+      '2.2 Your Goal in This Section',
+      '2.3 Before You Start',
+      '2.4 How to Complete the Application',
+      '2.5 General Completion Rules',
+      '2.6 Before You Upload to the Deal Room',
+      '2.7 Final Note',
+    ],
+  },
+  {
+    title: 'Loan Programs',
+    subtitle: 'Choose the right financing structure before you choose the lender.',
+    footer: 'Program fit drives lender fit.',
+    subItems: [
+      '3.1 Why This Section Matters',
+      '3.2 What Drives Loan Program Fit',
+      '3.3 Property Type Changes the Loan Options',
+      '3.4 Borrower Factors Matter Too',
+      '3.5 Common Loan Programs',
+      '3.6 When Short-Term Financing May Be the Better First Step',
+      '3.7 Quick Examples of Likely Program Fit',
+      '3.8 What to Watch Out For',
+      '3.9 Use Prep Coach',
+      '3.10 Before You Move Forward',
+      '3.11 Final Note',
+    ],
+  },
+  {
+    title: 'Required Documentation and Supporting Forms',
+    subtitle: 'Build a complete, organized file that lenders can move on.',
+    footer: 'Missing documents are the most common reason deals stall.',
+    subItems: [
+      '4.1 Why This Section Matters',
+      '4.2 Start with the Application, Then Build Out the File',
+      '4.3 Documentation Should Match the Loan Program',
+      '4.4 The Four Main Document Categories',
+      '4.5 Borrower Documents',
+      '4.6 Property Documents',
+      '4.7 Transaction Documents',
+      '4.8 Explanatory and Supplemental Documents',
+      '4.9 What Is Commonly Needed for Most Deals',
+      '4.10 How Requirements Change by Transaction Type',
+      '4.11 How to Use the Document Library',
+      '4.12 Consistency Rules',
+      '4.13 How to Organize Documents in the Deal Room',
+      '4.14 Before You Move Forward',
+      '4.15 Final Note',
+    ],
+  },
+  {
+    title: 'Building and Organizing the Deal Room',
+    subtitle: 'Keep everything in one place and share it the right way.',
+    footer: 'An organized deal room signals a prepared borrower.',
+    subItems: [
+      '5.1 Why the Deal Room Matters',
+      '5.2 What the Deal Room Is For',
+      '5.3 When to Build the Deal Room',
+      '5.4 Create One Deal Room per Transaction',
+      '5.5 How to Name the Deal Room',
+      '5.6 What to Upload First',
+      '5.7 How to Organize the Files',
+      '5.8 What Good Organization Does for You',
+      '5.9 What Not to Do',
+      '5.10 Share the Deal Room the Right Way',
+      '5.11 Keep the Deal Room Updated',
+      '5.12 Use the Deal Room to Track Lender Activity',
+      '5.13 Before You Share the Deal Room',
+      '5.14 Final Note',
+    ],
+  },
+  {
+    title: 'Deal Room Cover Page Template',
+    subtitle: 'Give lenders a clear snapshot before they open a single file.',
+    footer: 'The cover page sets the tone for everything that follows.',
+    subItems: [
+      '6.1 Purpose of the Cover Page',
+      '6.2 Deal Room Snapshot Template',
+      '6.3 Documents Included in This Deal Room',
+      '6.4 Suggested File Name',
+      '6.5 Final Checklist',
+    ],
+  },
+  {
+    title: 'Initial Lender Outreach',
+    subtitle: 'Reach out professionally and strategically to the right lenders.',
+    footer: 'Preparation first. Outreach second.',
+    subItems: [
+      '7.1 Why This Section Matters',
+      '7.2 Start with the Right Lender Targets',
+      '7.3 Why Your Preparation Gives You an Advantage',
+      '7.4 Use the Email Templates — But Customize Them',
+      '7.5 How Many Lenders to Target',
+      '7.6 Stay Positive and Professional',
+      '7.7 The Typical Outreach Sequence',
+      '7.8 What the First Email Should Do',
+      '7.9 When to Send the Deal Room',
+      '7.10 Use Early Feedback to Improve the File',
+      '7.11 Track Everything',
+      '7.12 Before You Begin Outreach',
+      '7.13 Final Note',
+    ],
+  },
+  {
+    title: 'Follow-Up Email Templates',
+    subtitle: 'Stay professional, persistent, and easy to respond to.',
+    footer: 'Clear follow-up keeps deals from going quiet.',
+    subItems: [
+      '8.1 Step 3 — First Follow-Up Email',
+      '8.2 Step 3 — Short Version',
+      '8.3 Step 4 — Final Follow-Up Email',
+      '8.4 Step 4 — Short Version',
+      '8.5 Follow-Up Style Rules',
+      '8.6 When to Stop Following Up',
+      '8.7 Final Checklist',
+    ],
+  },
+  {
+    title: 'Managing Lender Responses and Next Steps',
+    subtitle: 'Respond quickly, stay consistent, and keep momentum moving.',
+    footer: 'How you handle responses shapes how lenders see you.',
+    subItems: [
+      '9.1 Why This Section Matters',
+      '9.2 What a Lender Response Usually Means',
+      '9.3 Keep the Real Goal in Mind',
+      '9.4 Respond Quickly — But Not Carelessly',
+      '9.5 The First Response After Interest Is Shown',
+      '9.6 Use Letters of Explanation the Right Way',
+      '9.7 Track Every Response',
+      '9.8 Expect Different Lenders to Ask for Different Things',
+      '9.9 How to Handle Questions and Conditions',
+      '9.10 Keep Your Story Consistent',
+      '9.11 Know What a "No" Can Still Teach You',
+      '9.12 Keep Momentum Without Creating Pressure',
+      '9.13 Know When to Expand Outreach',
+      '9.14 Use Prep Coach When Responses Get Complicated',
+      '9.15 Common Mistakes to Avoid',
+      '9.16 Before You Move Forward',
+      '9.17 Final Note',
+    ],
+  },
+  {
+    title: 'Letters of Explanation Template Set',
+    subtitle: 'Address concerns clearly before lenders have to ask twice.',
+    footer: 'A well-written explanation removes doubt from the file.',
+    subItems: [
+      '10.1 Introduction and Instructions',
+      '10.2 Template — LOE-Credit',
+      '10.3 Template — LOE-Bankruptcy',
+      '10.4 Template — LOE-Prior Record',
+      '10.5 Template — LOE-Vacancy',
+      '10.6 Template — LOE-Ownership Change',
+      '10.7 Quick Instructions for Use',
+    ],
+  },
+  {
+    title: 'From Term Sheet to Formal Underwriting',
+    subtitle: 'Understand the offer before you accept the structure.',
+    footer: 'Not every yes is the right yes.',
+    subItems: [
+      '11.1 Why This Section Matters',
+      '11.2 What a Term Sheet Usually Means',
+      '11.3 Read the Term Sheet Carefully',
+      '11.4 What to Ask Yourself Before Accepting',
+      '11.5 A Word About Fees',
+      '11.6 Formal Underwriting Is a Different Stage',
+      '11.7 Expect More Document Requests',
+      '11.8 Keep Responses Organized',
+      '11.9 Third-Party Reports and Costs',
+      '11.10 Conditions Are Normal',
+      '11.11 Watch for Deal Drift',
+      '11.12 Keep Momentum Going',
+      '11.13 Know What Success Looks Like at This Stage',
+      '11.14 Use Prep Coach if the Process Gets Heavy',
+      '11.15 Common Mistakes to Avoid',
+      '11.16 Before You Move Forward',
+      '11.17 Final Note',
+    ],
+  },
+  {
+    title: 'Closing and Beyond',
+    subtitle: 'Move through commitment, signing, and funding with confidence.',
+    footer: 'A strong finish starts with a complete file.',
+    subItems: [
+      '12.1 Commitment Letter and What It Means',
+      '12.2 Legal Review and Late-Stage Issues',
+      '12.3 Why Borrowers Should Consider Their Own Legal Review',
+      '12.4 How a Prep Coach Can Help During Closing',
+      '12.5 Staying Calm When the Deal Feels Uncertain',
+      '12.6 Final Loan Documents and Closing Disclosure',
+      '12.7 Signing, Funding, and Finalizing the Transaction',
+      '12.8 Life After Closing',
+      '12.9 Ongoing Communication with Your Lender',
+      '12.10 Maintaining Strong Banking Relationships Through Business Challenges',
+      '12.11 Long-Term Borrower Responsibilities',
+    ],
+  },
+  {
+    title: 'Final Thoughts',
+    subtitle: 'Preparation is what separates funded deals from stalled ones.',
+    footer: 'The work you do before outreach determines the outcome.',
+    subItems: [
+      '13.1 Becoming an Elite Borrowing Prospect',
+      '13.2 Why Preparation Changes Outcomes',
+      '13.3 Giving Your Transaction the Best Chance for Success',
+      '13.4 The Long-Term Value of Borrower Readiness',
+      '13.5 Continued Support for K2 Certified Borrowers',
+      '13.6 Closing Encouragement',
+    ],
+  },
+  // ── Bonus sections ────────────────────────────────────────────────
+  {
+    title: 'Bonus 1 — Underwriting Q&A',
+    subtitle: 'Respond to lender questions clearly, calmly, and with documentation.',
+    footer: 'A fast, credible response keeps deals moving.',
+    subItems: [
+      'A Plain-English Guide to Common Lender and Underwriter Questions After the Term Sheet',
+      'Practical framework for handling questions clearly and professionally',
+      'Covers due diligence, conditions, and closing-stage responses',
+    ],
+  },
+  {
+    title: 'Bonus 2 — Negotiating Loan Terms',
+    subtitle: 'Read the offer carefully and know where the real risks are.',
+    footer: 'Not every yes is the right yes.',
+    subItems: [
+      'A Plain-English Guide to Reading the Offer and Knowing Where to Push Back',
+      'Covers pricing, timing, reserves, guarantees, and lender controls',
+      'Practical framework for reviewing terms before you commit',
+    ],
+  },
+  {
+    title: 'Bonus 3 — SBA & Business-Purpose Lending',
+    subtitle: 'Understand how lenders evaluate deals that go beyond pure real estate.',
+    footer: 'Business-purpose lending follows a different path.',
+    subItems: [
+      'A Plain-English Supplement for Owner-Occupied and Business-Purpose Deals',
+      'Covers SBA financing, equipment, working capital, and growth needs',
+      'Programs, documentation, structure, and long-term financing objectives',
+    ],
+  },
+];
 
-/* ------------------------------------------------------------------ */
-/*  Page                                                                */
-/* ------------------------------------------------------------------ */
+const plainTextColumn = dividerList
+  .map((block) => `${block.title}\n\n${block.subtitle}\n\n${block.footer}`)
+  .join('\n\n');
+
+const darkDividerTitles = new Set([
+  'Final Thoughts',
+  'Bonus 1 — Underwriting Q&A',
+  'Bonus 2 — Negotiating Loan Terms',
+  'Bonus 3 — SBA & Business-Purpose Lending',
+]);
+
 export default function WorkbookPage() {
-  const [showGuarantee, setShowGuarantee] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const currentSectionRef = useRef(-1);
-  const hasTriggeredRef = useRef(false);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      if (hasTriggeredRef.current) return;
-
-      const sections = container.querySelectorAll('section');
-      if (!sections.length) return;
-
-      const viewportMiddle = window.scrollY + window.innerHeight / 2;
-      let currentIdx = 0;
-      sections.forEach((sec, idx) => {
-        const rect = sec.getBoundingClientRect();
-        const sectionTop = rect.top + window.scrollY;
-        if (viewportMiddle >= sectionTop) {
-          currentIdx = idx;
-        }
-      });
-
-      if (currentSectionRef.current === -1) {
-        currentSectionRef.current = currentIdx;
-        return;
-      }
-
-      if (currentIdx !== currentSectionRef.current) {
-        currentSectionRef.current = currentIdx;
-        hasTriggeredRef.current = true;
-        setShowGuarantee(true);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const dismissPopup = () => {
-    setShowGuarantee(false);
-    setDismissed(true);
-  };
-
   return (
-    <div ref={containerRef} className="flex flex-col">
-      {/* ── Slide-in Guarantee card ──────────────────────────── */}
-      <div
-        className={`fixed bottom-6 left-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] transition-all duration-500 ease-out ${
-          showGuarantee && !dismissed
-            ? 'translate-x-0 opacity-100'
-            : '-translate-x-[120%] opacity-0 pointer-events-none'
-        }`}
-      >
-        <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-200 p-6">
-          <button
-            onClick={dismissPopup}
-            className="absolute top-3 right-3 p-1 rounded-full hover:bg-gray-100 transition-colors"
-            aria-label="Close"
-          >
-            <X className="h-4 w-4 text-gray-400" />
-          </button>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <Shield className="h-6 w-6 text-primary" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-900 leading-tight pr-6">
-              The Prepared Borrower Guarantee
-            </h3>
-          </div>
-          <p className="text-sm text-gray-600 leading-relaxed mb-5">
-            If you don&apos;t feel more confident, more organized, and better
-            equipped to approach lenders after using the Kit, return it within
-            30&nbsp;days for a full refund.
-          </p>
-          <CheckoutButton product="kit" size="default" className="w-full">
-            Get the Success Kit &mdash; $39
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </CheckoutButton>
-        </div>
-      </div>
-
-      {/* ============================================================ */}
-      {/*  HERO                                                         */}
-      {/* ============================================================ */}
-      <section className="bg-gradient-to-br from-slate-50 to-slate-100 py-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="h-5 w-5 fill-yellow-400 text-yellow-400"
-                    />
-                  ))}
-                </div>
-                <span className="text-sm text-gray-600">
-                  Rated 5.0 by 200+ borrowers
-                </span>
+    <main className={`${montserrat.className} min-h-screen bg-[linear-gradient(180deg,#fcfcfa_0%,#f5f6f9_60%,#eef2f7_100%)] text-slate-900`}>
+      <div className="mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
+        <header className="rounded-3xl border border-slate-200/70 bg-white/90 p-8 shadow-sm backdrop-blur-sm md:p-12">
+          <div className="flex flex-col gap-10">
+            <div className="flex items-start justify-between gap-6">
+              <div className="relative h-14 w-44 md:h-16 md:w-52">
+                <Image
+                  src="/logo2.png"
+                  alt="K2 Commercial Finance Investor and Business Loans"
+                  fill
+                  className="object-contain object-left"
+                  priority
+                />
               </div>
+              <p className="max-w-xs text-right text-xs font-medium uppercase tracking-[0.2em] text-slate-500">
+                Master Divider System
+              </p>
+            </div>
 
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
-                Go Independent &ndash; Financing Success Kit
+            <div className="space-y-4">
+              <h1 className={`${playfair.className} text-4xl leading-tight text-[#192a56] md:text-6xl`}>
+                Master Canva Divider Template
               </h1>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                A small investment that protects a very big decision.
-              </p>
-
-              <div className="flex items-baseline gap-3 mb-2">
-                <span className="text-5xl font-bold text-gray-900">$39</span>
-                <span className="text-gray-500">One&ndash;Time &middot; Instant Access</span>
-              </div>
-
-              <CheckoutButton
-                product="kit"
-                size="lg"
-                className="text-lg px-8 py-6 w-full sm:w-auto mt-6"
-              >
-                Get the Kit &ndash; $39
-                <Download className="ml-2 h-5 w-5" />
-              </CheckoutButton>
-
-              <p className="text-sm text-gray-500 mt-4">
-                Instant access. No subscription required.
+              <p className="max-w-3xl text-base text-slate-600 md:text-lg">
+                Duplicate this single design for each workbook section. Keep layout, spacing,
+                typography, and branding fixed. Only swap section title, subtitle, and footer text.
               </p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-2xl p-8 border-2 border-slate-200">
-              <div
-                className="aspect-[3/4] rounded-lg mb-6 bg-cover bg-center"
-                style={{ backgroundImage: `url('${SUCCESSKIT_HERO_IMAGE}')` }}
-                aria-label="Success Kit planning materials on desk"
-              />
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Format</span>
-                  <span className="font-semibold">Online Tools + PDF</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Access</span>
-                  <span className="font-semibold">Instant</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Updates</span>
-                  <span className="font-semibold">Lifetime</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Price</span>
-                  <span className="font-bold text-primary text-lg">$39</span>
-                </div>
+            <div className="h-px w-full bg-gradient-to-r from-transparent via-[#c9a14a] to-transparent" />
+
+            <div className="grid gap-6 text-sm text-slate-700 md:grid-cols-3">
+              <div className="rounded-2xl border border-slate-200 bg-[#f8fafc] p-5">
+                <p className="font-semibold text-slate-900">Dimensions</p>
+                <p className="mt-2">US Letter Portrait: 8.5 x 11 in</p>
+                <p className="mt-1">A4 Portrait: 210 x 297 mm</p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-[#f8fafc] p-5">
+                <p className="font-semibold text-slate-900">Style Pairing</p>
+                <p className="mt-2">Title: Playfair Display</p>
+                <p className="mt-1">Subtitle/Footer: Montserrat</p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-[#f8fafc] p-5">
+                <p className="font-semibold text-slate-900">Primary Palette</p>
+                <p className="mt-2">Light background</p>
+                <p className="mt-1">Navy text + gold accent</p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </header>
 
-      {/* ============================================================ */}
-      {/*  BEST FOR                                                     */}
-      {/* ============================================================ */}
-      <section className="py-16 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">
-            Best For
+        <section className="mt-12 rounded-3xl border border-slate-200 bg-white p-7 shadow-sm md:p-10">
+          <div className="grid items-start gap-8 lg:grid-cols-[1.15fr,0.85fr]">
+            <article className="rounded-2xl border border-slate-200 bg-[#fffefb] p-7 md:p-8">
+              <div className="relative h-10 w-36">
+                <Image
+                  src="/logo2.png"
+                  alt="K2 logo"
+                  fill
+                  className="object-contain object-left"
+                />
+              </div>
+              <div className="mt-20 md:mt-24">
+                <h2 className={`${playfair.className} text-4xl text-[#192a56] md:text-5xl`}>
+                  Start Here
+                </h2>
+                <p className="mt-4 max-w-xl text-base font-medium text-slate-600 md:text-lg">
+                  Build your deal the right way from the beginning.
+                </p>
+                <div className="mt-6 h-[2px] w-44 bg-[#c9a14a]" />
+              </div>
+              <p className="mt-28 text-sm text-slate-500 md:mt-32">
+                A cleaner process starts with a clearer plan.
+              </p>
+            </article>
+
+            <div className="space-y-4 text-sm text-slate-700">
+              <h3 className="text-base font-semibold uppercase tracking-[0.16em] text-[#192a56]">
+                Canva Build Checklist
+              </h3>
+              <ol className="space-y-3">
+                <li>1. Create one divider page with logo, title, subtitle, accent line, and footer.</li>
+                <li>2. Keep logo top-left for a premium business layout.</li>
+                <li>3. Follow fixed spacing and alignment across every duplicate page.</li>
+                <li>4. Duplicate this divider design 20 times.</li>
+                <li>5. Change only title, subtitle, and footer text for each section.</li>
+                <li>6. Use dark variation only for major bonus or final CTA sections.</li>
+              </ol>
+
+              <h3 className="pt-3 text-base font-semibold uppercase tracking-[0.16em] text-[#192a56]">
+                Spacing Guide
+              </h3>
+              <ul className="space-y-2">
+                <li>Top margin: 0.75 in to 1.0 in</li>
+                <li>Logo to title: 1.0 in to 1.5 in</li>
+                <li>Title to subtitle: 0.2 in to 0.35 in</li>
+                <li>Subtitle to accent: 0.25 in to 0.4 in</li>
+                <li>Footer from bottom: 0.5 in to 0.75 in</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-7 shadow-sm md:p-10">
+          <h3 className="text-base font-semibold uppercase tracking-[0.16em] text-[#192a56]">
+            Divider Text Blocks
+          </h3>
+          <p className="mt-2 text-sm text-slate-600">
+            Includes 13 main sections plus 3 bonus sections.
           </p>
-          <p className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
-            Organized, self&#x2011;motivated borrowers who want to submit clean,
-            professional loan packages lenders actually want to fund&mdash;targeting
-            lenders on your own and avoiding broker involvement.
-          </p>
-        </div>
-      </section>
 
-      {/* ============================================================ */}
-      {/*  WHAT YOU GET (expandable sections)                           */}
-      {/* ============================================================ */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">
-              What You Get
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-              Instant Access &ndash; $39 One&#x2011;Time
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              A complete DIY financing system: instantly downloadable guidance and
-              online tools to help you move through the financing process with
-              clarity and purpose.
-            </p>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            {dividerList.map((block, index) => (
+              <article key={block.title} className="rounded-2xl border border-slate-200 bg-[#fbfcff] p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                  {index + 1}
+                </p>
+                <h4 className={`${playfair.className} mt-2 text-2xl text-[#192a56]`}>
+                  {block.title}
+                </h4>
+                <p className="mt-2 text-sm text-slate-700">{block.subtitle}</p>
+                <div className="mt-4 h-[2px] w-24 bg-[#c9a14a]" />
+                {block.subItems.length > 0 && (
+                  <ul className="mt-4 space-y-1">
+                    {block.subItems.map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-xs text-slate-500">
+                        <span className="mt-[3px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#c9a14a]" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <p className="mt-4 text-xs font-medium text-slate-400 italic">{block.footer}</p>
+              </article>
+            ))}
           </div>
+        </section>
 
-          <div className="space-y-4">
-            {/* 1 – Loan Prep Tools */}
-            <Expandable title="Step-By-Step Loan Prep Tools" icon={ListChecks} defaultOpen>
-              <p className="text-gray-700 mb-3">No guesswork. No confusion.</p>
-              <p className="text-gray-600 leading-relaxed">
-                Just a clear path to choosing the right loan program, organizing
-                lender&#x2011;ready documents, accelerating your process and
-                avoiding the mistakes that quietly kill deals.
-              </p>
-            </Expandable>
+        <section className="mt-8 space-y-8">
+          {dividerList.map((block) => {
+            const useDarkTheme = darkDividerTitles.has(block.title);
 
-            {/* 2 – Document Library */}
-            <Expandable title="Document Library – Everything Lenders Expect" icon={FileText}>
-              <p className="text-gray-600 mb-4 leading-relaxed">
-                A complete library of essential application documents, including:
-              </p>
-              <ul className="space-y-2">
-                {[
-                  'Personal financial statements',
-                  'Borrower forms',
-                  'Templates lenders expect',
-                  'Supporting docs you\u2019ll need for every deal',
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-gray-700">
-                    <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <p className="text-gray-600 mt-4 font-medium">
-                Everything organized, downloadable, and ready to use.
-              </p>
-            </Expandable>
-
-            {/* 3 – Deal Room */}
-            <Expandable title="Deal Room – Track Each Deal Independently" icon={FolderOpen}>
-              <p className="text-gray-600 mb-4 leading-relaxed">
-                Each deal gets its own dedicated workspace.
-              </p>
-              <ul className="space-y-2">
-                {[
-                  'Upload documents',
-                  'Track progress',
-                  'Keep everything organized and lender\u2011ready',
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-gray-700">
-                    <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <p className="text-gray-600 mt-4 font-medium">
-                No more scattered files or lost emails.
-              </p>
-            </Expandable>
-
-            {/* 4 – Submission Tracker */}
-            <Expandable title="Submission Tracker – Know Exactly Where You Stand" icon={LayoutDashboard}>
-              <p className="text-gray-600 mb-4 leading-relaxed">
-                Log every lender you&apos;ve submitted to and track the status of each one.
-              </p>
-              <ul className="space-y-2">
-                {[
-                  'Who has your package',
-                  'What stage they\u2019re in',
-                  'What they need next',
-                  'Where to follow up',
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-gray-700">
-                    <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <p className="text-gray-600 mt-4 font-medium">
-                This alone saves hours and prevents deals from stalling.
-              </p>
-            </Expandable>
-
-            {/* 5 – Pro-Level Polish */}
-            <Expandable title="Pro-Level Polish, Zero Experience Required" icon={Zap}>
-              <p className="text-gray-600 leading-relaxed">
-                Everything you need to present a clean, credible,
-                lender&#x2011;friendly package&mdash;without years of industry
-                experience.
-              </p>
-            </Expandable>
-          </div>
-
-          {/* One-Time Purchase callout */}
-          <div className="mt-10 rounded-2xl bg-white border border-slate-200 p-6 md:p-8 text-center">
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
-              One&ndash;Time Purchase
-            </h3>
-            <p className="text-gray-600 mb-6">
-              No subscriptions. No upsells. Just a powerful, self&#x2011;directed
-              system that puts you in control.
-            </p>
-            <CheckoutButton
-              product="kit"
-              size="lg"
-              className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
-            >
-              Get the Kit &ndash; $39 One&ndash;Time
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </CheckoutButton>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  Prep Coach Section                                           */}
-      {/* ============================================================ */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-sm font-medium text-primary mb-6">
-                <Bot className="h-4 w-4" />
-                AI-Powered Prep Coach
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Meet Your Prep Coach
-              </h2>
-              <p className="text-xl text-gray-700 mb-3 leading-relaxed font-medium">
-                AI made simple &mdash; the first AI agent designed exclusively for
-                small commercial property investors.
-              </p>
-              <p className="text-lg text-gray-600 mb-4 leading-relaxed">
-                Turnkey program &mdash; no tech expertise needed. Click
-                prompts &rarr; get expert guidance instantly.
-              </p>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                Prep Coach is your unfair competitive advantage &mdash; a turnkey AI
-                system that prepares you to work smarter with lenders and
-                advisors.
-              </p>
-              <ul className="space-y-3 mb-8">
-                {[
-                  'Step-by-step guided loan package preparation',
-                  'AI-generated executive summaries & lender scripts',
-                  'DSCR calculations & financial statement builders',
-                  'Available 24/7 \u2014 work at your own pace',
-                  'No experience needed \u2014 Prep Coach leads the way',
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-2 text-gray-700">
-                    <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Button size="lg" asChild className="shadow-lg shadow-primary/20">
-                <a href="/prepcoach">
-                  Explore Prep Coach
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </a>
-              </Button>
-            </div>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-emerald-50/50 rounded-3xl -rotate-2 scale-105" />
-              <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl shadow-2xl p-8 text-white">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center">
-                    <Bot className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">K2 Prep Coach</h4>
-                    <p className="text-xs text-slate-400">
-                      AI-Guided Preparation
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-3 text-sm">
-                  <div className="bg-white/10 rounded-xl p-3">
-                    <p className="text-slate-300">
-                      &ldquo;Generate an executive summary for my SBA loan&hellip;&rdquo;
-                    </p>
-                  </div>
-                  <div className="bg-primary/20 rounded-xl p-3 ml-4">
-                    <p className="text-slate-200">
-                      Here&apos;s your executive summary draft based on your
-                      financials&hellip;
-                    </p>
-                  </div>
-                  <div className="bg-white/10 rounded-xl p-3">
-                    <p className="text-slate-300">
-                      &ldquo;What documents do I need for underwriting?&rdquo;
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  STILL UNSURE?                                                */}
-      {/* ============================================================ */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border-2 border-amber-200 bg-amber-50/50 p-8 md:p-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 text-center">
-              Still Unsure? Consider This.
-            </h2>
-
-            <div className="space-y-4 text-gray-700 leading-relaxed">
-              <p>
-                You&apos;re about to make a six&#x2011; or seven&#x2011;figure move.
-              </p>
-              <p>
-                One missing document or unclear submission can stall your deal
-                instantly.
-              </p>
-              <p>
-                For <span className="font-bold text-primary">$39</span>, you get
-                the tools, documents, and structure that keep deals alive and
-                moving.
-              </p>
-              <p className="font-semibold">
-                This is the smallest investment in your entire financing
-                process&mdash;and the one that can change your outcome the most.
-              </p>
-              <p className="text-gray-900 font-bold">
-                Don&apos;t risk a major financial decision over a $39 shortcut.
-              </p>
-            </div>
-
-            <div className="mt-8 text-center">
-              <CheckoutButton
-                product="kit"
-                size="lg"
-                className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
+            return (
+              <article
+                key={`sheet-${block.title}`}
+                className={`divider-sheet relative overflow-hidden rounded-3xl border shadow-sm ${
+                  useDarkTheme
+                    ? 'border-slate-700 bg-[#0f1d45]'
+                    : 'border-slate-200 bg-[#fffefb]'
+                }`}
               >
-                Get the Kit &ndash; $39 One&ndash;Time
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </CheckoutButton>
-            </div>
-          </div>
-        </div>
-      </section>
+                <div
+                  className={`absolute left-0 top-0 h-full w-2 ${
+                    useDarkTheme ? 'bg-[#c9a14a]/60' : 'bg-[#c9a14a]/45'
+                  }`}
+                />
 
-      {/* ============================================================ */}
-      {/*  Certified Borrower upsell                                    */}
-      {/* ============================================================ */}
-      <section className="py-16 bg-gradient-to-br from-emerald-50/50 to-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-3 bg-white border-2 border-primary/20 rounded-2xl px-6 py-4 shadow-lg shadow-primary/5 mb-8">
-            <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Shield className="h-7 w-7 text-primary" />
-            </div>
-            <div className="text-left">
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold text-gray-900">
-                  K2 Certified Borrower
-                </span>
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="h-4 w-4 fill-yellow-400 text-yellow-400"
+                <div className="divider-sheet-inner relative flex h-full flex-col">
+                  <div className="divider-logo-wrap relative h-14 w-44 md:h-16 md:w-52">
+                    <Image
+                      src="/logo2.png"
+                      alt="K2 logo"
+                      fill
+                      className={`object-contain object-left ${
+                        useDarkTheme ? 'brightness-0 invert' : ''
+                      }`}
                     />
-                  ))}
+                  </div>
+
+                  <div className="divider-main-copy mt-auto">
+                    <h2
+                      className={`${playfair.className} text-[clamp(2.2rem,5vw,3.2rem)] leading-[1.1] ${
+                        useDarkTheme ? 'text-white' : 'text-[#192a56]'
+                      }`}
+                    >
+                      {block.title}
+                    </h2>
+                    <p
+                      className={`mt-4 max-w-[42ch] text-[clamp(0.95rem,2vw,1.1rem)] font-medium ${
+                        useDarkTheme ? 'text-slate-200' : 'text-slate-600'
+                      }`}
+                    >
+                      {block.subtitle}
+                    </p>
+                    <div className="mt-6 h-[2px] w-44 bg-[#c9a14a]" />
+                    {block.subItems.length > 0 && (
+                      <ul className="mt-6 grid grid-cols-2 gap-x-6 gap-y-1.5">
+                        {block.subItems.map((item) => (
+                          <li
+                            key={item}
+                            className={`flex items-start gap-2 text-[0.72rem] leading-snug ${
+                              useDarkTheme ? 'text-slate-300' : 'text-slate-500'
+                            }`}
+                          >
+                            <span className="mt-[4px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#c9a14a]" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+
+                  <p
+                    className={`divider-footer mt-auto text-[0.72rem] md:text-[0.78rem] ${
+                      useDarkTheme ? 'text-slate-300' : 'text-slate-500'
+                    }`}
+                  >
+                    {block.footer}
+                  </p>
                 </div>
-              </div>
-              <p className="text-sm text-gray-500">
-                Rated 5.0 &mdash; Trusted by hundreds of borrowers
-              </p>
-            </div>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Ready for the Next Level?
-          </h2>
-          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Upgrade to Certified Borrower for expert lender matching, warm
-            introductions, and lifetime access to our full platform.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button
-              size="lg"
-              asChild
-              className="shadow-lg shadow-primary/20"
-            >
-              <a href="/membership/certified-borrower">
-                Become Certified &mdash; $250
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </a>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  Guarantee                                                    */}
-      {/* ============================================================ */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <GuaranteePopover>
-            <Shield className="h-14 w-14 text-primary mx-auto mb-6 cursor-help" />
-          </GuaranteePopover>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            The Prepared Borrower Guarantee
-          </h2>
-          <p className="text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
-            If you don&apos;t feel more confident, more organized, and better
-            equipped to approach lenders after using the Kit, return it within
-            30 days for a full refund.
-          </p>
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  FINAL CTA                                                    */}
-      {/* ============================================================ */}
-      <section className="py-20 bg-slate-900 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Shield className="h-16 w-16 mx-auto mb-6" />
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Get Financing-Ready?
-          </h2>
-          <p className="text-xl text-slate-300 mb-8">
-            Download the Success Kit and start preparing today
-          </p>
-          <div className="flex items-baseline gap-3 justify-center mb-8">
-            <span className="text-5xl font-bold">$39</span>
-            <span className="text-slate-300">One&ndash;Time</span>
-          </div>
-          <CheckoutButton
-            product="kit"
-            variant="secondary"
-            size="lg"
-            className="text-lg px-8 py-6"
-          >
-            Get the Kit &ndash; $39
-            <Download className="ml-2 h-5 w-5" />
-          </CheckoutButton>
-          <p className="text-sm text-slate-400 mt-4">
-            Instant access. Lifetime updates.
-          </p>
-        </div>
-      </section>
-    </div>
+              </article>
+            );
+          })}
+        </section>
+      </div>
+    </main>
   );
 }

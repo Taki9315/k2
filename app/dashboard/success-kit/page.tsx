@@ -133,15 +133,15 @@ export default function SuccessKitDashboardPage() {
                 </h1>
               </div>
               <p className="text-sm text-gray-600 mt-1">
-                Access your documents, companion downloads, and tools.
+                Access your documents, companion downloads.
               </p>
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
               <Button size="sm" variant="outline" asChild className="gap-1.5">
-                <Link href="/dashboard/documents">
+                <Link href="/workbook">
                   <FolderOpen className="h-4 w-4" />
-                  Document Library
+                  Financing Success Kit
                 </Link>
               </Button>
             </div>
