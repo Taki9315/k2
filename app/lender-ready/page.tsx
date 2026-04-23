@@ -59,12 +59,12 @@ export default function LenderReadyPage() {
                 </div>
                 <CheckoutButton
                     product="kit"
-                    label="Get Lifetime Access for $39"
+                    label="Get Six Months of Access for $39"
                     size="lg"
                     className="text-lg px-10 py-6 shadow-lg shadow-primary/20"
                 />
                 <p className="mt-4 text-sm text-gray-500">
-                    One-time payment. Lifetime access. No subscription.
+                    One-time payment. Six months full access. No subscription.
                 </p>
             </section>
 
@@ -491,7 +491,7 @@ export default function LenderReadyPage() {
                             One-time <span className="font-bold text-primary">$39</span> payment
                         </p>
                         <p className="text-base text-gray-600 mb-1">
-                            Lifetime access
+                            Six months full access
                         </p>
                         <p className="text-base text-gray-600 mb-1">
                             No subscription
@@ -941,10 +941,10 @@ export default function LenderReadyPage() {
 
                         <AccordionItem value="faq-4" className="border border-slate-200 rounded-xl overflow-hidden px-0">
                             <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-slate-50 text-left">
-                                Do I keep access for life?
+                                How long do I get access?
                             </AccordionTrigger>
                             <AccordionContent className="px-6 pb-5 text-sm text-gray-600 leading-relaxed">
-                                Yes. You pay once and keep lifetime access.
+                                Your purchase includes six months of full access from the date of purchase, with unlimited deals during that access window.
                             </AccordionContent>
                         </AccordionItem>
 
@@ -998,7 +998,7 @@ export default function LenderReadyPage() {
                         <div className="mt-8 text-center">
                             <CheckoutButton
                                 product="kit"
-                                label="Get Lifetime Access to the K2 Lender-Ready System for $39"
+                                label="Get Six Months of Access to the K2 Lender-Ready System for $39"
                                 size="lg"
                                 className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
                             />

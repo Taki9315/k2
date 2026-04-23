@@ -124,7 +124,7 @@ function CheckoutSuccessContent() {
             ? 'We could not verify your session. If you were charged, your access will be activated shortly.'
             : isCertified
             ? 'Your K2 Certified Borrower access is now active. Head to your dashboard to explore the Deal Room, PrepCoach, and Preferred Lender network.'
-            : 'Your K2 Success Kit is ready. Head to your dashboard to download your documents and start using PrepCoach.'}
+            : 'Your K2 Success Kit is ready. You now have six months of access to your documents, dashboard tools, and PrepCoach.'}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">

@@ -110,7 +110,9 @@ function PaymentForm({
         <div className="text-center">
           <h3 className="text-lg font-bold text-gray-900">Payment Successful!</h3>
           <p className="text-sm text-gray-600 mt-1">
-            Your purchase of {productName} is complete.
+            {product === 'kit'
+              ? `Your purchase of ${productName} is complete. Six months of access is now ready.`
+              : `Your purchase of ${productName} is complete.`}
           </p>
         </div>
         <Button onClick={onClose} className="mt-2">
@@ -126,7 +128,9 @@ function PaymentForm({
       <div className="rounded-lg border bg-slate-50 p-4 flex items-center justify-between">
         <div>
           <p className="font-semibold text-gray-900 text-sm">{productName}</p>
-          <p className="text-xs text-gray-500">One-time payment</p>
+          <p className="text-xs text-gray-500">
+            {product === 'kit' ? 'One-time payment for six months of access' : 'One-time payment'}
+          </p>
         </div>
         <Badge variant="secondary" className="text-base font-bold px-3 py-1">
           ${(amount / 100).toFixed(2)}
@@ -276,7 +280,9 @@ export function StripePaymentDialog({
         <DialogHeader>
           <DialogTitle>Complete Your Purchase</DialogTitle>
           <DialogDescription>
-            Enter your payment details below. Your card will be securely saved for future use.
+            {product === 'kit'
+              ? 'Enter your payment details below to start six months of full K2 Lender-Ready System access.'
+              : 'Enter your payment details below. Your card will be securely saved for future use.'}
           </DialogDescription>
         </DialogHeader>
 

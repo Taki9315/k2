@@ -263,9 +263,13 @@ export default function SuccessKitDashboardPage() {
                 <Sparkles className="h-5 w-5 text-blue-600" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-gray-900">Lifetime Access</h4>
+                <h4 className="text-sm font-semibold text-gray-900">
+                  {isCertifiedBorrower || isAdmin ? 'Full Access Active' : '6 Months Access'}
+                </h4>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  Free updates whenever we add new content or templates.
+                  {isCertifiedBorrower || isAdmin
+                    ? 'Your Success Kit remains included with your broader dashboard access.'
+                    : 'Unlimited deals during your six-month access window.'}
                 </p>
               </div>
             </CardContent>

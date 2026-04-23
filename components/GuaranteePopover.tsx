@@ -11,7 +11,7 @@ type GuaranteePopoverProps = {
 };
 
 /**
- * Guarantee hover popup — shows the "Prepared Borrower Guarantee" text
+ * Guarantee hover popup — shows the refund guarantee text
  * when hovering over checkmark icons or guarantee mentions.
  */
 export function GuaranteePopover({ children, className }: GuaranteePopoverProps) {
@@ -45,18 +45,16 @@ export function GuaranteePopover({ children, className }: GuaranteePopoverProps)
               <Shield className="h-5 w-5 text-primary" />
             </div>
             <h4 className="text-sm font-bold text-gray-900">
-              The Prepared Borrower Guarantee
+              14-Day Ready or Refund Guarantee
             </h4>
           </div>
           <p className="text-xs text-gray-600 leading-relaxed mb-3">
-            If you don&apos;t feel more confident, more organized, and better
-            equipped to approach lenders after using the Kit, return it within
-            30&nbsp;days for a full refund. No questions asked.
+            If you do not feel significantly more organized and confident after using the Kit, request a full refund within 14 days. No questions asked.
           </p>
           <div className="flex items-center gap-3 text-xs text-gray-500">
             <span className="flex items-center gap-1">
               <CheckCircle2 className="h-3 w-3 text-green-500" />
-              30-day guarantee
+              14-day guarantee
             </span>
             <span className="flex items-center gap-1">
               <CheckCircle2 className="h-3 w-3 text-green-500" />
