@@ -16,6 +16,7 @@ import {
   Loader2,
   ExternalLink,
   CheckCircle2,
+  ChevronDown,
   Sparkles,
   FileSpreadsheet,
   FileText,
@@ -23,6 +24,8 @@ import {
   FileImage,
   File,
 } from 'lucide-react';
+import { montserrat, playfair, dividerList, darkDividerTitles } from '@/app/workbook/page';
+import Image from 'next/image';
 
 /**
  * Success Kit dashboard page — provides document library access,
@@ -70,6 +73,29 @@ export default function SuccessKitDashboardPage() {
   const router = useRouter();
   const [libraryDocs, setLibraryDocs] = useState<{ id: string; title: string; description: string | null; file_url: string; file_size: number; mime_type: string; category: string }[]>([]);
   const [viewingPdf, setViewingPdf] = useState<{ title: string; url: string } | null>(null);
+  const [isKitPreviewOpen, setIsKitPreviewOpen] = useState(false);
+
+  const workbookPdfUrlTemplate =
+    (process.env.NEXT_PUBLIC_SUPABASE_URL
+      ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/workbook/pdfs/[number].pdf`
+      : '');
+
+  const getWorkbookPdfUrl = (index: number) => {
+    if (!workbookPdfUrlTemplate) return null;
+
+    if (workbookPdfUrlTemplate.includes('[number]')) {
+      return workbookPdfUrlTemplate.replace('[number]', String(index + 1));
+    }
+
+    return `${workbookPdfUrlTemplate.replace(/\/$/, '')}/${index + 1}.pdf`;
+  };
+
+  const openWorkbookSectionPdf = (index: number, title: string) => {
+    const url = getWorkbookPdfUrl(index);
+    if (!url) return;
+
+    setViewingPdf({ title, url });
+  };
 
   useEffect(() => {
     if (!loading && !user) router.push('/login');
@@ -83,7 +109,7 @@ export default function SuccessKitDashboardPage() {
     fetch('/api/document-library')
       .then((res) => res.ok ? res.json() : { docs: [] })
       .then((data) => setLibraryDocs(data.docs || []))
-      .catch(() => {});
+      .catch(() => { });
   }, [hasAccess]);
 
   if (loading || !user) {
@@ -114,44 +140,254 @@ export default function SuccessKitDashboardPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <section className="bg-white border-b py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-4">
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/dashboard">
-                <ArrowLeft className="mr-1 h-4 w-4" />
-                Dashboard
-              </Link>
-            </Button>
-          </div>
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Financing Success Kit
-                </h1>
+      <main className={`${montserrat.className} min-h-screen bg-[linear-gradient(180deg,#fcfcfa_0%,#f5f6f9_60%,#eef2f7_100%)] text-slate-900`}>
+        <div className="mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
+          <header
+            className={`rounded-3xl border border-slate-200/70 bg-white/90 p-8 shadow-sm backdrop-blur-sm transition-all md:p-12 ${isKitPreviewOpen ? 'shadow-md' : 'hover:shadow-md'} cursor-pointer`}
+            role="button"
+            tabIndex={0}
+            aria-expanded={isKitPreviewOpen}
+            onClick={() => setIsKitPreviewOpen((open) => !open)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                setIsKitPreviewOpen((open) => !open);
+              }
+            }}
+          >
+            <div className="flex flex-col gap-10">
+              <div className="flex items-start justify-between gap-6">
+                <div className="relative h-14 w-44 md:h-16 md:w-52">
+                  <Image
+                    src="/logo2.png"
+                    alt="K2 Commercial Finance Investor and Business Loans"
+                    fill
+                    className="object-contain object-left"
+                    priority
+                  />
+                </div>
+                <div className="flex items-center gap-3 self-start text-right">
+                  <p className="max-w-xs text-xs font-medium uppercase tracking-[0.2em] text-slate-500">
+                    K2 Financing Success Kit
+                  </p>
+                  <ChevronDown
+                    className={`mt-0.5 h-5 w-5 flex-shrink-0 text-slate-400 transition-transform duration-200 ${isKitPreviewOpen ? 'rotate-180' : ''}`}
+                  />
+                </div>
               </div>
-              <p className="text-sm text-gray-600 mt-1">
-                Access your documents, companion downloads.
+
+              <div className="space-y-4">
+                <h1 className={`${playfair.className} text-4xl leading-tight text-[#192a56] md:text-6xl`}>
+                  Welcome to the K2 Financing Success Kit
+                </h1>
+                <p className="max-w-3xl text-base text-slate-600 md:text-lg">
+                  This is your lender-ready workspace for small commercial real estate and owner-occupied business financing. Use the kit to organize your package, strengthen your submission, and move into lender outreach with more clarity and confidence.
+                </p>
+              </div>
+
+              <div className="h-px w-full bg-gradient-to-r from-transparent via-[#c9a14a] to-transparent" />
+
+              <div className="grid gap-6 text-sm text-slate-700 md:grid-cols-3">
+                <div className="rounded-2xl border border-slate-200 bg-[#f8fafc] p-5">
+                  <p className="font-semibold text-slate-900">What It Helps You Do</p>
+                  <p className="mt-2">Build a cleaner, more complete loan package.</p>
+                  <p className="mt-1">Reduce avoidable back-and-forth with lenders.</p>
+                </div>
+                <div className="rounded-2xl border border-slate-200 bg-[#f8fafc] p-5">
+                  <p className="font-semibold text-slate-900">What&apos;s Inside</p>
+                  <p className="mt-2">Guides, templates, worksheets, and checklists.</p>
+                  <p className="mt-1">Tools to support preparation, packaging, and submission.</p>
+                </div>
+                <div className="rounded-2xl border border-slate-200 bg-[#f8fafc] p-5">
+                  <p className="font-semibold text-slate-900">How to Use It</p>
+                  <p className="mt-2">Work through the kit section by section.</p>
+                  <p className="mt-1">Download what you need, complete your package, then move forward.</p>
+                </div>
+              </div>
+
+              <p className="text-sm font-medium text-slate-500">
+                {isKitPreviewOpen ? 'Click this section to collapse the full kit preview.' : 'Click this section to expand the full kit preview.'}
               </p>
             </div>
+          </header>
 
-            <div className="flex items-center gap-2 flex-wrap">
-              <Button size="sm" variant="outline" asChild className="gap-1.5">
-                <Link href="/workbook">
-                  <FolderOpen className="h-4 w-4" />
-                  Financing Success Kit
-                </Link>
-              </Button>
-            </div>
-          </div>
+          {isKitPreviewOpen && (
+            <>
+              <section className="mt-12 rounded-3xl border border-slate-200 bg-white p-7 shadow-sm md:p-10">
+                <div className="grid items-start gap-8 lg:grid-cols-[1.15fr,0.85fr]">
+                  <article className="rounded-2xl border border-slate-200 bg-[#fffefb] p-7 md:p-8">
+                    <div className="relative h-10 w-36">
+                      <Image
+                        src="/logo2.png"
+                        alt="K2 logo"
+                        fill
+                        className="object-contain object-left"
+                      />
+                    </div>
+                    <div className="mt-20 md:mt-24">
+                      <h2 className={`${playfair.className} text-4xl text-[#192a56] md:text-5xl`}>
+                        Start Here
+                      </h2>
+                      <p className="mt-4 max-w-xl text-base font-medium text-slate-600 md:text-lg">
+                        Use the kit to turn a rough opportunity into a cleaner, lender-ready submission.
+                      </p>
+                      <div className="mt-6 h-[2px] w-44 bg-[#c9a14a]" />
+                    </div>
+                    <p className="mt-28 text-sm text-slate-500 md:mt-32">
+                      Start with the story, then support it with organized documents and clean numbers.
+                    </p>
+                  </article>
+
+                  <div className="space-y-4 text-sm text-slate-700">
+                    <h3 className="text-base font-semibold uppercase tracking-[0.16em] text-[#192a56]">
+                      Best First Steps
+                    </h3>
+                    <ol className="space-y-3">
+                      <li>1. Read through the guide once so you understand the full financing path before outreach.</li>
+                      <li>2. Gather borrower, property, and business documents into one working file set.</li>
+                      <li>3. Complete the templates and worksheets to tighten weak spots in the package.</li>
+                      <li>4. Use PrepCoach when you need help with loan programs, lender fit, or submission strategy.</li>
+                      <li>5. Move your final materials into the Document Library and Deal Room in a clean order.</li>
+                      <li>6. Send only when the package feels complete, consistent, and easy for a lender to review.</li>
+                    </ol>
+
+                    <h3 className="pt-3 text-base font-semibold uppercase tracking-[0.16em] text-[#192a56]">
+                      What to Focus On
+                    </h3>
+                    <ul className="space-y-2">
+                      <li>A clear sponsor story and transaction overview</li>
+                      <li>Clean financials, NOI or DSCR support, and sources and uses</li>
+                      <li>Complete supporting documents with fewer obvious gaps</li>
+                      <li>Consistent naming, organization, and presentation</li>
+                      <li>Smart lender targeting before you begin sending files</li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+
+              <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-7 shadow-sm md:p-10">
+                <h3 className="text-base font-semibold uppercase tracking-[0.16em] text-[#192a56]">
+                  Divider Text Blocks
+                </h3>
+                <p className="mt-2 text-sm text-slate-600">
+                  Includes 13 main sections plus 3 bonus sections.
+                </p>
+
+                <div className="mt-6 grid gap-4 md:grid-cols-2">
+                  {dividerList.map((block, index) => (
+                    <article key={block.title} className="rounded-2xl border border-slate-200 bg-[#fbfcff] p-5">
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                        {index + 1}
+                      </p>
+                      <h4 className={`${playfair.className} mt-2 text-2xl text-[#192a56]`}>
+                        {block.title}
+                      </h4>
+                      <p className="mt-2 text-sm text-slate-700">{block.subtitle}</p>
+                      <div className="mt-4 h-[2px] w-24 bg-[#c9a14a]" />
+                      {block.subItems.length > 0 && (
+                        <ul className="mt-4 space-y-1">
+                          {block.subItems.map((item) => (
+                            <li key={item} className="flex items-start gap-2 text-xs text-slate-500">
+                              <span className="mt-[3px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#c9a14a]" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      <p className="mt-4 text-xs font-medium text-slate-400 italic">{block.footer}</p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              <section className="mt-8 space-y-8">
+                {dividerList.map((block, index) => {
+                  const useDarkTheme = darkDividerTitles.has(block.title);
+
+                  return (
+                    <article
+                      key={`sheet-${block.title}`}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open ${block.title} PDF`}
+                      onClick={() => openWorkbookSectionPdf(index, block.title)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          openWorkbookSectionPdf(index, block.title);
+                        }
+                      }}
+                      className={`divider-sheet relative overflow-hidden rounded-3xl border shadow-sm ${useDarkTheme
+                          ? 'border-[#245b12] bg-[#3f8700]'
+                          : 'border-slate-200 bg-[#fffefb]'
+                        } cursor-pointer transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2`}
+                    >
+                      <div
+                        className={`absolute left-0 top-0 h-full w-2 ${useDarkTheme ? 'bg-[#c9a14a]/60' : 'bg-[#c9a14a]/45'
+                          }`}
+                      />
+
+                      <div className="divider-sheet-inner relative flex h-full flex-col">
+                        <div className={`divider-logo-wrap relative h-14 w-44 md:h-16 md:w-52 ${useDarkTheme ? 'rounded-2xl bg-white/95 p-2 shadow-sm shadow-black/20' : ''}`}>
+                          <div className="relative h-full w-full">
+                            <Image
+                              src="/brand.png"
+                              alt="K2 logo"
+                              fill
+                              className="object-contain object-left"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="divider-main-copy mt-auto">
+                          <h2
+                            className={`${playfair.className} text-[clamp(2.2rem,5vw,3.2rem)] leading-[1.1] ${useDarkTheme ? 'text-white' : 'text-[#192a56]'
+                              }`}
+                          >
+                            {block.title}
+                          </h2>
+                          <p
+                            className={`mt-4 max-w-[42ch] text-[clamp(0.95rem,2vw,1.1rem)] font-medium ${useDarkTheme ? 'text-slate-200' : 'text-slate-600'
+                              }`}
+                          >
+                            {block.subtitle}
+                          </p>
+                          <div className="mt-6 h-[2px] w-44 bg-[#c9a14a]" />
+                          {block.subItems.length > 0 && (
+                            <ul className="mt-6 grid grid-cols-2 gap-x-6 gap-y-1.5">
+                              {block.subItems.map((item) => (
+                                <li
+                                  key={item}
+                                  className={`flex items-start gap-2 text-[0.72rem] leading-snug ${useDarkTheme ? 'text-slate-300' : 'text-slate-500'
+                                    }`}
+                                >
+                                  <span className="mt-[4px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#c9a14a]" />
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+
+                        <p
+                          className={`divider-footer mt-auto text-[0.72rem] md:text-[0.78rem] ${useDarkTheme ? 'text-slate-300' : 'text-slate-500'
+                            }`}
+                        >
+                          {block.footer}
+                        </p>
+                      </div>
+                    </article>
+                  );
+                })}
+              </section>
+            </>
+          )}
         </div>
-      </section>
+      </main>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Document Library listing */}
-        {libraryDocs.length > 0 && (
+        {/* {libraryDocs.length > 0 && (
           <Card className="mb-8">
                 <CardContent className="p-5">
                   <div className="flex items-center gap-2.5 mb-4">
@@ -227,7 +463,7 @@ export default function SuccessKitDashboardPage() {
                   </div>
                 </CardContent>
               </Card>
-        )}
+        )} */}
 
         {/* Quick info cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -415,14 +651,14 @@ export default function SuccessKitDashboardPage() {
             </DialogTitle>
           </DialogHeader>
           <div className="flex-1 min-h-0 relative">
-            <div className="absolute top-2 right-2 z-10">
+            {/* <div className="absolute top-2 right-2 z-10">
               <Button size="sm" variant="secondary" asChild className="gap-1.5 h-7 text-xs shadow-sm">
                 <a href={viewingPdf?.url || ''} download>
                   <Download className="h-3 w-3" />
                   Download
                 </a>
               </Button>
-            </div>
+            </div> */}
             {viewingPdf && (
               <iframe
                 src={viewingPdf.url}

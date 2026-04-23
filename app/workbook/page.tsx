@@ -1,12 +1,12 @@
 import Image from 'next/image';
 import { Montserrat, Playfair_Display } from 'next/font/google';
 
-const playfair = Playfair_Display({
+export const playfair = Playfair_Display({
   subsets: ['latin'],
   weight: ['600', '700'],
 });
 
-const montserrat = Montserrat({
+export const montserrat = Montserrat({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
 });
@@ -18,7 +18,7 @@ type DividerCopy = {
   subItems: string[];
 };
 
-const dividerList: DividerCopy[] = [
+export const dividerList: DividerCopy[] = [
   // ── Main sections ─────────────────────────────────────────────────
   {
     title: 'Start Here',
@@ -289,7 +289,7 @@ const plainTextColumn = dividerList
   .map((block) => `${block.title}\n\n${block.subtitle}\n\n${block.footer}`)
   .join('\n\n');
 
-const darkDividerTitles = new Set([
+export const darkDividerTitles = new Set([
   'Final Thoughts',
   'Bonus 1 — Underwriting Q&A',
   'Bonus 2 — Negotiating Loan Terms',
