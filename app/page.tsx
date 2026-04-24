@@ -41,7 +41,7 @@ export default function Home() {
                 Small CRE + Owner-Occupied Financing
               </div>
               <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-gray-900 mb-5 leading-[1.15]">
-                Many Sponsors Have Good Deals. Few Have{' '}
+                Many Borrowers Have Good Deals. Few Have{' '}
                 <span className="text-primary">Finance-Ready Submissions</span>. Which One Are You?
               </h1>
               <p className="text-base md:text-lg text-gray-700 mb-6 leading-relaxed">
