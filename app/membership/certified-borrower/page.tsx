@@ -145,7 +145,7 @@ export default function CertifiedBorrowerPage() {
           />
 
           <p className="mt-6 text-sm text-gray-500">
-            Built for serious borrowers who want real support, not random lender matching.
+            Built for serious borrowers who want broker support, not random lender matching.
           </p>
         </div>
       </section>
@@ -166,13 +166,19 @@ export default function CertifiedBorrowerPage() {
 
           <div className="space-y-4 text-lg text-gray-600 leading-relaxed">
             <p>
-              A lot of borrowers have solid deals. What they often do not have is a clear lender strategy, the right lender relationships, enough time to manage outreach and follow-up, or the experience to review terms and negotiate effectively.
-            </p>
-            <p className="font-medium text-gray-800">
-              That is where momentum gets lost.
+              In commercial real estate, strong deals deserve strong representation.
             </p>
             <p>
-              The K2 Certified Borrower Program is designed for serious borrowers who want more than tools. It gives you direct access to K2 Commercial Finance so you are not left doing the hardest part alone.
+              Financing is about more than information. It is about strategy, positioning, relationships, and access to the right lenders.
+            </p>
+            <p className="font-medium text-gray-800">
+              The K2 Certified Borrower Program gives you more than a process. It puts K2 Commercial Finance on your side to present your deal with credibility, target the right lenders, and guide the financing process with precision.
+            </p>
+            <p>
+              Because in this business, what you know matters. But who represents you matters too.
+            </p>
+            <p className="font-medium text-gray-800">
+              The strongest investors build the right team. K2 is ready to be part of yours.
             </p>
           </div>
         </div>
@@ -220,61 +226,57 @@ export default function CertifiedBorrowerPage() {
             </div>
           </div>
         </div>
-      </section>
+        </section>
 
-      {/* ============================================================ */}
-      {/*  WHAT YOU GET                                                  */}
-      {/* ============================================================ */}
-      <section className="py-24 bg-white relative">
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
-        </div>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              What You Get
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              As a K2 Certified Borrower, you receive everything in the K2 Lender-Ready System, plus direct support from K2 Commercial Finance throughout the financing process.
-            </p>
+        {/* ============================================================ */}
+        {/*  FULL TRANSPARENCY                                             */}
+        {/* ============================================================ */}
+        <section className="py-24 bg-white relative">
+          <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
           </div>
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-4">
+          <p className="text-sm font-semibold text-primary tracking-wide mb-3">
+            FULL TRANSPARENCY
+          </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+            Your Specialized Low Fee Structure
+          </h2>
+            </div>
 
-          <div className="text-lg font-medium text-gray-800 mb-8">
-            That includes:
-          </div>
+            <div className="mb-6">
+          <p className="text-base text-gray-700 leading-relaxed mb-4">
+            <span className="font-semibold text-gray-900">K2 Commercial Finance</span> operates differently—no hidden incentives, no yield-spread games that reward worse terms for you.
+          </p>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              { icon: Target, text: 'Financing strategy guidance' },
-              { icon: ClipboardList, text: 'Loan program targeting' },
-              { icon: Users, text: 'Lender targeting' },
-              { icon: MessageSquare, text: 'Lender outreach and lender communication' },
-              { icon: FileSearch, text: 'Attempts to secure direct lender term sheets' },
-              { icon: Phone, text: 'Assistance with calls with lenders' },
-              { icon: Scale, text: 'Review of lender documents and lender terms' },
-              { icon: Handshake, text: 'Help negotiating the best possible transaction' },
-              { icon: TrendingUp, text: 'Support through underwriting and closing' },
-              { icon: Bot, text: 'Prep Coach AI' },
-              { icon: FolderLock, text: 'Secure deal room' },
-              { icon: ListChecks, text: 'Submission tracking' },
-              { icon: FileText, text: 'Professional templates and financial tools' },
-            ].map((item) => (
-              <div key={item.text} className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <item.icon className="h-5 w-5 text-primary" />
-                </div>
-                <p className="text-gray-700 leading-relaxed pt-1">{item.text}</p>
+            <div className="space-y-4">
+          {[
+            {
+              text: 'Our maximum fee is just 2% (typically lender-paid only on funded deals)—well below typical industry norms of 3–5%.',
+            },
+            {
+              text: 'Everything is disclosed upfront in writing.',
+            },
+            {
+              text: 'We never accept undisclosed yield-spread premiums that could misalign our recommendations.',
+            },
+            {
+              text: `Our success depends on your deal closing on strong terms—that's the alignment you get as a Certified Borrower.`,
+            },
+          ].map((item, i) => (
+            <div key={i} className="flex items-start gap-4 rounded-lg bg-slate-50 p-4 border border-slate-200">
+              <div className="h-6 w-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <CheckCircle2 className="h-5 w-5 text-green-600" />
               </div>
-            ))}
+              <p className="text-gray-700 leading-relaxed">{item.text}</p>
+            </div>
+          ))}
+            </div>
           </div>
+        </section>
 
-          <div className="mt-10 rounded-xl bg-primary/5 border border-primary/20 p-5">
-            <p className="text-gray-700 leading-relaxed">
-              This is not a lender blast service. This is relationship-based financing support designed to help serious borrowers improve execution and move deals forward.
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* ============================================================ */}
       {/*  HOW IT WORKS                                                  */}

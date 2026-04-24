@@ -302,6 +302,11 @@ export default function AboutPage() {
 
             <Card className="border-2">
               <CardContent className="p-8">
+                <div
+                  className="mb-5 aspect-video rounded-lg bg-cover bg-center"
+                  style={{ backgroundImage: `url('image.png')` }}
+                  aria-label="Respect for the process"
+                />
                 <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
                   <Scale className="h-6 w-6 text-slate-700" />
                 </div>
