@@ -81,7 +81,7 @@ export default function Home() {
 
             <div className="relative hidden lg:flex items-start justify-end pt-4">
               <Image
-                src="/book_cover.png"
+                src="/book_cover_updated.png"
                 alt="K2 Lender-Ready Small CRE Loan Package Kit with Prep Coach AI"
                 width={420}
                 height={540}

@@ -219,63 +219,63 @@ export default function CertifiedBorrowerPage() {
               <DollarSign className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <p className="font-semibold text-gray-900 mb-1">Aligned incentives</p>
+              <p className="font-semibold text-gray-900 mb-1">Let's Invest in Each Other</p>
               <p className="text-gray-600">
                 You invest $250 upfront &rarr; your transaction closes successfully &rarr; you receive a $500 closing credit.
               </p>
             </div>
           </div>
         </div>
-        </section>
+      </section>
 
-        {/* ============================================================ */}
-        {/*  FULL TRANSPARENCY                                             */}
-        {/* ============================================================ */}
-        <section className="py-24 bg-white relative">
-          <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+      {/* ============================================================ */}
+      {/*  FULL TRANSPARENCY                                             */}
+      {/* ============================================================ */}
+      <section className="py-24 bg-white relative">
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+        </div>
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-4">
+            <p className="text-sm font-semibold text-primary tracking-wide mb-3">
+              FULL TRANSPARENCY
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+              Your Specialized Low Fee Structure
+            </h2>
           </div>
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-4">
-          <p className="text-sm font-semibold text-primary tracking-wide mb-3">
-            FULL TRANSPARENCY
-          </p>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
-            Your Specialized Low Fee Structure
-          </h2>
-            </div>
 
-            <div className="mb-6">
-          <p className="text-base text-gray-700 leading-relaxed mb-4">
-            <span className="font-semibold text-gray-900">K2 Commercial Finance</span> operates differently—no hidden incentives, no yield-spread games that reward worse terms for you.
-          </p>
-            </div>
+          <div className="mb-6">
+            <p className="text-base text-gray-700 leading-relaxed mb-4">
+              <span className="font-semibold text-gray-900">K2 Commercial Finance</span> is built on transparency and alignment, with no compensation tied to less favorable terms for our clients.
+            </p>
+          </div>
 
-            <div className="space-y-4">
-          {[
-            {
-              text: 'Our maximum fee is just 2% (typically lender-paid only on funded deals)—well below typical industry norms of 3–5%.',
-            },
-            {
-              text: 'Everything is disclosed upfront in writing.',
-            },
-            {
-              text: 'We never accept undisclosed yield-spread premiums that could misalign our recommendations.',
-            },
-            {
-              text: `Our success depends on your deal closing on strong terms—that's the alignment you get as a Certified Borrower.`,
-            },
-          ].map((item, i) => (
-            <div key={i} className="flex items-start gap-4 rounded-lg bg-slate-50 p-4 border border-slate-200">
-              <div className="h-6 w-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-            <CheckCircle2 className="h-5 w-5 text-green-600" />
+          <div className="space-y-4">
+            {[
+              {
+                text: 'Our maximum fee is just 2% (typically lender-paid only on funded deals)—well below typical industry norms of 3–5%.',
+              },
+              {
+                text: 'Everything is disclosed upfront in writing.',
+              },
+              {
+                text: 'We never accept undisclosed yield-spread premiums that could misalign our recommendations.',
+              },
+              {
+                text: `Our interests are fully aligned with yours—we are compensated only when your deal closes, and our success is measured by the strength of your outcome.`,
+              },
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-4 rounded-lg bg-slate-50 p-4 border border-slate-200">
+                <div className="h-6 w-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                </div>
+                <p className="text-gray-700 leading-relaxed">{item.text}</p>
               </div>
-              <p className="text-gray-700 leading-relaxed">{item.text}</p>
-            </div>
-          ))}
-            </div>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
 
       {/* ============================================================ */}
@@ -312,7 +312,7 @@ export default function CertifiedBorrowerPage() {
               {
                 num: '4',
                 title: 'We handle lender targeting and outreach',
-                text: 'K2 Commercial Finance helps market the deal professionally and works to generate direct lender interest and term sheets.',
+                text: 'K2 Commercial Finance launches your transaction and works to generate direct lender interest and term sheets.',
               },
               {
                 num: '5',
@@ -372,7 +372,7 @@ export default function CertifiedBorrowerPage() {
               </div>
               <div className="mt-6">
                 <Link
-                  href="/membership"
+                  href="/lender-ready"
                   className="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:underline"
                 >
                   View the System <ArrowRight className="h-4 w-4" />
@@ -632,7 +632,7 @@ export default function CertifiedBorrowerPage() {
           <div className="text-lg text-slate-300 mb-10 max-w-3xl mx-auto leading-relaxed space-y-4">
             <p>
               If you want to handle lender targeting, lender outreach, and process management on your own, the{' '}
-              <Link href="/membership" className="text-white font-semibold hover:underline">
+              <Link href="/lender-ready" className="text-white font-semibold hover:underline">
                 K2 Lender-Ready System
               </Link>{' '}
               gives you the tools to do that.

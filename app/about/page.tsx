@@ -373,7 +373,7 @@ export default function AboutPage() {
               asChild
               className="text-lg px-8 py-6"
             >
-              <Link href="/membership">
+              <Link href="/lender-ready">
                 Explore the K2 Lender-Ready System
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
