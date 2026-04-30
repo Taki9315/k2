@@ -326,17 +326,17 @@ export default function LenderReadyPage() {
                             </CardContent>
                         </Card>
 
-                        {/* 5. Permanent Access */}
+                        {/* 5. Six Month Access */}
                         <Card className="border-2 border-primary/20 rounded-2xl hover:shadow-xl transition-all duration-300 overflow-hidden bg-primary/[0.02] md:col-span-2">
                             <CardHeader>
                                 <div className="w-14 h-14 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center mb-4">
                                     <RefreshCw className="h-7 w-7 text-primary" />
                                 </div>
-                                <CardTitle className="text-xl">Permanent Access, Unlimited Personal Use</CardTitle>
+                                <CardTitle className="text-xl">Six Month Access, Unlimited Personal Use</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                                    Your one-time fee gives you permanent online access to the system for as many deals as you want to do.
+                                    Your one-time fee gives you six months of access to the system for as many deals as you want to do.
                                 </p>
                                 <div className="space-y-2">
                                     {[
@@ -359,7 +359,7 @@ export default function LenderReadyPage() {
                     </div>
 
                     <p className="text-center text-lg text-gray-700 mt-12 max-w-3xl mx-auto leading-relaxed">
-                        This is not about making your deal look fancy. It is about making it easier for the right lender to understand, evaluate, and take seriously.
+                        This isn’t about documentation overload. It’s about making it easy for the right lender to understand, evaluate, and pursue your financing opportunity.
                     </p>
                 </div>
             </section>

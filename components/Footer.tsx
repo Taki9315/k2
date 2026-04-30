@@ -35,12 +35,32 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <h3 className="text-lg font-bold text-gray-900 mb-4">
-              K2C Finance
+              K2 Commercial Finance
             </h3>
             <p className="text-primary/90 text-sm mb-4">
               Empowering borrowers with the knowledge, tools and 
               relationships to secure financing and build successful businesses.
             </p>
+            <div className="text-sm text-primary/90 space-y-1 mb-4">
+              <p>K2 Commercial Finance</p>
+              <p>13 Goldeneye Court</p>
+              <p>New Britain, PA 18901</p>
+              <p>
+                <a
+                  href="tel:2675495792"
+                  className="hover:text-primary transition-colors"
+                >
+                  267-549-5792
+                </a>{' '}
+                |{' '}
+                <a
+                  href="mailto:ken@k2cfinance.com"
+                  className="hover:text-primary transition-colors"
+                >
+                  ken@k2cFinance.com
+                </a>
+              </p>
+            </div>
             <div className="flex space-x-4">
               <a
                 href="mailto:ken@k2cfinance.com"
@@ -155,7 +175,7 @@ export function Footer() {
 
         <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-500">
-            © {new Date().getFullYear()} K2 Commercial Finance. All rights reserved.
+            © K2 Commercial Finance - Helping Serious Borrowers Close Deals Since 2001
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link
