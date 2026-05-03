@@ -16,6 +16,7 @@ import {
   Target,
 } from 'lucide-react';
 import Link from 'next/link';
+import { KIT_PRICE_LABEL } from '@/lib/products';
 
 /* ── Questions ──────────────────────────────────────────────────────── */
 
@@ -144,7 +145,7 @@ const RESULTS: Record<PathType, QuizResult> = {
       'Foundation to upgrade to Certified later if your timeline accelerates',
     ],
     cta: {
-      label: 'Get the Success Kit for $39 – Start Prepping Now',
+      label: `Get the Success Kit for ${KIT_PRICE_LABEL} – Start Prepping Now`,
       href: '/workbook',
     },
     secondary: {

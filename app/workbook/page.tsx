@@ -354,7 +354,7 @@ export default function WorkbookPage() {
             <article className="rounded-2xl border border-slate-200 bg-[#fffefb] p-7 md:p-8">
               <div className="relative h-10 w-36">
                 <Image
-                  src="/logo2.png"
+                  src="/brand.png"
                   alt="K2 logo"
                   fill
                   className="object-contain object-left"
@@ -458,12 +458,10 @@ export default function WorkbookPage() {
                 <div className="divider-sheet-inner relative flex h-full flex-col">
                   <div className="divider-logo-wrap relative h-14 w-44 md:h-16 md:w-52">
                     <Image
-                      src="/logo2.png"
+                      src="/brand.png"
                       alt="K2 logo"
                       fill
-                      className={`object-contain object-left ${
-                        useDarkTheme ? 'brightness-0 invert' : ''
-                      }`}
+                      className={`object-contain object-left`}
                     />
                   </div>
 

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { FlipbookViewer } from '@/components/FlipbookViewer';
+import { CERTIFIED_PRICE_LABEL, KIT_PRICE_LABEL } from '@/lib/products';
 import {
   ArrowLeft,
   Download,
@@ -74,13 +75,13 @@ export default function SuccessKitViewerPage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button asChild>
               <Link href="/workbook">
-                Get the Success Kit — $20
+                {`Get the Success Kit — ${KIT_PRICE_LABEL}`}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
             <Button variant="outline" asChild>
               <Link href="/membership/certified-borrower">
-                Become Certified — $250
+                {`Become Certified — ${CERTIFIED_PRICE_LABEL}`}
               </Link>
             </Button>
           </div>

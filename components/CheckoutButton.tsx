@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { CERTIFIED_PRICE_LABEL, KIT_PRICE_LABEL } from '@/lib/products';
 import { supabase } from '@/lib/supabase';
 import { StripePaymentDialog } from '@/components/StripePaymentDialog';
 
@@ -58,7 +59,9 @@ export function CheckoutButton({
   }, [router]);
 
   const defaultLabel =
-    product === 'certified' ? 'Enroll Now — $250' : 'Get Success Kit — $39';
+    product === 'certified'
+      ? `Enroll Now — ${CERTIFIED_PRICE_LABEL}`
+      : `Get Success Kit — ${KIT_PRICE_LABEL}`;
 
   return (
     <>

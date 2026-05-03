@@ -3,6 +3,10 @@
 
 import Link from 'next/link';
 import { CheckoutButton } from '@/components/CheckoutButton';
+import {
+  CERTIFIED_CLOSING_CREDIT_LABEL,
+  CERTIFIED_PRICE_LABEL,
+} from '@/lib/products';
 
 export default function MembershipPage() {
   return (
@@ -18,12 +22,12 @@ export default function MembershipPage() {
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             Expert guidance, automated deal tools, and direct access to our
-            Preferred Lender network - all for a one-time $250 fee with
+            Preferred Lender network - all for a one-time {CERTIFIED_PRICE_LABEL} fee with
             lifetime access.
           </p>
           <CheckoutButton
             product="certified"
-            label="Get Started — $250 One-Time"
+            label={`Get Started — ${CERTIFIED_PRICE_LABEL} One-Time`}
             size="lg"
             className="text-lg px-8 py-3 shadow-lg shadow-primary/20"
           />
@@ -104,7 +108,7 @@ export default function MembershipPage() {
                         'Direct access to Preferred Lender network',
                         'Monthly live Q&A, document review & feedback',
                         'Private community & advanced content',
-                        '$1,000 closing credit at funding',
+                        `${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit at funding`,
                       ].map((benefit) => (
                         <li key={benefit} className="flex items-center group">
                           <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 mr-3 flex-shrink-0 group-hover:bg-green-200 transition-colors">
@@ -132,11 +136,11 @@ export default function MembershipPage() {
                 your corner.
               </p>
               <p className="text-gray-600 mb-8 leading-relaxed">
-                For a one-time $250 fee, you get lifetime access to our full
+                For a one-time {CERTIFIED_PRICE_LABEL} fee, you get lifetime access to our full
                 transaction management system, our Preferred Lender network,
                 monthly live Q&amp;A sessions, document review and feedback, and
                 more. And when you close with a K2 Preferred Lender, you
-                receive a $1,000 closing credit applied directly at funding.
+                receive a {CERTIFIED_CLOSING_CREDIT_LABEL} closing credit applied directly at funding.
               </p>
               <div className="rounded-2xl bg-slate-50 border border-slate-200/80 p-6 mb-10">
                 <p className="font-semibold text-gray-900 mb-2">
@@ -178,10 +182,10 @@ export default function MembershipPage() {
           </div>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { num: '1', text: 'Pay $250 once - get instant lifetime access' },
+              { num: '1', text: `Pay ${CERTIFIED_PRICE_LABEL} once - get instant lifetime access` },
               { num: '2', text: 'Build & polish your deal with PrepCoach & checklists' },
               { num: '3', text: 'Submit to Preferred Lenders (or K2 shops broader)' },
-              { num: '4', text: 'Close your deal - collect $1,000 credit*' },
+              { num: '4', text: `Close your deal - collect ${CERTIFIED_CLOSING_CREDIT_LABEL} credit*` },
             ].map((step) => (
               <div key={step.num} className="text-center">
                 <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white text-lg font-bold mb-4">

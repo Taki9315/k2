@@ -40,6 +40,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { cn } from '@/lib/utils';
+import { CERTIFIED_PRICE_LABEL, KIT_PRICE_LABEL } from '@/lib/products';
 
 type Order = {
   id: string;
@@ -468,14 +469,14 @@ export default function DashboardPage() {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <Button size="lg" className="bg-black hover:bg-black/80 text-white shadow-lg" asChild>
                       <Link href="/workbook">
-                        Get the Success Kit — $20
+                        {`Get the Success Kit — ${KIT_PRICE_LABEL}`}
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Link>
                     </Button>
                     <span className="text-xs text-gray-400">or</span>
                     <Button size="lg" variant="outline" asChild>
                       <Link href="/membership/certified-borrower">
-                        Become Certified — $250
+                        {`Become Certified — ${CERTIFIED_PRICE_LABEL}`}
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Link>
                     </Button>
@@ -619,7 +620,7 @@ export default function DashboardPage() {
                   </p>
                   <Button size="sm" variant="outline" asChild>
                     <Link href="/workbook">
-                      Get Started — Success Kit $15
+                      {`Get Started — Success Kit ${KIT_PRICE_LABEL}`}
                       <ArrowRight className="ml-1.5 h-4 w-4" />
                     </Link>
                   </Button>
@@ -764,7 +765,7 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-4">
                       <Button size="lg" className="bg-black hover:bg-black/80 text-white shadow-lg" asChild>
                         <Link href="/membership/certified-borrower">
-                          Enroll Now — $250
+                          {`Enroll Now — ${CERTIFIED_PRICE_LABEL}`}
                           <ArrowRight className="ml-2 h-5 w-5" />
                         </Link>
                       </Button>
@@ -1020,7 +1021,7 @@ export default function DashboardPage() {
                   {isBasicBorrower && (
                     <Button size="sm" className="w-full bg-black hover:bg-black/80 text-white" asChild>
                       <Link href="/workbook">
-                        Get Success Kit — $15
+                        {`Get Success Kit — ${KIT_PRICE_LABEL}`}
                         <ArrowRight className="ml-1.5 h-4 w-4" />
                       </Link>
                     </Button>
@@ -1028,7 +1029,7 @@ export default function DashboardPage() {
                   {isKitBuyer && (
                     <Button size="sm" className="w-full bg-black hover:bg-black/80 text-white" asChild>
                       <Link href="/membership/certified-borrower">
-                        Enroll Now — $250
+                        {`Enroll Now — ${CERTIFIED_PRICE_LABEL}`}
                         <ArrowRight className="ml-1.5 h-4 w-4" />
                       </Link>
                     </Button>

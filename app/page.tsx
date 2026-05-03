@@ -22,6 +22,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { HomeRedirect } from '@/components/HomeRedirect';
+import { CERTIFIED_PRICE_LABEL, KIT_PRICE_LABEL } from '@/lib/products';
 
 export default function Home() {
   return (
@@ -63,7 +64,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button size="lg" asChild className="px-6 py-5 shadow-lg shadow-primary/20">
                   <Link href="/lender-ready">
-                    Get the Kit + Prep Coach AI for $39
+                    {`Get the Kit + Prep Coach AI for ${KIT_PRICE_LABEL}`}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
@@ -137,7 +138,7 @@ export default function Home() {
                     'Secure Deal Room',
                     'Submission tracking',
                     'Prep Coach AI for strategy, lender fit, and packaging help',
-                    'One-time $39 payment',
+                    `One-time ${KIT_PRICE_LABEL} payment`,
                     '14-Day Ready or Refund Guarantee',
                   ].map((item) => (
                     <div key={item} className="flex items-start gap-2">
@@ -149,7 +150,7 @@ export default function Home() {
                 <div className="mt-auto">
                   <Button size="lg" asChild className="w-full">
                     <Link href="/lender-ready">
-                      Get the Kit for $39
+                      {`Get the Kit for ${KIT_PRICE_LABEL}`}
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
@@ -175,7 +176,7 @@ export default function Home() {
                     'Direct strategy, lender targeting, and outreach support',
                     'Help reviewing lender feedback, terms, and next steps',
                     'Active deal management support',
-                    'One-time $250 payment',
+                    `One-time ${CERTIFIED_PRICE_LABEL} payment`,
                   ].map((item) => (
                     <div key={item} className="flex items-start gap-2">
                       <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
@@ -186,7 +187,7 @@ export default function Home() {
                 <div className="mt-auto">
                   <Button size="lg" variant="outline" asChild className="w-full border-2 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300">
                     <Link href="/membership/certified-borrower">
-                      Explore the $250 Upgrade
+                      {`Explore the ${CERTIFIED_PRICE_LABEL} Upgrade`}
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
@@ -367,13 +368,13 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild className="text-lg px-8 py-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300">
               <Link href="/lender-ready">
-                Get the Kit + Prep Coach AI for $39
+                {`Get the Kit + Prep Coach AI for ${KIT_PRICE_LABEL}`}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild className="text-lg px-8 py-6 border-white/20 bg-white/5 text-white hover:bg-white hover:text-slate-900 hover:border-white transition-all duration-300">
               <Link href="/membership/certified-borrower">
-                Explore the $250 Upgrade
+                {`Explore the ${CERTIFIED_PRICE_LABEL} Upgrade`}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>

@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
+import { KIT_PRICE_LABEL } from '@/lib/products';
 import {
   BookOpen,
   Download,
@@ -30,11 +31,11 @@ import Image from 'next/image';
 /**
  * Success Kit dashboard page — provides document library access,
  * companion downloads, and PrepCoach for Kit + Certified users.
- */
+              <Link href="/workbook">{`Get the Success Kit - ${KIT_PRICE_LABEL}`}</Link>
 
 /** Detect file format from mime type or file URL */
 function getFileFormat(mimeType: string, fileUrl: string): { label: string; color: string; icon: typeof FileText } {
-  const url = fileUrl.toLowerCase();
+                {`Become Certified — ${CERTIFIED_PRICE_LABEL}`}
   if (mimeType === 'application/pdf' || url.endsWith('.pdf')) {
     return { label: 'PDF', color: 'bg-red-100 text-red-700 border-red-200', icon: FileText };
   }
@@ -131,7 +132,7 @@ export default function SuccessKitDashboardPage() {
             download, and print-ready version.
           </p>
           <Button asChild>
-            <Link href="/workbook">Get the Success Kit - $39</Link>
+            <Link href="/workbook">{`Get the Success Kit - ${KIT_PRICE_LABEL}`}</Link>
           </Button>
         </div>
       </div>
