@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
     // ─── CRITICAL: Upgrade the user role FIRST (most important operation) ───
 
     if (resolvedProduct === 'certified') {
-      // Certified Borrower
+      // $250 → Certified Borrower
       // Core update: only columns guaranteed to exist
       const { error: updateError } = await supabase
         .from('profiles')
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
         console.warn('[confirm-payment] Optional certified fields failed (non-critical):', e);
       }
     } else if (resolvedProduct === 'kit') {
-      // Kit Buyer
+      // $39 → Kit Buyer
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ workbook_purchased: true })

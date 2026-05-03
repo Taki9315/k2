@@ -7,11 +7,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { CheckoutButton } from '@/components/CheckoutButton';
 import {
-  CERTIFIED_CLOSING_CREDIT_LABEL,
-  CERTIFIED_PRICE_LABEL,
-  KIT_PRICE_LABEL,
-} from '@/lib/products';
-import {
   Shield,
   CheckCircle2,
   ArrowRight,
@@ -23,28 +18,28 @@ import {
   TrendingUp,
   Users,
   Phone,
-        const FAQ_ITEMS = [
-          {
-            q: 'Is this a broker relationship?',
-            a: 'The K2 Certified Borrower Program is the higher-support option in which K2 Commercial Finance works directly with you throughout the financing process. Specific broker engagement terms and compensation are disclosed clearly in writing.',
-          },
-          {
-            q: 'Do I still get the K2 Lender-Ready System?',
-            a: 'Yes. The Program includes the K2 Lender-Ready System.',
-          },
-          {
-            q: 'Does K2 Commercial Finance guarantee funding?',
-            a: 'No. No honest lender, broker, or advisor can guarantee funding. What K2 Commercial Finance does is improve the quality of the strategy, targeting, presentation, communication, and process.',
-          },
-          {
-            q: `Why charge ${CERTIFIED_PRICE_LABEL} upfront?`,
-            a: 'Because serious transactions require real time, effort, and attention. The upfront investment helps ensure we are working with serious borrowers who are prepared to engage in the process.',
-          },
-          {
-            q: `What is the ${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit?`,
-            a: `If your transaction successfully closes, you receive a ${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit. It is our way of rewarding serious borrowers who follow through.`,
-          },
-        ];
+  Award,
+  FileText,
+  Briefcase,
+  Handshake,
+  Scale,
+  MessageSquare,
+  ClipboardList,
+  Building2,
+  UserCheck,
+  Bot,
+  FolderLock,
+  ListChecks,
+  FileSearch,
+} from 'lucide-react';
+
+/* ------------------------------------------------------------------ */
+/*  Collapsible component                                               */
+/* ------------------------------------------------------------------ */
+function Collapsible({
+  title,
+  icon: Icon,
+  children,
   defaultOpen = false,
 }: {
   title: string;
@@ -100,12 +95,12 @@ const FAQ_ITEMS = [
     a: 'No. No honest lender, broker, or advisor can guarantee funding. What K2 Commercial Finance does is improve the quality of the strategy, targeting, presentation, communication, and process.',
   },
   {
-    q: `Why charge ${CERTIFIED_PRICE_LABEL} upfront?`,
+    q: 'Why charge $250 upfront?',
     a: 'Because serious transactions require real time, effort, and attention. The upfront investment helps ensure we are working with serious borrowers who are prepared to engage in the process.',
   },
   {
-    q: `What is the ${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit?`,
-    a: `If your transaction successfully closes, you receive a ${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit. It is our way of rewarding serious borrowers who follow through.`,
+    q: 'What is the $500 closing credit?',
+    a: 'If your transaction successfully closes, you receive a $500 closing credit. It is our way of rewarding serious borrowers who follow through.',
   },
 ];
 
@@ -136,15 +131,15 @@ export default function CertifiedBorrowerPage() {
           </p>
 
           <p className="text-lg font-semibold text-gray-900 mb-2">
-            {`One-time ${CERTIFIED_PRICE_LABEL} payment. Lifetime access.`}
+            One-time $250 payment. Lifetime access.
           </p>
           <p className="text-base text-primary font-medium mb-8">
-            {`Receive a ${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit on any successfully closed transaction.`}
+            Receive a $500 closing credit on any successfully closed transaction.
           </p>
 
           <CheckoutButton
             product="certified"
-            label={`Become a K2 Certified Borrower for ${CERTIFIED_PRICE_LABEL}`}
+            label="Become a K2 Certified Borrower for $250"
             size="lg"
             className="text-lg px-8 py-6 shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30"
           />
@@ -177,8 +172,8 @@ export default function CertifiedBorrowerPage() {
               Financing is about more than information. It is about strategy, positioning, relationships, and access to the right lenders.
             </p>
             <p className="font-medium text-gray-800">
-                  `One-time ${CERTIFIED_PRICE_LABEL} payment`,
-                  `Includes a ${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit on any successfully closed transaction`,
+              The K2 Certified Borrower Program gives you more than a process. It puts K2 Commercial Finance on your side to present your deal with credibility, target the right lenders, and guide the financing process with precision.
+            </p>
             <p>
               Because in this business, what you know matters. But who represents you matters too.
             </p>
@@ -200,19 +195,19 @@ export default function CertifiedBorrowerPage() {
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              {`Why the ${CERTIFIED_PRICE_LABEL} Upfront Investment Makes Sense`}
+              Why the $250 Upfront Investment Makes Sense
             </h2>
           </div>
 
           <div className="space-y-4 text-lg text-gray-600 leading-relaxed">
             <p>
-              {`The ${CERTIFIED_PRICE_LABEL} upfront payment helps confirm that you are serious, engaged, and prepared to move forward on a real transaction. K2 Commercial Finance invests meaningful time, energy, judgment, and relationship capital into every file we take on, so it is important that our clients show a real level of commitment.`}
+              The $250 upfront payment helps confirm that you are serious, engaged, and prepared to move forward on a real transaction. K2 Commercial Finance invests meaningful time, energy, judgment, and relationship capital into every file we take on, so it is important that our clients show a real level of commitment.
             </p>
             <p className="font-medium text-gray-800">
-              {`And when your transaction closes, we make that commitment back to you with a ${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit.`}
+              And when your transaction closes, we make that commitment back to you with a $500 closing credit.
             </p>
             <p>
-              {`In other words, you invest ${CERTIFIED_PRICE_LABEL} up front, and if your transaction closes successfully, you receive a ${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit.`}
+              In other words, you invest $250 up front, and if your transaction closes successfully, you receive a $500 closing credit.
             </p>
             <p>
               That helps align incentives from the beginning and rewards borrowers who are prepared to follow through.
@@ -226,7 +221,7 @@ export default function CertifiedBorrowerPage() {
             <div>
               <p className="font-semibold text-gray-900 mb-1">Let's Invest in Each Other</p>
               <p className="text-gray-600">
-                {`You invest ${CERTIFIED_PRICE_LABEL} upfront → your transaction closes successfully → you receive a ${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit.`}
+                You invest $250 upfront &rarr; your transaction closes successfully &rarr; you receive a $500 closing credit.
               </p>
             </div>
           </div>
@@ -301,7 +296,7 @@ export default function CertifiedBorrowerPage() {
             {[
               {
                 num: '1',
-                title: `Pay ${CERTIFIED_PRICE_LABEL} once`,
+                title: 'Pay $250 once',
                 text: 'You become a K2 Certified Borrower and receive lifetime access.',
               },
               {
@@ -312,7 +307,7 @@ export default function CertifiedBorrowerPage() {
               {
                 num: '3',
                 title: 'Review strategy with K2 Commercial Finance',
-                  `One-time ${KIT_PRICE_LABEL} payment`,
+                text: 'We help shape the financing plan, lender targeting, and loan program approach.',
               },
               {
                 num: '4',
@@ -341,8 +336,8 @@ export default function CertifiedBorrowerPage() {
 
       {/* ============================================================ */}
       {/*  COMPARISON: SYSTEM vs PROGRAM                                 */}
-                  `One-time ${CERTIFIED_PRICE_LABEL} payment`,
-                  `Includes a ${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit on any successfully closed transaction`,
+      {/* ============================================================ */}
+      <section className="py-24 bg-white relative">
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
         </div>
@@ -367,7 +362,7 @@ export default function CertifiedBorrowerPage() {
                   'Self-directed financing preparation',
                   'Templates, tools, deal room, tracking, and Prep Coach AI',
                   'Build and manage the process yourself',
-                  `One-time ${KIT_PRICE_LABEL} payment`,
+                  'One-time $39 payment',
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-2">
                     <CheckCircle2 className="h-4 w-4 text-slate-400 mt-0.5 flex-shrink-0" />
@@ -407,8 +402,8 @@ export default function CertifiedBorrowerPage() {
                   'Works to secure direct lender term sheets',
                   'Assists with lender calls, term review, and negotiation',
                   'Supports you through underwriting and closing',
-                  `One-time ${CERTIFIED_PRICE_LABEL} payment`,
-                  `Includes a ${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit on any successfully closed transaction`,
+                  'One-time $250 payment',
+                  'Includes a $500 closing credit on any successfully closed transaction',
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-2">
                     <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
@@ -580,13 +575,13 @@ export default function CertifiedBorrowerPage() {
               K2 Certified Borrower Program
             </h2>
             <p className="text-xl text-gray-700 mb-1">
-              One-time <span className="font-bold text-primary">{CERTIFIED_PRICE_LABEL}</span> payment
+              One-time <span className="font-bold text-primary">$250</span> payment
             </p>
             <p className="text-lg text-gray-600 mb-1">
               Lifetime access
             </p>
             <p className="text-base text-primary font-medium mb-6">
-              {`Plus a ${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit on any successfully closed transaction`}
+              Plus a $500 closing credit on any successfully closed transaction
             </p>
             <p className="text-sm text-gray-500 mb-8">
               Transparent success fee structure on funded transactions will be disclosed upfront in writing.
@@ -594,7 +589,7 @@ export default function CertifiedBorrowerPage() {
 
             <CheckoutButton
               product="certified"
-              label={`Become a K2 Certified Borrower for ${CERTIFIED_PRICE_LABEL}`}
+              label="Become a K2 Certified Borrower for $250"
               size="lg"
               className="text-lg px-8 py-6 shadow-lg shadow-primary/20"
             />
@@ -649,13 +644,13 @@ export default function CertifiedBorrowerPage() {
 
           <CheckoutButton
             product="certified"
-            label={`Become a K2 Certified Borrower for ${CERTIFIED_PRICE_LABEL}`}
+            label="Become a K2 Certified Borrower for $250"
             size="lg"
             className="text-lg px-8 py-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300"
           />
 
           <p className="mt-6 text-sm text-slate-400">
-            {`One-time payment. Lifetime access. ${CERTIFIED_CLOSING_CREDIT_LABEL} closing credit on any successfully closed transaction.`}
+            One-time payment. Lifetime access. $500 closing credit on any successfully closed transaction.
           </p>
         </div>
       </section>

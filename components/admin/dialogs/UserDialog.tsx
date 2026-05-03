@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import type { User } from "@/lib/admin-mock-data";
-import { KIT_PRICE_LABEL } from "@/lib/products";
 
 interface UserDialogProps {
   open: boolean;
@@ -132,7 +131,7 @@ export function UserDialog({ open, onOpenChange, user, onSave }: UserDialogProps
             <div className="flex items-center justify-between">
               <div>
                 <Label htmlFor="workbook">Kit Purchased</Label>
-                <p className="text-xs text-muted-foreground mt-0.5">{`User has purchased the ${KIT_PRICE_LABEL} Success Kit`}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">User has purchased the $39 Success Kit</p>
               </div>
               <Switch id="workbook" checked={workbookPurchased} onCheckedChange={setWorkbookPurchased} />
             </div>

@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, PlayCircle, Eye, Lock } from 'lucide-react';
-import { CERTIFIED_PRICE_LABEL } from '@/lib/products';
 import { supabase } from '@/lib/supabase';
 import { toYouTubeEmbedUrl } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -108,7 +107,7 @@ export default function ContentDetailPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/membership/certified-borrower">{`Become Certified – ${CERTIFIED_PRICE_LABEL}`}</Link>
+                <Link href="/membership/certified-borrower">Become Certified – $250</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <Link href="/content">Browse Free Content</Link>

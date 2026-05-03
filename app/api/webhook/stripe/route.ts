@@ -3,7 +3,9 @@ import { stripe, PRODUCTS } from '@/lib/stripe';
 import { createServiceRoleClient } from '@/lib/supabase-server';
 
 /**
- * Determine product from the current checkout amounts when metadata is unavailable.
+ * Determine product from amount (cents) when metadata is unavailable.
+ *   $39.00 (3900)  → kit
+ *   $250.00 (25000) → certified
  */
 function productFromAmount(amount: number | null): string | null {
   if (amount === PRODUCTS.kit.priceAmount) return 'kit';
@@ -53,7 +55,7 @@ async function fulfillOrder(
     stripe_payment_intent_id: paymentIntentId,
   });
 
-  // 2. Certified Borrower
+  // 2. $250 → Certified Borrower
   if (product === 'certified') {
     await supabase
       .from('profiles')
@@ -76,7 +78,7 @@ async function fulfillOrder(
     console.log(`[Stripe Webhook] User ${userId} upgraded to Certified Borrower`);
   }
 
-  // 3. Kit Buyer
+  // 3. $39 → Kit Buyer
   if (product === 'kit') {
     await supabase
       .from('profiles')

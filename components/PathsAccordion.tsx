@@ -14,11 +14,6 @@ import {
   DollarSign,
   ChevronDown,
 } from 'lucide-react';
-import {
-  CERTIFIED_CLOSING_CREDIT_LABEL,
-  CERTIFIED_PRICE_LABEL,
-  KIT_PRICE_LABEL,
-} from '@/lib/products';
 
 type RichBullet = {
   title: string;
@@ -50,105 +45,105 @@ const PATHS: PathItem[] = [
     step: 1,
     icon: BookOpen,
     title: 'Learn Borrowing Tips and Strategies for Free',
-    idealFor: `you're brand new to commercial real estate financing, unsure if it fits your goals, or want smart, no-risk education before committing time or money—avoid wasting months on bad advice or rookie mistakes.`,
+    idealFor: `you're brand new to commercial real estate financing, unsure if it fits your goals, or want smart, no-risk education before committing time or money\u2014avoid wasting months on bad advice or rookie mistakes.`,
     bullets: [
-      'Free videos & articles – no signup, no email gate',
+      'Free videos & articles \u2013 no signup, no email gate',
       'Clear breakdowns of major loan programs, common pitfalls, and must-have prep steps',
       'Honest insights to decide quickly whether financing accelerates your deals (or if another path makes more sense)',
     ],
-    commitment: '$0 – just your time and curiosity.',
+    commitment: '$0 \u2013 just your time and curiosity.',
     cta: { label: 'Browse Free Educational Content', href: '/content' },
   },
   {
     step: 2,
     icon: FileCheck,
-    title: 'Go Independent – Financing Success Kit',
+    title: 'Go Independent \u2013 Financing Success Kit',
     subtitle: 'A small investment that protects a very big decision.',
-    idealFor: `organized, self-motivated borrowers who want to submit clean, professional loan packages lenders actually want to fund—targeting lenders on your own and avoiding broker involvement.`,
+    idealFor: `organized, self\u2011motivated borrowers who want to submit clean, professional loan packages lenders actually want to fund\u2014targeting lenders on your own and avoiding broker involvement.`,
     featured: true,
     bullets: [
       {
-        title: `Instant Access – ${KIT_PRICE_LABEL} One-Time`,
+        title: 'Instant Access \u2013 $39 One\u2011Time',
         description: 'A complete DIY financing system: instantly downloadable guidance and online tools to help you move through the financing process with clarity and purpose.',
       },
       {
-        title: 'Step-By-Step Loan Prep Tools',
-        description: 'A clear path to choosing the right loan program, organizing lender-ready documents, accelerating your process and avoiding the mistakes that quietly kill deals.',
+        title: 'Step\u2011By\u2011Step Loan Prep Tools',
+        description: 'A clear path to choosing the right loan program, organizing lender\u2011ready documents, accelerating your process and avoiding the mistakes that quietly kill deals.',
       },
       {
-        title: 'Document Library – Everything Lenders Expect',
-        description: 'Personal financial statements, borrower forms, templates lenders expect, and supporting docs—organized, downloadable, and ready to use.',
+        title: 'Document Library \u2013 Everything Lenders Expect',
+        description: 'Personal financial statements, borrower forms, templates lenders expect, and supporting docs\u2014organized, downloadable, and ready to use.',
       },
       {
-        title: 'Deal Room – Track Each Deal Independently',
-        description: 'Each deal gets its own dedicated workspace. Upload documents, track progress, and keep everything organized and lender-ready.',
+        title: 'Deal Room \u2013 Track Each Deal Independently',
+        description: 'Each deal gets its own dedicated workspace. Upload documents, track progress, and keep everything organized and lender\u2011ready.',
       },
       {
-        title: 'Submission Tracker – Know Exactly Where You Stand',
-        description: 'Log every lender you’ve submitted to and track the status of each one. This alone saves hours and prevents deals from stalling.',
+        title: 'Submission Tracker \u2013 Know Exactly Where You Stand',
+        description: 'Log every lender you\u2019ve submitted to and track the status of each one. This alone saves hours and prevents deals from stalling.',
       },
       {
-        title: 'Pro-Level Polish, Zero Experience Required',
-        description: 'Everything you need to present a clean, credible, lender-friendly package—without years of industry experience.',
+        title: 'Pro\u2011Level Polish, Zero Experience Required',
+        description: 'Everything you need to present a clean, credible, lender\u2011friendly package\u2014without years of industry experience.',
       },
     ],
-    commitment: `${KIT_PRICE_LABEL} one-time. No subscriptions. No upsells. Just a powerful, self-directed system that puts you in control.`,
-    cta: { label: `Get the Kit – ${KIT_PRICE_LABEL} One-Time`, href: '/workbook' },
+    commitment: '$39 one\u2011time. No subscriptions. No upsells. Just a powerful, self\u2011directed system that puts you in control.',
+    cta: { label: 'Get the Kit \u2013 $39 One\u2011Time', href: '/workbook' },
   },
   {
     step: 3,
     icon: Headphones,
     title: 'K2 Certified Borrower',
     subtitle: 'Partner with K2 Commercial Finance',
-    idealFor: `borrowers ready to move fast—partner with K2 for expert lender matching, warm introductions, and lifetime tools.`,
+    idealFor: `borrowers ready to move fast\u2014partner with K2 for expert lender matching, warm introductions, and lifetime tools.`,
     bullets: [
       {
-        title: '30-Minute Private Strategy & Coaching Call',
-        description: 'We review your paperwork and deal in detail, then craft a custom lender-targeting plan.',
+        title: '30\u2011Minute Private Strategy & Coaching Call',
+        description: 'We review your paperwork and deal in detail, then craft a custom lender\u2011targeting plan.',
       },
       {
-        title: 'Expert Lender Matching & Warm Introductions – Done For You',
-        description: 'We match your specifics to our vetted Preferred Lenders, then make trusted, warm introductions. After the intro, it’s you and the lender—direct and efficient.',
+        title: 'Expert Lender Matching & Warm Introductions \u2013 Done For You',
+        description: 'We match your specifics to our vetted Preferred Lenders, then make trusted, warm introductions. After the intro, it\u2019s you and the lender\u2014direct and efficient.',
       },
       {
-        title: 'K2 PrepCoach™ – Unlimited 24/7 AI Co-Pilot',
-        description: 'Always-available expert trained on small commercial deals.',
+        title: 'K2 PrepCoach\u2122 \u2013 Unlimited 24/7 AI Co\u2011Pilot',
+        description: 'Always\u2011available expert trained on small commercial deals.',
         subBullets: [
           'Instant deal health score + prioritized fixes',
-          'Document gap detector & missing-item alerts',
+          'Document gap detector & missing\u2011item alerts',
           'Polished narrative/cover letter generator',
-          'Red-flag scanner for underwriting risks',
-          'Rate/term/total-cost comparisons',
+          'Red\u2011flag scanner for underwriting risks',
+          'Rate/term/total\u2011cost comparisons',
           'Realistic closing timeline predictor',
         ],
       },
       {
         title: 'Secure Deal Builder & Private Data Room',
-        description: 'Guided narrative building + password-protected vault to upload, organize, version-control, and reuse files across deals.',
+        description: 'Guided narrative building + password\u2011protected vault to upload, organize, version\u2011control, and reuse files across deals.',
       },
       {
         title: 'Readiness Checklists & Pro Tools',
-        description: 'Step-by-step tasks to identify and fix issues early.',
+        description: 'Step\u2011by\u2011step tasks to identify and fix issues early.',
       },
       {
-        title: `${CERTIFIED_CLOSING_CREDIT_LABEL} Closing Credit*`,
+        title: '$1,000 Closing Credit*',
         description: 'Credited at closing on any funded deal through our Preferred Lenders. (*Terms apply.)',
       },
     ],
     feeTransparency: {
       title: 'Full Transparency: Your Low Fee Structure',
-      text: 'No hidden incentives, no yield-spread games.',
+      text: 'No hidden incentives, no yield\u2011spread games.',
       bullets: [
-        'Maximum fee just 2% (typically lender-paid only on funded deals)',
+        'Maximum fee just 2% (typically lender\u2011paid only on funded deals)',
         'Everything disclosed upfront in writing',
-        'No undisclosed yield-spread premiums',
+        'No undisclosed yield\u2011spread premiums',
         'Our success depends on your deal closing on strong terms',
       ],
     },
     commitment:
-      `${CERTIFIED_PRICE_LABEL} one-time – Lifetime access. First 100 Certified Borrowers secure lifetime access—spots are limited.`,
+      '$250 one\u2011time \u2013 Lifetime access. First 100 Certified Borrowers secure lifetime access\u2014spots are limited.',
     cta: {
-      label: `Become a Certified Borrower – ${CERTIFIED_PRICE_LABEL}`,
+      label: 'Become a Certified Borrower \u2013 $250',
       href: '/membership/certified-borrower',
     },
   },
@@ -215,6 +210,7 @@ export function PathsAccordion() {
                 <span className="font-semibold">Best if:</span> {item.idealFor}
               </p>
 
+              {/* Accordion toggle */}
               <button
                 onClick={() => toggle(index)}
                 className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors cursor-pointer"
@@ -228,6 +224,7 @@ export function PathsAccordion() {
               </button>
             </CardHeader>
 
+            {/* Expandable content */}
             <div
               className={`overflow-hidden transition-all duration-300 ease-in-out ${
                 isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'

@@ -31,7 +31,6 @@ import {
 import { CheckoutButton } from '@/components/CheckoutButton';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { KIT_PRICE_LABEL } from '@/lib/products';
 
 export default function LenderReadyPage() {
     return (
@@ -60,7 +59,7 @@ export default function LenderReadyPage() {
                 </div>
                 <CheckoutButton
                     product="kit"
-                    label={`Get Six Months of Access for ${KIT_PRICE_LABEL}`}
+                    label="Get Six Months of Access for $39"
                     size="lg"
                     className="text-lg px-10 py-6 shadow-lg shadow-primary/20"
                 />
@@ -182,7 +181,7 @@ export default function LenderReadyPage() {
             </section>
 
             {/* ============================================================ */}
-            {/*  WHAT YOU GET FOR THE CURRENT KIT PRICE                         */}
+            {/*  WHAT YOU GET FOR $39                                          */}
             {/* ============================================================ */}
             <section className="py-24 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
                 <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -191,7 +190,7 @@ export default function LenderReadyPage() {
                 </div>
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
-                        <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">{`What You Get for ${KIT_PRICE_LABEL}`}</p>
+                        <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">What You Get for $39</p>
                         <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-5">
                             Everything You Need to Build, Organize &amp; Submit
                         </h2>
@@ -489,7 +488,7 @@ export default function LenderReadyPage() {
                             K2 Lender-Ready System
                         </p>
                         <p className="text-lg text-gray-700 mb-1">
-                            One-time <span className="font-bold text-primary">{KIT_PRICE_LABEL}</span> payment
+                            One-time <span className="font-bold text-primary">$39</span> payment
                         </p>
                         <p className="text-base text-gray-600 mb-1">
                             Six months full access
@@ -503,7 +502,7 @@ export default function LenderReadyPage() {
 
                         <CheckoutButton
                             product="kit"
-                            label={`Get the K2 Lender-Ready System for ${KIT_PRICE_LABEL}`}
+                            label="Get the K2 Lender-Ready System for $39"
                             size="lg"
                             className="text-lg px-8 py-6 shadow-lg shadow-primary/20"
                         />
@@ -537,7 +536,7 @@ export default function LenderReadyPage() {
 
                     <CheckoutButton
                         product="kit"
-                        label={`Try It Risk-Free for ${KIT_PRICE_LABEL}`}
+                        label="Try It Risk-Free for $39"
                         size="lg"
                         className="text-lg px-8 py-6 shadow-lg shadow-primary/20"
                     />
@@ -999,7 +998,7 @@ export default function LenderReadyPage() {
                         <div className="mt-8 text-center">
                             <CheckoutButton
                                 product="kit"
-                                label={`Get Six Months of Access to the K2 Lender-Ready System for ${KIT_PRICE_LABEL}`}
+                                label="Get Six Months of Access to the K2 Lender-Ready System for $39"
                                 size="lg"
                                 className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
                             />

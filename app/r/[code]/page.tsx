@@ -12,11 +12,6 @@ import {
   Building2,
   Handshake,
 } from 'lucide-react';
-import {
-  CERTIFIED_CLOSING_CREDIT_LABEL,
-  CERTIFIED_PRICE_LABEL,
-  KIT_PRICE_LABEL,
-} from '@/lib/products';
 
 type PartnerInfo = {
   name: string;
@@ -101,13 +96,13 @@ export default function ReferralPage() {
             PrepCoach prompts.
           </p>
 
-          <p className="text-3xl font-bold text-gray-900 mb-2">{KIT_PRICE_LABEL}</p>
+          <p className="text-3xl font-bold text-gray-900 mb-2">$39</p>
           <p className="text-sm text-gray-500 mb-8">One-time purchase</p>
 
           <CheckoutButton
             product="kit"
             referralCode={code}
-            label={`Get Your Success Kit — ${KIT_PRICE_LABEL}`}
+            label="Get Your Success Kit — $39"
             size="lg"
             className="text-lg px-8 py-4 shadow-lg shadow-primary/20"
           />
@@ -150,13 +145,13 @@ export default function ReferralPage() {
           </h2>
           <p className="text-gray-600 mb-6">
             Upgrade to K2 Certified Borrower for full access — Deal Room,
-            Preferred Lender network, all PrepCoach prompts, and a {CERTIFIED_CLOSING_CREDIT_LABEL}
+            Preferred Lender network, all PrepCoach prompts, and a $1,000
             closing credit.
           </p>
           <CheckoutButton
             product="certified"
             referralCode={code}
-            label={`Become Certified — ${CERTIFIED_PRICE_LABEL}`}
+            label="Become Certified — $250"
             variant="outline"
             size="lg"
           />
